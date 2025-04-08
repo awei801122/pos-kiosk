@@ -1,0 +1,682 @@
+
+
+=== New Request ===
+2025-04-08 21:20:11
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:20:11
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:20:12
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:20:34
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:20:34
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:20:34
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:21:08
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:21:08
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:21:08
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:21:13
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:21:13
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:21:13
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:21:19
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:21:19
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:21:19
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:23:32
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:23:32
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:23:32
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:25:18
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:25:18
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:25:18
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:31:26
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:31:26
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:31:27
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:31:28
+REQUEST_URI: /favicon.ico
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/favicon.ico
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/favicon.ico
+File not found: C:\Users\awei8\pos-kiosk-app\kiosk/favicon.ico
+
+
+=== New Request ===
+2025-04-08 21:31:59
+REQUEST_URI: /kiosk/index.html
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/kiosk/index.html
+File not found: C:\Users\awei8\pos-kiosk-app\kiosk/kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:33:21
+REQUEST_URI: /kiosk/index.html
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:33:21
+REQUEST_URI: /kiosk/order.js
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:33:21
+REQUEST_URI: /kiosk/menu.json
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:33:25
+REQUEST_URI: /kiosk/index.html
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:33:26
+REQUEST_URI: /kiosk/order.js
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:33:26
+REQUEST_URI: /kiosk/menu.json
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:33:44
+REQUEST_URI: /kiosk/save.php
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/save.php
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/save.php
+Including PHP file: C:\Users\awei8\pos-kiosk-app\kiosk/save.php
+
+
+=== New Request ===
+2025-04-08 21:33:53
+REQUEST_URI: /kiosk/save.php
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/save.php
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/save.php
+Including PHP file: C:\Users\awei8\pos-kiosk-app\kiosk/save.php
+
+
+=== New Request ===
+2025-04-08 21:34:13
+REQUEST_URI: /kiosk/index.html
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:34:13
+REQUEST_URI: /kiosk/order.js
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:34:13
+REQUEST_URI: /kiosk/menu.json
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:34:20
+REQUEST_URI: /kiosk/save.php
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html/kiosk/save.php
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/save.php
+Including PHP file: C:\Users\awei8\pos-kiosk-app\kiosk/save.php
+
+
+=== New Request ===
+2025-04-08 21:34:50
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:34:50
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:34:50
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:36:10
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:36:10
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:36:10
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:37:15
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:37:15
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:37:16
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:38:13
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+include_path: .;C:\php\pear
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:38:13
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+include_path: .;C:\php\pear
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:38:13
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+include_path: .;C:\php\pear
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+
+
+=== New Request ===
+2025-04-08 21:38:42
+REQUEST_URI: /
+SCRIPT_NAME: /index.html
+PHP_SELF: /index.html
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\index.html
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+include_path: .;C:\php\pear
+Trying to serve index.html from: C:\Users\awei8\pos-kiosk-app\kiosk/index.html
+
+
+=== New Request ===
+2025-04-08 21:38:42
+REQUEST_URI: /order.js
+SCRIPT_NAME: /order.js
+PHP_SELF: /order.js
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\order.js
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+include_path: .;C:\php\pear
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/order.js
+
+
+=== New Request ===
+2025-04-08 21:38:43
+REQUEST_URI: /menu.json
+SCRIPT_NAME: /menu.json
+PHP_SELF: /menu.json
+DOCUMENT_ROOT: C:\Users\awei8\pos-kiosk-app\kiosk
+SCRIPT_FILENAME: C:\Users\awei8\pos-kiosk-app\kiosk\menu.json
+__DIR__: C:\Users\awei8\pos-kiosk-app\kiosk
+getcwd(): C:\Users\awei8\pos-kiosk-app\kiosk
+include_path: .;C:\php\pear
+Looking for file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
+Serving file: C:\Users\awei8\pos-kiosk-app\kiosk/menu.json
