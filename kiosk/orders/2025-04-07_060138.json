@@ -1,0 +1,14 @@
+{
+    "cart": [
+        {
+            "id": "braised_pork",
+            "name_zh": "台式滷肉飯",
+            "name_en": "Braised Pork Rice",
+            "price": 100,
+            "cost": 40,
+            "image": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/1\/1b\/Lu_rou_fan.jpg\/320px-Lu_rou_fan.jpg"
+        }
+    ],
+    "number": "060138",
+    "time": "2025-04-07 06:01:38"
+}

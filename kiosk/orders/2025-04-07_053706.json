@@ -1,0 +1,14 @@
+{
+    "cart": [
+        {
+            "id": "thai_pork",
+            "name_zh": "打拋豬肉飯",
+            "name_en": "Basil Minced Pork",
+            "price": 120,
+            "cost": 50,
+            "image": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/7\/7e\/Pad_Kra_Pao_Moo_Sap.jpg\/320px-Pad_Kra_Pao_Moo_Sap.jpg"
+        }
+    ],
+    "number": "053706",
+    "time": "2025-04-07 05:37:06"
+}

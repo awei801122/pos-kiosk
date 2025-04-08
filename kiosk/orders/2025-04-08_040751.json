@@ -1,0 +1,29 @@
+{
+    "number": "040751",
+    "cart": [
+        {
+            "id": "braised_pork",
+            "name_zh": "台式滷肉飯",
+            "name_en": "Braised Pork Rice",
+            "price": 100,
+            "cost": 40,
+            "image": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/1\/1b\/Lu_rou_fan.jpg\/320px-Lu_rou_fan.jpg"
+        },
+        {
+            "id": "braised_pork",
+            "name_zh": "台式滷肉飯",
+            "name_en": "Braised Pork Rice",
+            "price": 100,
+            "cost": 40,
+            "image": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/1\/1b\/Lu_rou_fan.jpg\/320px-Lu_rou_fan.jpg"
+        },
+        {
+            "id": "hamburger",
+            "name_zh": "漢堡",
+            "name_en": "Hamburger",
+            "price": 100,
+            "image": "https:\/\/example.com\/images\/hamburger.jpg"
+        }
+    ],
+    "time": "2025-04-08 04:07:51"
+}

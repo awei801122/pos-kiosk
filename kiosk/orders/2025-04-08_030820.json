@@ -1,0 +1,21 @@
+{
+    "number": "030820",
+    "cart": [
+        {
+            "id": "braised_pork",
+            "name_zh": "台式滷肉飯",
+            "name_en": "Braised Pork Rice",
+            "price": 100,
+            "cost": 40,
+            "image": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/1\/1b\/Lu_rou_fan.jpg\/320px-Lu_rou_fan.jpg"
+        },
+        {
+            "id": "french_fries",
+            "name_zh": "薯條",
+            "name_en": "French Fries",
+            "price": 50,
+            "image": "https:\/\/example.com\/images\/fries.jpg"
+        }
+    ],
+    "time": "2025-04-08 03:08:20"
+}

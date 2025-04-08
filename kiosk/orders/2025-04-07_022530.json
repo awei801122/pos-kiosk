@@ -1,0 +1,22 @@
+{
+    "number": "022530",
+    "cart": [
+        {
+            "id": "thai_pork",
+            "name_zh": "打拋豬肉飯",
+            "name_en": "Basil Minced Pork",
+            "price": 120,
+            "cost": 50,
+            "image": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/7\/7e\/Pad_Kra_Pao_Moo_Sap.jpg\/320px-Pad_Kra_Pao_Moo_Sap.jpg"
+        },
+        {
+            "id": "braised_pork",
+            "name_zh": "台式滷肉飯",
+            "name_en": "Braised Pork Rice",
+            "price": 100,
+            "cost": 40,
+            "image": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/1\/1b\/Lu_rou_fan.jpg\/320px-Lu_rou_fan.jpg"
+        }
+    ],
+    "time": "2025-04-07 02:25:30"
+}

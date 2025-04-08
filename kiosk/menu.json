@@ -1,0 +1,39 @@
+[
+  {
+    "id": "thai_pork",
+    "name_zh": "打拋豬肉飯",
+    "name_en": "Basil Minced Pork",
+    "price": 120,
+    "cost": 50,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Pad_Kra_Pao_Moo_Sap.jpg/320px-Pad_Kra_Pao_Moo_Sap.jpg"
+  },
+  {
+    "id": "braised_pork",
+    "name_zh": "台式滷肉飯",
+    "name_en": "Braised Pork Rice",
+    "price": 100,
+    "cost": 40,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Lu_rou_fan.jpg/320px-Lu_rou_fan.jpg"
+  },
+  {
+    "id": "hamburger",
+    "name_zh": "漢堡",
+    "name_en": "Hamburger",
+    "price": 100,
+    "image": "https://example.com/images/hamburger.jpg"
+  },
+  {
+    "id": "french_fries",
+    "name_zh": "薯條",
+    "name_en": "French Fries",
+    "price": 50,
+    "image": "https://example.com/images/fries.jpg"
+  },
+  {
+    "id": "cola",
+    "name_zh": "可樂",
+    "name_en": "Cola",
+    "price": 30,
+    "image": "https://example.com/images/cola.jpg"
+  }
+]

@@ -7,14 +7,14 @@ dist/
 Thumbs.db
 
 # POS 自助點餐的動態檔案
-kiosk/menu.json
-kiosk/queue.json
-kiosk/orders/
+#kiosk/menu.json
+#kiosk/queue.json
+#kiosk/orders/
 kiosk/done.json
 kiosk/report.html
 
 # 設定檔（如 config.json 可以選擇性忽略）
-config.json
+#config.json
 
 # 執行檔
 *.exe
