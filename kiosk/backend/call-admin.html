@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>叫號管理</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    .queue {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    .number-box {
+      background: white;
+      padding: 1em;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.5em;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 0.5em 1em;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>叫號管理</h1>
+  <div class="queue" id="queueList">
+    <div>載入中...</div>
+  </div>
+
+  <script>
+    async function loadQueue() {
+      try {
+        const res = await fetch('../queue.json?_=' + new Date().getTime()); // 防快取
+        const data = await res.json();
+
+        const queueList = document.getElementById('queueList');
+        queueList.innerHTML = '';
+
+        if (data.length === 0) {
+          queueList.innerHTML = '<div>目前沒有叫號</div>';
+        } else {
+          data.forEach(num => {
+            const div = document.createElement('div');
+            div.className = 'number-box';
+            div.innerHTML = `
+              ${num}
+              <button onclick="markAsTaken('${num}')">已取餐</button>
+            `;
+            queueList.appendChild(div);
+          });
+        }
+      } catch (err) {
+        console.error('載入 queue.json 失敗', err);
+        document.getElementById('queueList').innerHTML = '<div>載入錯誤</div>';
+      }
+    }
+
+    async function markAsTaken(number) {
+      if (!confirm(`確認號碼 ${number} 已取餐？`)) return;
+
+      const res = await fetch('remove_queue.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `number=${encodeURIComponent(number)}`
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        alert(`號碼 ${number} 已移除`);
+        loadQueue();
+      } else {
+        alert(`移除失敗：${result.message}`);
+      }
+    }
+
+    loadQueue();
+    setInterval(loadQueue, 5000); // 每 5 秒更新
+  </script>
+</body>
+</html>

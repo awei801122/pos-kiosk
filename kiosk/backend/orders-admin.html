@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>備餐管理</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    .order {
+      background: #fff;
+      padding: 1em;
+      margin: 1em 0;
+      border-left: 5px solid #3498db;
+      border-radius: 8px;
+    }
+    .order.completed {
+      border-left-color: #27ae60;
+      background: #f0fff0;
+    }
+    button {
+      padding: 0.5em 1em;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+    .refresh {
+      margin-bottom: 1em;
+      background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <h1>備餐管理</h1>
+  <button onclick="loadOrders()" class="refresh">重新整理</button>
+  <div id="orderList">載入中...</div>
+
+  <script>
+    async function loadOrders() {
+      const list = document.getElementById('orderList');
+      list.innerHTML = '載入中...';
+
+      try {
+        const res = await fetch('list-orders.php');
+        const orders = await res.json();
+
+        if (orders.length === 0) {
+          list.innerHTML = '<div>目前無訂單</div>';
+          return;
+        }
+
+        list.innerHTML = '';
+        for (const order of orders) {
+          const summary = {};
+          for (const item of order.cart) {
+            const name = item.name_zh;
+            summary[name] = (summary[name] || 0) + 1;
+          }
+          const itemList = Object.entries(summary)
+            .map(([name, qty]) => `${name} ×${qty}`)
+            .join(', ');
+
+          const div = document.createElement('div');
+          div.className = 'order' + (order.completed ? ' completed' : '');
+          div.innerHTML = `
+            <div><strong>叫號：</strong>${order.number}</div>
+            <div><strong>時間：</strong>${order.time}</div>
+            <div><strong>品項：</strong>${itemList}</div>
+            ${order.completed ? 
+              '<button disabled>已完成</button>' :
+              `<button onclick="completeOrder('${order.number}')">備餐完成</button>`
+            }
+          `;
+          list.appendChild(div);
+        }
+      } catch (err) {
+        console.error('載入訂單錯誤', err);
+        list.innerHTML = '<div>載入失敗，請稍後再試。</div>';
+      }
+    }
+
+    async function completeOrder(number) {
+      try {
+        const res = await fetch('update_queue.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ number }),
+        });
+
+        const result = await res.json();
+
+        if (result.status === 'ok') {
+          alert(`號碼 ${number} 已完成備餐`);
+          loadOrders();
+        } else {
+          alert(`更新失敗：${result.message || '未知錯誤'}`);
+        }
+      } catch (err) {
+        console.error("更新狀態失敗", err);
+        alert("更新狀態失敗，請稍後再試");
+      }
+    }
+
+    // 頁面載入時載入訂單
+    loadOrders();
+    
+    // 每 10 秒自動重新整理
+    setInterval(loadOrders, 10000);
+  </script>
+</body>
+</html>

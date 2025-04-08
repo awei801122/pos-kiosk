@@ -1,0 +1,20 @@
+# Node modules / 編譯暫存
+node_modules/
+dist/
+
+# 系統暫存檔
+.DS_Store
+Thumbs.db
+
+# POS 自助點餐的動態檔案
+kiosk/menu.json
+kiosk/queue.json
+kiosk/orders/
+kiosk/done.json
+kiosk/report.html
+
+# 設定檔（如 config.json 可以選擇性忽略）
+config.json
+
+# 執行檔
+*.exe

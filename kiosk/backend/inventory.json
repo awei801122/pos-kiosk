@@ -1,0 +1,19 @@
+{
+    "items": [
+      {
+        "id": "basil_pork",
+        "zh": "打拋豬肉飯",
+        "en": "Basil Minced Pork",
+        "cost": 60,
+        "stock": 50
+      },
+      {
+        "id": "braised_pork",
+        "zh": "台式滷肉飯",
+        "en": "Braised Pork Rice",
+        "cost": 40,
+        "stock": 50
+      }
+    ]
+  }
+  

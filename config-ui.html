@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>設定主機 IP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+    }
+    input, button {
+      font-size: 1.2em;
+      padding: 0.5em;
+      width: 100%;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h2>設定 POS 主機 IP</h2>
+  <label>主機網址（含埠號）：</label>
+  <input type="text" id="serverUrl" placeholder="例如：http://192.168.1.103:8000">
+  <button onclick="saveConfig()">儲存設定</button>
+
+  <script>
+    // 載入現有設定
+    window.electronAPI.loadConfig().then(config => {
+      document.getElementById('serverUrl').value = config['server_url'] || '';
+    });
+
+    // 儲存設定
+    function saveConfig() {
+      const url = document.getElementById('serverUrl').value;
+      window.electronAPI.saveConfig({ server_url: url }).then(() => {
+        alert('設定已儲存，請重新啟動應用程式。');
+      });
+    }
+  </script>
+</body>
+</html>

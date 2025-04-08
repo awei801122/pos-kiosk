@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>自助點餐 Kiosk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 1em;
+    }
+    .lang-toggle {
+      position: absolute;
+      right: 1em;
+      top: 1em;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1em;
+    }
+    .item {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin: 1em;
+      padding: 1em;
+      width: 200px;
+      text-align: center;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    .item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .cart {
+      background: #fff8dc;
+      padding: 1em;
+      margin: 1em;
+      border-radius: 10px;
+    }
+    button {
+      padding: 0.5em 1em;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>自助點餐 Kiosk</h1>
+    <button id="langBtn" class="lang-toggle">English</button>
+  </header>
+
+  <div id="menu" class="menu"></div>
+
+  <section class="cart">
+    <h2>🧾 購物清單 / Order</h2>
+    <ul id="cart"></ul>
+    <p>總金額 / Total: <span id="total">$0</span></p>
+    <button id="submitOrder">送出訂單 / Submit</button>
+  </section>
+
+  <!-- 主程式 -->
+  <script src="order.js"></script>
+</body>
+</html>
