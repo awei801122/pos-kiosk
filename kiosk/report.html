@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>每日報表</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      color: #333;
+    }
+    label, input {
+      font-size: 1em;
+    }
+    .report {
+      background: white;
+      padding: 1em;
+      margin-top: 1em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+    th, td {
+      padding: 0.5em;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    #exportBtn {
+      margin-top: 1em;
+      padding: 0.5em 1em;
+      font-size: 1em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+
+  <!-- ✅ 引入 SheetJS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h1>📊 每日報表</h1>
+  <label for="reportDate">選擇日期：</label>
+  <input type="date" id="reportDate" />
+
+  <div class="report" id="reportArea">請選擇日期查看報表</div>
+  <button id="exportBtn">⬇️ 下載 Excel</button>
+
+  <script>
+    document.getElementById("reportDate").addEventListener("change", loadReport);
+    document.getElementById("exportBtn").addEventListener("click", exportToExcel);
+
+    function loadReport() {
+      const date = document.getElementById("reportDate").value;
+      if (!date) return;
+
+      fetch(`backend/report.php?date=${date}`)
+        .then(res => res.json())
+        .then(data => {
+          window.currentReportData = data; // 🔒 儲存目前報表資料給匯出用
+
+          const area = document.getElementById("reportArea");
+          area.innerHTML = `
+            <h2>📅 日期：${data.date}</h2>
+            <p>🧾 訂單數量：${data.total_orders}</p>
+            <p>💰 總營業額：$${data.total_sales}</p>
+            <p>📦 成本總額：$${data.total_cost}</p>
+            <p>📈 淨利潤：$${data.profit}</p>
+
+            <h3>品項銷售統計：</h3>
+            <table>
+              <tr><th>品項</th><th>數量</th></tr>
+              ${Object.entries(data.items).map(([name, qty]) => `
+                <tr><td>${name}</td><td>${qty}</td></tr>
+              `).join('')}
+            </table>
+          `;
+        });
+    }
+
+    function exportToExcel() {
+      const data = window.currentReportData;
+      if (!data) {
+        alert("請先載入報表！");
+        return;
+      }
+
+      const rows = [
+        ["日期", data.date],
+        ["訂單數量", data.total_orders],
+        ["總營業額", data.total_sales],
+        ["總成本", data.total_cost],
+        ["利潤", data.profit],
+        [],
+        ["品項", "數量"]
+      ];
+
+      for (const [name, qty] of Object.entries(data.items)) {
+        rows.push([name, qty]);
+      }
+
+      const worksheet = XLSX.utils.aoa_to_sheet(rows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "報表");
+
+      const filename = `報表_${data.date}.xlsx`;
+      XLSX.writeFile(workbook, filename);
+    }
+
+    // 預設今天日期
+    document.getElementById("reportDate").value = new Date().toISOString().slice(0, 10);
+    loadReport();
+  </script>
+</body>
+</html>

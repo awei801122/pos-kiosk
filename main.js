@@ -38,7 +38,7 @@ function loadMainUI() {
     serverUrl = "http://" + serverUrl;
   }
 
-  const targetUrl = `${serverUrl}/kiosk/index.html`;
+  const targetUrl = `${serverUrl}/index.html`;
   console.log("Loading URL:", targetUrl);
   mainWindow.loadURL(targetUrl);
 }

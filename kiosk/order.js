@@ -2,9 +2,20 @@ let lang = "zh";
 let cart = [];
 let menuData = [];
 
+// 根據環境返回正確的 API URL
+function getApiUrl(path) {
+  // 如果是 Electron 環境，使用當前頁面的主機名
+  if (window.electronAPI?.isElectron) {
+    return `${window.location.protocol}//${window.location.host}/${path}`;
+  }
+  // 其他環境使用相對路徑
+  return path;
+}
+
 function loadMenu() {
   console.log('Attempting to load menu...');
-  fetch("menu.json")
+  
+  fetch(getApiUrl('menu.json'))
     .then(response => {
       console.log('Menu fetch response:', response);
       if (!response.ok) {
@@ -74,7 +85,7 @@ function submitOrder() {
     return;
   }
 
-  fetch("save.php", {
+  fetch(getApiUrl('save.php'), {
     method: "POST",
     body: JSON.stringify({ cart }),
     headers: {
@@ -97,8 +108,25 @@ function submitOrder() {
     });
 }
 
+function checkOrderStatus() {
+  fetch(getApiUrl('list-orders.php'))
+    .then(res => res.json())
+    .then(orders => {
+      console.log("Current orders:", orders);
+      // 可以在這裡添加更新UI的邏輯
+    })
+    .catch(err => {
+      console.error("檢查訂單狀態時發生錯誤：", err);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   loadMenu();
   document.getElementById("langBtn").addEventListener("click", toggleLanguage);
   document.getElementById("submitOrder").addEventListener("click", submitOrder);
+  
+  // 每30秒檢查一次訂單狀態
+  setInterval(checkOrderStatus, 30000);
+  // 初始檢查
+  checkOrderStatus();
 }); 
