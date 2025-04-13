@@ -1,0 +1,150 @@
+{
+    "error_codes": [
+        {
+            "code": "SYS001",
+            "level": "error",
+            "message": "系統錯誤",
+            "description": "系統發生未預期的錯誤",
+            "solution": "請聯絡系統管理員"
+        },
+        {
+            "code": "SYS002",
+            "level": "error",
+            "message": "資料庫連接失敗",
+            "description": "無法連接到資料庫",
+            "solution": "檢查資料庫服務是否正常運行"
+        },
+        {
+            "code": "AUTH001",
+            "level": "error",
+            "message": "登入失敗",
+            "description": "使用者名稱或密碼錯誤",
+            "solution": "請確認輸入的帳號密碼是否正確"
+        },
+        {
+            "code": "AUTH002",
+            "level": "error",
+            "message": "權限不足",
+            "description": "使用者沒有執行此操作的權限",
+            "solution": "請聯絡系統管理員取得權限"
+        },
+        {
+            "code": "AUTH003",
+            "level": "error",
+            "message": "會話過期",
+            "description": "使用者會話已過期",
+            "solution": "請重新登入系統"
+        },
+        {
+            "code": "INV001",
+            "level": "warning",
+            "message": "庫存不足",
+            "description": "商品庫存低於安全庫存量",
+            "solution": "請進行補貨"
+        },
+        {
+            "code": "INV002",
+            "level": "error",
+            "message": "庫存更新失敗",
+            "description": "無法更新商品庫存",
+            "solution": "請確認商品資料是否正確"
+        },
+        {
+            "code": "ORD001",
+            "level": "error",
+            "message": "訂單建立失敗",
+            "description": "無法建立新訂單",
+            "solution": "請確認訂單資料是否完整"
+        },
+        {
+            "code": "ORD002",
+            "level": "error",
+            "message": "付款失敗",
+            "description": "無法完成付款",
+            "solution": "請確認付款資訊是否正確"
+        },
+        {
+            "code": "PRT001",
+            "level": "error",
+            "message": "印表機錯誤",
+            "description": "無法連接到印表機",
+            "solution": "請檢查印表機連接狀態"
+        },
+        {
+            "code": "PRT002",
+            "level": "warning",
+            "message": "印表機缺紙",
+            "description": "印表機紙張不足",
+            "solution": "請補充印表機紙張"
+        },
+        {
+            "code": "BCK001",
+            "level": "error",
+            "message": "備份失敗",
+            "description": "無法完成資料備份",
+            "solution": "請檢查備份儲存空間"
+        },
+        {
+            "code": "API001",
+            "level": "error",
+            "message": "API 錯誤",
+            "description": "無法連接到外部 API",
+            "solution": "請檢查網路連接狀態"
+        },
+        {
+            "code": "API002",
+            "level": "error",
+            "message": "API 驗證失敗",
+            "description": "API 金鑰驗證失敗",
+            "solution": "請確認 API 金鑰是否正確"
+        },
+        {
+            "code": "NET001",
+            "level": "error",
+            "message": "網路錯誤",
+            "description": "無法連接到網路",
+            "solution": "請檢查網路連接狀態"
+        },
+        {
+            "code": "NET002",
+            "level": "warning",
+            "message": "網路延遲",
+            "description": "網路連線速度過慢",
+            "solution": "請檢查網路頻寬"
+        },
+        {
+            "code": "DB001",
+            "level": "error",
+            "message": "資料庫錯誤",
+            "description": "資料庫操作失敗",
+            "solution": "請聯絡系統管理員"
+        },
+        {
+            "code": "DB002",
+            "level": "error",
+            "message": "資料重複",
+            "description": "資料已存在",
+            "solution": "請確認資料是否重複"
+        },
+        {
+            "code": "FILE001",
+            "level": "error",
+            "message": "檔案錯誤",
+            "description": "無法讀取或寫入檔案",
+            "solution": "請檢查檔案權限"
+        },
+        {
+            "code": "FILE002",
+            "level": "error",
+            "message": "檔案格式錯誤",
+            "description": "檔案格式不符合要求",
+            "solution": "請確認檔案格式是否正確"
+        }
+    ],
+    "settings": {
+        "error_format": "{code} - {message}",
+        "log_errors": true,
+        "notify_admin": true,
+        "auto_recovery": false
+    }
+} 

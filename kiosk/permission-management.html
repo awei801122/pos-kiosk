@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>權限管理 - POS 自助點餐機系統</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 側邊欄 -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="fas fa-home"></i> 首頁
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="menu-management.html">
+                                <i class="fas fa-utensils"></i> 菜單管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="fas fa-boxes"></i> 庫存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="user-management.html">
+                                <i class="fas fa-users"></i> 使用者管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="permission-management.html">
+                                <i class="fas fa-key"></i> 權限管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="fas fa-cog"></i> 系統設定
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主要內容區 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">權限管理</h1>
+                </div>
+
+                <!-- 角色權限設定 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">角色權限設定</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>權限項目</th>
+                                        <th>系統管理員</th>
+                                        <th>店長</th>
+                                        <th>員工</th>
+                                        <th>廚房</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="permissionList">
+                                    <!-- 權限列表將由 JavaScript 動態生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 權限管理 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">權限管理</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>權限代碼</th>
+                                        <th>權限名稱</th>
+                                        <th>權限說明</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="permissionItems">
+                                    <!-- 權限項目將由 JavaScript 動態生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addPermissionModal">
+                            <i class="fas fa-plus"></i> 新增權限
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 新增權限 Modal -->
+    <div class="modal fade" id="addPermissionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增權限</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPermissionForm">
+                        <div class="mb-3">
+                            <label class="form-label">權限代碼</label>
+                            <input type="text" class="form-control" name="code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">權限名稱</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">權限說明</label>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="savePermission">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 編輯權限 Modal -->
+    <div class="modal fade" id="editPermissionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">編輯權限</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPermissionForm">
+                        <input type="hidden" name="id">
+                        <div class="mb-3">
+                            <label class="form-label">權限代碼</label>
+                            <input type="text" class="form-control" name="code" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">權限名稱</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">權限說明</label>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="updatePermission">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="assets/js/permission-management.js"></script>
+</body>
+</html> 

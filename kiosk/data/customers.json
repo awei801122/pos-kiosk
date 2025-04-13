@@ -1,0 +1,54 @@
+{
+    "customers": [
+        {
+            "id": "customer_1",
+            "name": "王小明",
+            "phone": "0912345678",
+            "email": "wang@example.com",
+            "birthday": "1990-05-15",
+            "address": "台北市信義區信義路五段7號",
+            "member_since": "2024-01-01",
+            "membership_level": "金卡",
+            "points": 1000,
+            "total_spent": 5000,
+            "last_visit": "2024-03-15",
+            "favorite_items": [
+                "product_1",
+                "product_4"
+            ],
+            "order_history": [
+                "order_1"
+            ],
+            "preferences": {
+                "language": "zh-TW",
+                "notifications": true,
+                "marketing_emails": true
+            }
+        },
+        {
+            "id": "customer_2",
+            "name": "李小華",
+            "phone": "0923456789",
+            "email": "li@example.com",
+            "birthday": "1995-08-20",
+            "address": "台北市大安區忠孝東路四段1號",
+            "member_since": "2024-02-01",
+            "membership_level": "銀卡",
+            "points": 500,
+            "total_spent": 2500,
+            "last_visit": "2024-03-15",
+            "favorite_items": [
+                "product_3",
+                "product_4"
+            ],
+            "order_history": [
+                "order_2"
+            ],
+            "preferences": {
+                "language": "zh-TW",
+                "notifications": true,
+                "marketing_emails": false
+            }
+        }
+    ]
+} 

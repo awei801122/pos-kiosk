@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台管理 - POS系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #343a40;
+            color: white;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,.75);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,.1);
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .stat-card {
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .stat-card.primary {
+            background: #0d6efd;
+        }
+        .stat-card.success {
+            background: #198754;
+        }
+        .stat-card.warning {
+            background: #ffc107;
+        }
+        .stat-card.danger {
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 側邊欄 -->
+            <div class="col-md-2 sidebar p-3">
+                <h4 class="mb-4">POS系統</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-page="dashboard">
+                            <i class="bi bi-speedometer2"></i> 儀表板
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="orders">
+                            <i class="bi bi-cart"></i> 訂單管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="menu">
+                            <i class="bi bi-menu-button"></i> 菜單管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="inventory">
+                            <i class="bi bi-box"></i> 庫存管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="users">
+                            <i class="bi bi-people"></i> 用戶管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="permissions">
+                            <i class="bi bi-shield-lock"></i> 權限管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="settings">
+                            <i class="bi bi-gear"></i> 系統設置
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 主內容區 -->
+            <div class="col-md-10 main-content">
+                <!-- 頂部導航 -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                    <div class="container-fluid">
+                        <span class="navbar-brand">後台管理</span>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">歡迎，<span id="userName">管理員</span></span>
+                            <button class="btn btn-outline-danger" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> 登出
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- 儀表板 -->
+                <div id="dashboard" class="page-content">
+                    <h2 class="mb-4">儀表板</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-card primary">
+                                <h5>今日訂單</h5>
+                                <h3 id="todayOrders">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card success">
+                                <h5>今日營業額</h5>
+                                <h3 id="todayRevenue">NT$ 0</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card warning">
+                                <h5>待處理訂單</h5>
+                                <h3 id="pendingOrders">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card danger">
+                                <h5>庫存不足</h5>
+                                <h3 id="lowStock">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">最近訂單</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table" id="recentOrders">
+                                            <thead>
+                                                <tr>
+                                                    <th>訂單號碼</th>
+                                                    <th>金額</th>
+                                                    <th>狀態</th>
+                                                    <th>時間</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">熱門商品</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table" id="topProducts">
+                                            <thead>
+                                                <tr>
+                                                    <th>商品名稱</th>
+                                                    <th>銷售量</th>
+                                                    <th>營業額</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 其他頁面內容將在這裡動態載入 -->
+                <div id="pageContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 全局變量
+        let currentUser = null;
+        let currentPage = 'dashboard';
+        let userPermissions = [];
+
+        // 初始化
+        window.onload = function() {
+            checkLogin();
+            loadUserPermissions();
+            setupNavigation();
+        };
+
+        // 檢查登入狀態
+        async function checkLogin() {
+            try {
+                const response = await fetch('/api/admin/auth/check');
+                if (!response.ok) {
+                    window.location.href = '/admin/login.html';
+                    return;
+                }
+                currentUser = await response.json();
+                document.getElementById('userName').textContent = currentUser.name;
+            } catch (error) {
+                console.error('檢查登入狀態失敗:', error);
+                window.location.href = '/admin/login.html';
+            }
+        }
+
+        // 載入用戶權限
+        async function loadUserPermissions() {
+            try {
+                const response = await fetch('/api/admin/auth/permissions');
+                if (response.ok) {
+                    userPermissions = await response.json();
+                    updateNavigation();
+                }
+            } catch (error) {
+                console.error('載入權限失敗:', error);
+            }
+        }
+
+        // 檢查權限
+        function hasPermission(permission) {
+            return userPermissions.includes(permission);
+        }
+
+        // 更新導航顯示
+        function updateNavigation() {
+            const navItems = {
+                'dashboard': 'dashboard.view',
+                'orders': 'orders.manage',
+                'menu': 'menu.manage',
+                'inventory': 'inventory.manage',
+                'users': 'users.manage',
+                'permissions': 'permissions.manage',
+                'settings': 'settings.manage'
+            };
+
+            for (const [page, permission] of Object.entries(navItems)) {
+                const link = document.querySelector(`.nav-link[data-page="${page}"]`);
+                if (link) {
+                    if (!hasPermission(permission)) {
+                        link.parentElement.style.display = 'none';
+                    } else {
+                        link.parentElement.style.display = '';
+                    }
+                }
+            }
+        }
+
+        // 載入儀表板數據
+        async function loadDashboard() {
+            try {
+                const response = await fetch('/api/admin/dashboard');
+                const data = await response.json();
+                
+                // 更新統計數據
+                document.getElementById('todayOrders').textContent = data.todayOrders;
+                document.getElementById('todayRevenue').textContent = `NT$ ${data.todayRevenue}`;
+                document.getElementById('pendingOrders').textContent = data.pendingOrders;
+                document.getElementById('lowStock').textContent = data.lowStock;
+
+                // 更新最近訂單
+                const ordersTable = document.querySelector('#recentOrders tbody');
+                ordersTable.innerHTML = data.recentOrders.map(order => `
+                    <tr>
+                        <td>${order.order_number}</td>
+                        <td>NT$ ${order.total_amount}</td>
+                        <td>${getStatusName(order.status)}</td>
+                        <td>${new Date(order.created_at).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+
+                // 更新熱門商品
+                const productsTable = document.querySelector('#topProducts tbody');
+                productsTable.innerHTML = data.topProducts.map(product => `
+                    <tr>
+                        <td>${product.name}</td>
+                        <td>${product.quantity}</td>
+                        <td>NT$ ${product.revenue}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('載入儀表板數據失敗:', error);
+                alert('載入數據失敗，請稍後再試');
+            }
+        }
+
+        // 設置導航
+        function setupNavigation() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    if (page !== currentPage) {
+                        loadPage(page);
+                    }
+                });
+            });
+        }
+
+        // 載入頁面
+        async function loadPage(page) {
+            // 檢查權限
+            const permissions = {
+                'dashboard': 'dashboard.view',
+                'orders': 'orders.manage',
+                'menu': 'menu.manage',
+                'inventory': 'inventory.manage',
+                'users': 'users.manage',
+                'permissions': 'permissions.manage',
+                'settings': 'settings.manage'
+            };
+
+            if (permissions[page] && !hasPermission(permissions[page])) {
+                alert('您沒有權限訪問此頁面');
+                return;
+            }
+
+            currentPage = page;
+            
+            // 更新導航狀態
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === page) {
+                    link.classList.add('active');
+                }
+            });
+
+            // 隱藏所有頁面
+            document.querySelectorAll('.page-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            if (page === 'dashboard') {
+                document.getElementById('dashboard').style.display = 'block';
+                loadDashboard();
+            } else {
+                try {
+                    const response = await fetch(`/admin/pages/${page}.html`);
+                    const html = await response.text();
+                    document.getElementById('pageContent').innerHTML = html;
+                    document.getElementById('pageContent').style.display = 'block';
+
+                    // 如果頁面有初始化函數，調用它
+                    if (typeof window[`init${page.charAt(0).toUpperCase() + page.slice(1)}`] === 'function') {
+                        window[`init${page.charAt(0).toUpperCase() + page.slice(1)}`]();
+                    }
+                } catch (error) {
+                    console.error(`載入頁面 ${page} 失敗:`, error);
+                    alert('載入頁面失敗，請稍後再試');
+                }
+            }
+        }
+
+        // 登出
+        async function logout() {
+            try {
+                const response = await fetch('/api/admin/auth/logout', {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                    window.location.href = '/admin/login.html';
+                }
+            } catch (error) {
+                console.error('登出失敗:', error);
+                alert('登出失敗，請稍後再試');
+            }
+        }
+
+        // 獲取狀態名稱
+        function getStatusName(status) {
+            const statuses = {
+                'pending': '待處理',
+                'confirmed': '已確認',
+                'preparing': '準備中',
+                'ready': '已完成',
+                'delivered': '已送達',
+                'cancelled': '已取消'
+            };
+            return statuses[status] || status;
+        }
+    </script>
+</body>
+</html> 

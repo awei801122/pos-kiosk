@@ -1,0 +1,158 @@
+{
+    "system": {
+        "name": "POS自助點餐機系統",
+        "version": "1.0.0",
+        "environment": "production",
+        "timezone": "Asia/Taipei",
+        "language": "zh-TW",
+        "theme": "default",
+        "maintenance_mode": false,
+        "debug_mode": false,
+        "currency": "TWD",
+        "date_format": "YYYY-MM-DD",
+        "time_format": "HH:mm:ss",
+        "decimal_places": 2,
+        "tax_rate": 0.05,
+        "receipt_template": "default",
+        "printer_settings": {
+            "type": "thermal",
+            "width": 80,
+            "font_size": "normal",
+            "header": "POS 自助點餐機系統",
+            "footer": "感謝您的光臨"
+        }
+    },
+    "business": {
+        "name": "咖啡廳",
+        "address": "台北市信義區信義路五段7號",
+        "phone": "02-12345678",
+        "email": "contact@cafe.com",
+        "tax_id": "12345678",
+        "business_hours": {
+            "monday": {"open": "08:00", "close": "22:00"},
+            "tuesday": {"open": "08:00", "close": "22:00"},
+            "wednesday": {"open": "08:00", "close": "22:00"},
+            "thursday": {"open": "08:00", "close": "22:00"},
+            "friday": {"open": "08:00", "close": "23:00"},
+            "saturday": {"open": "09:00", "close": "23:00"},
+            "sunday": {"open": "09:00", "close": "22:00"}
+        },
+        "holidays": [
+            "2024-01-01",
+            "2024-02-28",
+            "2024-04-04",
+            "2024-05-01",
+            "2024-10-10"
+        ]
+    },
+    "inventory": {
+        "low_stock_threshold": 10,
+        "auto_reorder": true,
+        "reorder_quantity": 20,
+        "stock_alert_email": "inventory@cafe.com",
+        "stock_check_interval": 3600
+    },
+    "order": {
+        "tax_rate": 0.05,
+        "service_charge": 0.1,
+        "minimum_order_amount": 100,
+        "maximum_order_amount": 10000,
+        "order_timeout": 300,
+        "auto_cancel_unpaid": true,
+        "cancel_timeout": 1800
+    },
+    "payment": {
+        "methods": ["CASH", "CREDIT_CARD", "LINE_PAY", "APPLE_PAY"],
+        "default_method": "CASH",
+        "credit_card_fee": 0.02,
+        "line_pay_fee": 0.01,
+        "apple_pay_fee": 0.01
+    },
+    "printer": {
+        "enabled": true,
+        "type": "THERMAL",
+        "model": "EPSON TM-T88V",
+        "port": "USB",
+        "paper_width": 80,
+        "auto_cut": true,
+        "print_kitchen": true,
+        "print_receipt": true
+    },
+    "security": {
+        "password_policy": {
+            "min_length": 8,
+            "require_uppercase": true,
+            "require_lowercase": true,
+            "require_numbers": true,
+            "require_special_chars": true,
+            "expiry_days": 90
+        },
+        "session_timeout": 1800,
+        "max_login_attempts": 5,
+        "lockout_duration": 900,
+        "ip_whitelist": ["192.168.1.0/24"],
+        "ssl_required": true
+    },
+    "notifications": {
+        "low_stock_alert": true,
+        "daily_sales_report": true,
+        "system_errors": true,
+        "email_notifications": {
+            "enabled": true,
+            "smtp_server": "smtp.gmail.com",
+            "smtp_port": 587,
+            "smtp_username": "notifications@cafe.com",
+            "smtp_password": "********",
+            "from_address": "notifications@cafe.com",
+            "to_addresses": ["manager@cafe.com", "admin@cafe.com"]
+        },
+        "sms_notifications": {
+            "enabled": false,
+            "provider": "twilio",
+            "api_key": "********"
+        }
+    },
+    "backup": {
+        "enabled": true,
+        "schedule": "daily",
+        "time": "02:00",
+        "retention_days": 30,
+        "location": "/backup",
+        "compression": true,
+        "encryption": true
+    },
+    "integration": {
+        "payment_gateways": {
+            "credit_card": {
+                "enabled": true,
+                "provider": "ecpay",
+                "merchant_id": "********",
+                "hash_key": "********",
+                "hash_iv": "********"
+            },
+            "line_pay": {
+                "enabled": true,
+                "channel_id": "********",
+                "channel_secret": "********"
+            }
+        },
+        "inventory_system": {
+            "enabled": true,
+            "sync_interval": 60,
+            "api_key": "********"
+        },
+        "accounting_system": {
+            "enabled": true,
+            "sync_interval": 1440,
+            "api_key": "********"
+        }
+    },
+    "notification": {
+        "line": {
+            "enabled": true,
+            "channel_access_token": "********",
+            "channel_secret": "********",
+            "notify_groups": ["MANAGERS", "STAFF"]
+        }
+    }
+} 

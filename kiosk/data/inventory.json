@@ -1,0 +1,46 @@
+{
+    "inventory": [
+        {
+            "id": "item_1",
+            "name": "牛肉",
+            "category": "category_1",
+            "supplier": "supplier_1",
+            "quantity": 50,
+            "unit": "kg",
+            "safety_stock": 20,
+            "last_restock": "2024-03-20",
+            "next_restock": "2024-03-27",
+            "price": 300,
+            "location": "冷藏區A1",
+            "status": "normal"
+        },
+        {
+            "id": "item_2",
+            "name": "高麗菜",
+            "category": "category_2",
+            "supplier": "supplier_2",
+            "quantity": 30,
+            "unit": "kg",
+            "safety_stock": 10,
+            "last_restock": "2024-03-21",
+            "next_restock": "2024-03-24",
+            "price": 50,
+            "location": "冷藏區B2",
+            "status": "warning"
+        },
+        {
+            "id": "item_3",
+            "name": "白米",
+            "category": "category_3",
+            "supplier": "supplier_3",
+            "quantity": 100,
+            "unit": "kg",
+            "safety_stock": 30,
+            "last_restock": "2024-03-19",
+            "next_restock": "2024-03-26",
+            "price": 80,
+            "location": "乾貨區C1",
+            "status": "normal"
+        }
+    ]
+} 

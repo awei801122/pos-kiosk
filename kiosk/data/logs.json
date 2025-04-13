@@ -1,0 +1,110 @@
+{
+    "logs": [
+        {
+            "id": "LOG-20240315-001",
+            "timestamp": "2024-03-15T10:00:00+08:00",
+            "level": "INFO",
+            "category": "SYSTEM",
+            "message": "系統啟動完成",
+            "details": {
+                "version": "1.0.0",
+                "environment": "production",
+                "memory_usage": "256MB"
+            },
+            "user": {
+                "id": "SYSTEM",
+                "name": "系統"
+            },
+            "ip": "127.0.0.1"
+        },
+        {
+            "id": "LOG-20240315-002",
+            "timestamp": "2024-03-15T10:05:00+08:00",
+            "level": "INFO",
+            "category": "AUTH",
+            "message": "使用者登入成功",
+            "details": {
+                "username": "admin",
+                "role": "ADMIN"
+            },
+            "user": {
+                "id": "USER-001",
+                "name": "管理員"
+            },
+            "ip": "192.168.1.100"
+        },
+        {
+            "id": "LOG-20240315-003",
+            "timestamp": "2024-03-15T10:10:00+08:00",
+            "level": "WARNING",
+            "category": "INVENTORY",
+            "message": "庫存不足警告",
+            "details": {
+                "product_id": "PROD-001",
+                "product_name": "咖啡豆",
+                "current_stock": 5,
+                "minimum_stock": 10
+            },
+            "user": {
+                "id": "USER-001",
+                "name": "管理員"
+            },
+            "ip": "192.168.1.100"
+        },
+        {
+            "id": "LOG-20240315-004",
+            "timestamp": "2024-03-15T10:15:00+08:00",
+            "level": "ERROR",
+            "category": "ORDER",
+            "message": "訂單處理失敗",
+            "details": {
+                "order_id": "ORD-20240315-001",
+                "error_code": "ERR-001",
+                "error_message": "支付處理失敗"
+            },
+            "user": {
+                "id": "USER-002",
+                "name": "收銀員"
+            },
+            "ip": "192.168.1.101"
+        },
+        {
+            "id": "LOG-20240315-005",
+            "timestamp": "2024-03-15T10:20:00+08:00",
+            "level": "INFO",
+            "category": "REPORT",
+            "message": "銷售報表生成成功",
+            "details": {
+                "report_id": "REP-20240315-001",
+                "report_type": "DAILY_SALES",
+                "period": "2024-03-15"
+            },
+            "user": {
+                "id": "USER-001",
+                "name": "管理員"
+            },
+            "ip": "192.168.1.100"
+        }
+    ],
+    "settings": {
+        "retention_days": 30,
+        "max_file_size": "10MB",
+        "log_levels": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        "categories": [
+            "SYSTEM",
+            "AUTH",
+            "INVENTORY",
+            "ORDER",
+            "REPORT",
+            "SETTINGS",
+            "API",
+            "SECURITY"
+        ],
+        "format": {
+            "timestamp": "YYYY-MM-DDTHH:mm:ssZ",
+            "include_ip": true,
+            "include_user": true,
+            "include_stack_trace": true
+        }
+    }
+} 

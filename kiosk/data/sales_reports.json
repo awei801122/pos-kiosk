@@ -1,0 +1,168 @@
+{
+    "reports": [
+        {
+            "id": "report_1",
+            "period": "2024-03",
+            "start_date": "2024-03-01",
+            "end_date": "2024-03-31",
+            "total_sales": 150000,
+            "total_orders": 500,
+            "average_order_value": 300,
+            "sales_by_category": [
+                {
+                    "category_id": "category_1",
+                    "name": "咖啡",
+                    "sales": 90000,
+                    "percentage": 60
+                },
+                {
+                    "category_id": "category_2",
+                    "name": "甜點",
+                    "sales": 45000,
+                    "percentage": 30
+                },
+                {
+                    "category_id": "category_3",
+                    "name": "輕食",
+                    "sales": 15000,
+                    "percentage": 10
+                }
+            ],
+            "top_products": [
+                {
+                    "product_id": "product_1",
+                    "name": "經典拿鐵",
+                    "sales": 30000,
+                    "quantity": 300
+                },
+                {
+                    "product_id": "product_2",
+                    "name": "焦糖瑪奇朵",
+                    "sales": 24000,
+                    "quantity": 200
+                },
+                {
+                    "product_id": "product_3",
+                    "name": "提拉米蘇",
+                    "sales": 23000,
+                    "quantity": 200
+                }
+            ],
+            "sales_by_hour": [
+                {
+                    "hour": "08:00",
+                    "sales": 5000
+                },
+                {
+                    "hour": "09:00",
+                    "sales": 8000
+                },
+                {
+                    "hour": "10:00",
+                    "sales": 10000
+                },
+                {
+                    "hour": "11:00",
+                    "sales": 12000
+                },
+                {
+                    "hour": "12:00",
+                    "sales": 15000
+                },
+                {
+                    "hour": "13:00",
+                    "sales": 12000
+                },
+                {
+                    "hour": "14:00",
+                    "sales": 10000
+                },
+                {
+                    "hour": "15:00",
+                    "sales": 8000
+                },
+                {
+                    "hour": "16:00",
+                    "sales": 10000
+                },
+                {
+                    "hour": "17:00",
+                    "sales": 12000
+                },
+                {
+                    "hour": "18:00",
+                    "sales": 15000
+                },
+                {
+                    "hour": "19:00",
+                    "sales": 12000
+                }
+            ],
+            "payment_methods": [
+                {
+                    "method": "現金",
+                    "amount": 60000,
+                    "percentage": 40
+                },
+                {
+                    "method": "信用卡",
+                    "amount": 75000,
+                    "percentage": 50
+                },
+                {
+                    "method": "行動支付",
+                    "amount": 15000,
+                    "percentage": 10
+                }
+            ],
+            "customer_analysis": {
+                "total_customers": 300,
+                "new_customers": 50,
+                "returning_customers": 250,
+                "average_visits": 5,
+                "average_spending": 500
+                "average_customer_value": 500
+            }
+        },
+        {
+            "id": "report_2",
+            "period": "2024-02",
+            "start_date": "2024-02-01",
+            "end_date": "2024-02-29",
+            "total_sales": 120000,
+            "total_orders": 400,
+            "average_order_value": 300,
+            "category_sales": {
+                "麵食": 48000,
+                "飯類": 36000,
+                "沙拉": 24000,
+                "飲料": 12000
+            },
+            "top_products": [
+                {
+                    "product_id": "product_1",
+                    "name": "牛肉麵",
+                    "quantity": 160,
+                    "revenue": 32000
+                },
+                {
+                    "product_id": "product_2",
+                    "name": "炒飯",
+                    "quantity": 120,
+                    "revenue": 24000
+                }
+            ],
+            "payment_methods": {
+                "現金": 60000,
+                "信用卡": 48000,
+                "行動支付": 12000
+            },
+            "customer_statistics": {
+                "total_customers": 240,
+                "new_customers": 40,
+                "returning_customers": 200,
+                "average_customer_value": 500
+            }
+        }
+    ]
+} 

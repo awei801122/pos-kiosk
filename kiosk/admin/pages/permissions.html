@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>權限管理 - POS系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 權限列表 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">權限列表</h5>
+                        <button class="btn btn-primary btn-sm" onclick="showAddPermissionModal()">
+                            <i class="bi bi-plus"></i> 新增權限
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="permissionsTable">
+                                <thead>
+                                    <tr>
+                                        <th>權限代碼</th>
+                                        <th>權限名稱</th>
+                                        <th>描述</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用戶權限分配 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">用戶權限分配</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="userSelect" class="form-label">選擇用戶</label>
+                            <select class="form-select" id="userSelect" onchange="loadUserPermissions()">
+                                <option value="">請選擇用戶</option>
+                            </select>
+                        </div>
+                        <div id="permissionsList" class="d-none">
+                            <h6>權限列表</h6>
+                            <div class="list-group" id="userPermissionsList"></div>
+                            <button class="btn btn-primary mt-3" onclick="saveUserPermissions()">
+                                <i class="bi bi-save"></i> 儲存權限
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增/編輯權限 Modal -->
+    <div class="modal fade" id="permissionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增權限</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="permissionForm">
+                        <input type="hidden" id="permissionId">
+                        <div class="mb-3">
+                            <label for="permissionCode" class="form-label">權限代碼</label>
+                            <input type="text" class="form-control" id="permissionCode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="permissionName" class="form-label">權限名稱</label>
+                            <input type="text" class="form-control" id="permissionName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="permissionDescription" class="form-label">描述</label>
+                            <textarea class="form-control" id="permissionDescription" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="savePermission()">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let permissions = [];
+        let selectedUserId = null;
+        let permissionModal = null;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            permissionModal = new bootstrap.Modal(document.getElementById('permissionModal'));
+            loadPermissions();
+            loadUsers();
+        });
+
+        // 載入權限列表
+        async function loadPermissions() {
+            try {
+                const response = await fetch('/api/admin/permissions');
+                permissions = await response.json();
+                renderPermissionsTable();
+            } catch (error) {
+                console.error('載入權限列表失敗:', error);
+                alert('載入權限列表失敗，請稍後再試');
+            }
+        }
+
+        // 載入用戶列表
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/admin/users');
+                const users = await response.json();
+                const select = document.getElementById('userSelect');
+                select.innerHTML = '<option value="">請選擇用戶</option>' +
+                    users.map(user => `<option value="${user.id}">${user.name} (${user.username})</option>`).join('');
+            } catch (error) {
+                console.error('載入用戶列表失敗:', error);
+                alert('載入用戶列表失敗，請稍後再試');
+            }
+        }
+
+        // 渲染權限表格
+        function renderPermissionsTable() {
+            const tbody = document.querySelector('#permissionsTable tbody');
+            tbody.innerHTML = permissions.map(permission => `
+                <tr>
+                    <td>${permission.code}</td>
+                    <td>${permission.name}</td>
+                    <td>${permission.description || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editPermission(${permission.id})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deletePermission(${permission.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 顯示新增權限 Modal
+        function showAddPermissionModal() {
+            document.getElementById('permissionForm').reset();
+            document.getElementById('permissionId').value = '';
+            permissionModal.show();
+        }
+
+        // 編輯權限
+        function editPermission(id) {
+            const permission = permissions.find(p => p.id === id);
+            if (permission) {
+                document.getElementById('permissionId').value = permission.id;
+                document.getElementById('permissionCode').value = permission.code;
+                document.getElementById('permissionName').value = permission.name;
+                document.getElementById('permissionDescription').value = permission.description || '';
+                permissionModal.show();
+            }
+        }
+
+        // 儲存權限
+        async function savePermission() {
+            const form = document.getElementById('permissionForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const data = {
+                id: document.getElementById('permissionId').value,
+                code: document.getElementById('permissionCode').value,
+                name: document.getElementById('permissionName').value,
+                description: document.getElementById('permissionDescription').value
+            };
+
+            try {
+                const response = await fetch('/api/admin/permissions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    permissionModal.hide();
+                    loadPermissions();
+                } else {
+                    throw new Error('儲存失敗');
+                }
+            } catch (error) {
+                console.error('儲存權限失敗:', error);
+                alert('儲存權限失敗，請稍後再試');
+            }
+        }
+
+        // 刪除權限
+        async function deletePermission(id) {
+            if (!confirm('確定要刪除此權限嗎？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/permissions/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadPermissions();
+                } else {
+                    throw new Error('刪除失敗');
+                }
+            } catch (error) {
+                console.error('刪除權限失敗:', error);
+                alert('刪除權限失敗，請稍後再試');
+            }
+        }
+
+        // 載入用戶權限
+        async function loadUserPermissions() {
+            const userId = document.getElementById('userSelect').value;
+            if (!userId) {
+                document.getElementById('permissionsList').classList.add('d-none');
+                return;
+            }
+
+            selectedUserId = userId;
+            document.getElementById('permissionsList').classList.remove('d-none');
+
+            try {
+                const response = await fetch(`/api/admin/users/${userId}/permissions`);
+                const userPermissions = await response.json();
+                const permissionsList = document.getElementById('userPermissionsList');
+                
+                permissionsList.innerHTML = permissions.map(permission => `
+                    <label class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" 
+                            value="${permission.id}"
+                            ${userPermissions.some(p => p.id === permission.id) ? 'checked' : ''}>
+                        ${permission.name} (${permission.code})
+                    </label>
+                `).join('');
+            } catch (error) {
+                console.error('載入用戶權限失敗:', error);
+                alert('載入用戶權限失敗，請稍後再試');
+            }
+        }
+
+        // 儲存用戶權限
+        async function saveUserPermissions() {
+            if (!selectedUserId) {
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll('#userPermissionsList input[type="checkbox"]');
+            const selectedPermissions = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+
+            try {
+                const response = await fetch(`/api/admin/users/${selectedUserId}/permissions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ permissions: selectedPermissions })
+                });
+
+                if (response.ok) {
+                    alert('權限更新成功');
+                } else {
+                    throw new Error('更新失敗');
+                }
+            } catch (error) {
+                console.error('更新用戶權限失敗:', error);
+                alert('更新用戶權限失敗，請稍後再試');
+            }
+        }
+    </script>
+</body>
+</html> 

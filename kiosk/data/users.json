@@ -1,0 +1,75 @@
+{
+    "users": [
+        {
+            "id": "U001",
+            "username": "admin",
+            "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC\/.og\/at2.uheWG\/igi",
+            "name": "\u7cfb\u7d71\u7ba1\u7406\u54e1",
+            "email": "admin@example.com",
+            "phone": "0912345678",
+            "role": "admin",
+            "status": "active",
+            "last_login": "2025-04-11 04:11:35",
+            "created_at": "2024-01-01 00:00:00",
+            "updated_at": "2024-03-20 10:00:00"
+        },
+        {
+            "id": "U002",
+            "username": "manager",
+            "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC\/.og\/at2.uheWG\/igi",
+            "name": "\u5e97\u9577",
+            "email": "manager@example.com",
+            "phone": "0923456789",
+            "role": "manager",
+            "status": "active",
+            "last_login": "2024-03-20 09:30:00",
+            "created_at": "2024-01-01 00:00:00",
+            "updated_at": "2024-03-20 09:30:00"
+        },
+        {
+            "id": "U003",
+            "username": "staff1",
+            "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC\/.og\/at2.uheWG\/igi",
+            "name": "\u54e1\u5de5\u4e00\u865f",
+            "email": "staff1@example.com",
+            "phone": "0934567890",
+            "role": "staff",
+            "status": "active",
+            "last_login": "2024-03-20 09:00:00",
+            "created_at": "2024-01-01 00:00:00",
+            "updated_at": "2024-03-20 09:00:00"
+        },
+        {
+            "id": "U004",
+            "username": "kitchen1",
+            "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC\/.og\/at2.uheWG\/igi",
+            "name": "\u5eda\u623f\u4e00\u865f",
+            "email": "kitchen1@example.com",
+            "phone": "0945678901",
+            "role": "kitchen",
+            "status": "active",
+            "last_login": "2024-03-20 08:30:00",
+            "created_at": "2024-01-01 00:00:00",
+            "updated_at": "2024-03-20 08:30:00"
+        }
+    ],
+    "settings": {
+        "password_policy": {
+            "min_length": 8,
+            "require_uppercase": true,
+            "require_lowercase": true,
+            "require_numbers": true,
+            "require_special_chars": true,
+            "expiry_days": 90,
+            "history_count": 5
+        },
+        "login_policy": {
+            "max_attempts": 5,
+            "lockout_duration": 30,
+            "session_timeout": 30
+        },
+        "default_role": "staff",
+        "require_email_verification": true,
+        "require_phone_verification": true
+    }
+}

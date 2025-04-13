@@ -1,0 +1,191 @@
+{
+    "default": {
+        "name": "預設主題",
+        "description": "系統預設主題",
+        "colors": {
+            "primary": "#007bff",
+            "secondary": "#6c757d",
+            "success": "#28a745",
+            "danger": "#dc3545",
+            "warning": "#ffc107",
+            "info": "#17a2b8",
+            "light": "#f8f9fa",
+            "dark": "#343a40",
+            "background": "#ffffff",
+            "text": "#212529",
+            "border": "#dee2e6",
+            "hover": "#e9ecef",
+            "active": "#007bff",
+            "disabled": "#6c757d"
+        },
+        "fonts": {
+            "family": "Arial, sans-serif",
+            "size": {
+                "small": "12px",
+                "normal": "14px",
+                "large": "16px",
+                "title": "24px",
+                "heading": "20px"
+            },
+            "weight": {
+                "light": "300",
+                "normal": "400",
+                "bold": "700"
+            }
+        },
+        "spacing": {
+            "small": "8px",
+            "normal": "16px",
+            "large": "24px",
+            "xlarge": "32px"
+        },
+        "border": {
+            "radius": {
+                "small": "4px",
+                "normal": "8px",
+                "large": "16px"
+            },
+            "width": "1px",
+            "style": "solid"
+        },
+        "shadow": {
+            "small": "0 2px 4px rgba(0,0,0,0.1)",
+            "normal": "0 4px 8px rgba(0,0,0,0.1)",
+            "large": "0 8px 16px rgba(0,0,0,0.1)"
+        },
+        "animation": {
+            "duration": {
+                "fast": "0.2s",
+                "normal": "0.3s",
+                "slow": "0.5s"
+            },
+            "timing": "ease-in-out"
+        }
+    },
+    "dark": {
+        "name": "深色主題",
+        "description": "深色模式主題",
+        "colors": {
+            "primary": "#0d6efd",
+            "secondary": "#6c757d",
+            "success": "#198754",
+            "danger": "#dc3545",
+            "warning": "#ffc107",
+            "info": "#0dcaf0",
+            "light": "#f8f9fa",
+            "dark": "#212529",
+            "background": "#121212",
+            "text": "#ffffff",
+            "border": "#2d2d2d",
+            "hover": "#2d2d2d",
+            "active": "#0d6efd",
+            "disabled": "#6c757d"
+        },
+        "fonts": {
+            "family": "Arial, sans-serif",
+            "size": {
+                "small": "12px",
+                "normal": "14px",
+                "large": "16px",
+                "title": "24px",
+                "heading": "20px"
+            },
+            "weight": {
+                "light": "300",
+                "normal": "400",
+                "bold": "700"
+            }
+        },
+        "spacing": {
+            "small": "8px",
+            "normal": "16px",
+            "large": "24px",
+            "xlarge": "32px"
+        },
+        "border": {
+            "radius": {
+                "small": "4px",
+                "normal": "8px",
+                "large": "16px"
+            },
+            "width": "1px",
+            "style": "solid"
+        },
+        "shadow": {
+            "small": "0 2px 4px rgba(0,0,0,0.3)",
+            "normal": "0 4px 8px rgba(0,0,0,0.3)",
+            "large": "0 8px 16px rgba(0,0,0,0.3)"
+        },
+        "animation": {
+            "duration": {
+                "fast": "0.2s",
+                "normal": "0.3s",
+                "slow": "0.5s"
+            },
+            "timing": "ease-in-out"
+        }
+    },
+    "light": {
+        "name": "淺色主題",
+        "description": "淺色模式主題",
+        "colors": {
+            "primary": "#0d6efd",
+            "secondary": "#6c757d",
+            "success": "#198754",
+            "danger": "#dc3545",
+            "warning": "#ffc107",
+            "info": "#0dcaf0",
+            "light": "#f8f9fa",
+            "dark": "#212529",
+            "background": "#ffffff",
+            "text": "#212529",
+            "border": "#dee2e6",
+            "hover": "#e9ecef",
+            "active": "#0d6efd",
+            "disabled": "#6c757d"
+        },
+        "fonts": {
+            "family": "Arial, sans-serif",
+            "size": {
+                "small": "12px",
+                "normal": "14px",
+                "large": "16px",
+                "title": "24px",
+                "heading": "20px"
+            },
+            "weight": {
+                "light": "300",
+                "normal": "400",
+                "bold": "700"
+            }
+        },
+        "spacing": {
+            "small": "8px",
+            "normal": "16px",
+            "large": "24px",
+            "xlarge": "32px"
+        },
+        "border": {
+            "radius": {
+                "small": "4px",
+                "normal": "8px",
+                "large": "16px"
+            },
+            "width": "1px",
+            "style": "solid"
+        },
+        "shadow": {
+            "small": "0 2px 4px rgba(0,0,0,0.1)",
+            "normal": "0 4px 8px rgba(0,0,0,0.1)",
+            "large": "0 8px 16px rgba(0,0,0,0.1)"
+        },
+        "animation": {
+            "duration": {
+                "fast": "0.2s",
+                "normal": "0.3s",
+                "slow": "0.5s"
+            },
+            "timing": "ease-in-out"
+        }
+    }
+} 

@@ -1,0 +1,55 @@
+{
+    "sales": [
+        {
+            "id": "sale_1",
+            "date": "2024-03-15",
+            "total_sales": 630,
+            "total_orders": 2,
+            "average_order_value": 315,
+            "payment_methods": {
+                "信用卡": 340,
+                "現金": 290
+            },
+            "product_sales": [
+                {
+                    "product_id": "product_1",
+                    "product_name": "經典拿鐵",
+                    "quantity": 2,
+                    "revenue": 240
+                },
+                {
+                    "product_id": "product_2",
+                    "product_name": "美式咖啡",
+                    "quantity": 1,
+                    "revenue": 100
+                },
+                {
+                    "product_id": "product_3",
+                    "product_name": "焦糖瑪奇朵",
+                    "quantity": 1,
+                    "revenue": 140
+                },
+                {
+                    "product_id": "product_4",
+                    "product_name": "提拉米蘇",
+                    "quantity": 1,
+                    "revenue": 150
+                }
+            ],
+            "employee_performance": [
+                {
+                    "employee_id": "employee_1",
+                    "employee_name": "張經理",
+                    "orders_handled": 1,
+                    "sales_amount": 340
+                },
+                {
+                    "employee_id": "employee_2",
+                    "employee_name": "林店員",
+                    "orders_handled": 1,
+                    "sales_amount": 290
+                }
+            ]
+        }
+    ]
+} 

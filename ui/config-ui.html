@@ -21,6 +21,7 @@
   <label>主機網址（含埠號）：</label>
   <input type="text" id="serverUrl" placeholder="例如：http://192.168.1.103:8000">
   <button onclick="saveConfig()">儲存設定</button>
+  <button onclick="closeWindow()">關閉視窗</button>
 
   <script>
     // 載入現有設定
@@ -34,6 +35,10 @@
       window.electronAPI.saveConfig({ server_url: url }).then(() => {
         alert('設定已儲存，請重新啟動應用程式。');
       });
+    }
+
+    function closeWindow() {
+      window.electronAPI.closeWindow();
     }
   </script>
 </body>

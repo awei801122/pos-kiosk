@@ -1,0 +1,73 @@
+{
+    "roles": {
+        "admin": [
+            "manage_users",
+            "manage_products",
+            "manage_inventory",
+            "view_reports",
+            "process_orders",
+            "manage_settings"
+        ],
+        "manager": [
+            "manage_products",
+            "manage_inventory",
+            "view_reports",
+            "process_orders"
+        ],
+        "staff": [
+            "process_orders",
+            "view_reports"
+        ],
+        "kitchen": [
+            "process_orders"
+        ]
+    },
+    "permissions": {
+        "system": {
+            "view": "檢視系統資訊",
+            "edit": "修改系統設定",
+            "delete": "刪除系統資料"
+        },
+        "user": {
+            "view": "檢視使用者資訊",
+            "create": "新增使用者",
+            "edit": "修改使用者資訊",
+            "delete": "刪除使用者"
+        },
+        "role": {
+            "view": "檢視角色資訊",
+            "create": "新增角色",
+            "edit": "修改角色權限",
+            "delete": "刪除角色"
+        },
+        "inventory": {
+            "view": "檢視庫存資訊",
+            "create": "新增庫存項目",
+            "edit": "修改庫存資訊",
+            "delete": "刪除庫存項目"
+        },
+        "menu": {
+            "view": "檢視菜單資訊",
+            "create": "新增菜單項目",
+            "edit": "修改菜單資訊",
+            "delete": "刪除菜單項目"
+        },
+        "order": {
+            "view": "檢視訂單資訊",
+            "create": "建立新訂單",
+            "edit": "修改訂單資訊",
+            "delete": "刪除訂單"
+        },
+        "report": {
+            "view": "檢視報表",
+            "create": "產生報表",
+            "export": "匯出報表"
+        },
+        "settings": {
+            "view": "檢視系統設定",
+            "edit": "修改系統設定"
+        }
+    },
+    "default_role": "staff",
+    "super_admin": "admin"
+} 

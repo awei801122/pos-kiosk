@@ -1,0 +1,24 @@
+# 頂層配置文件標記
+root = true
+
+# 所有文件通用配置
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# TypeScript 和 JavaScript 文件配置
+[*.{ts,tsx,js,jsx}]
+quote_type = single
+max_line_length = 100
+
+# JSON 文件配置
+[*.json]
+indent_size = 2
+
+# Markdown 文件配置
+[*.md]
+trim_trailing_whitespace = false 

@@ -1,0 +1,26 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "admin",
+            "password": "21232f297a57a5a743894a0e4a801fc3", // MD5 hash of "admin"
+            "name": "系統管理員",
+            "role": "admin",
+            "status": "active",
+            "last_login": "",
+            "created_at": "",
+            "updated_at": ""
+        }
+    ],
+    "roles": {
+        "admin": {
+            "permissions": ["all"]
+        },
+        "manager": {
+            "permissions": ["view_reports", "manage_products", "manage_inventory"]
+        },
+        "staff": {
+            "permissions": ["view_orders", "process_orders"]
+        }
+    }
+} 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" version="1.1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#f8f9fa"/>
+    <g fill="#dee2e6">
+        <path d="M100 70 L130 120 L70 120 Z"/>
+        <circle cx="130" cy="80" r="10"/>
+    </g>
+    <text x="100" y="150" text-anchor="middle" fill="#6c757d" font-family="Arial" font-size="14">
+        無商品圖片
+    </text>
+</svg> 

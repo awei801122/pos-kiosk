@@ -1,0 +1,55 @@
+{
+    "products": [
+        {
+            "id": "product_1",
+            "name": "牛肉麵",
+            "category": "category_1",
+            "description": "使用新鮮牛肉熬煮的湯頭，搭配手工麵條",
+            "price": 150,
+            "image": "beef_noodle.jpg",
+            "status": "active",
+            "ingredients": ["牛肉", "麵條", "高麗菜"],
+            "allergens": ["麩質"],
+            "nutrition": {
+                "calories": 650,
+                "protein": 35,
+                "fat": 25,
+                "carbs": 70
+            }
+        },
+        {
+            "id": "product_2",
+            "name": "蔬菜沙拉",
+            "category": "category_2",
+            "description": "新鮮蔬菜搭配特製醬料",
+            "price": 80,
+            "image": "salad.jpg",
+            "status": "active",
+            "ingredients": ["高麗菜", "青江菜", "空心菜"],
+            "allergens": [],
+            "nutrition": {
+                "calories": 120,
+                "protein": 5,
+                "fat": 2,
+                "carbs": 20
+            }
+        },
+        {
+            "id": "product_3",
+            "name": "炒飯",
+            "category": "category_3",
+            "description": "使用特選白米炒製的香噴噴炒飯",
+            "price": 100,
+            "image": "fried_rice.jpg",
+            "status": "active",
+            "ingredients": ["白米", "食用油", "雞蛋"],
+            "allergens": ["蛋"],
+            "nutrition": {
+                "calories": 450,
+                "protein": 15,
+                "fat": 12,
+                "carbs": 75
+            }
+        }
+    ]
+} 

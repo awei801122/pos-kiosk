@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>叫號顯示器 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+        }
+        .header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: #fff;
+        }
+        .orders-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .order-card {
+            background: #2d2d2d;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        .order-card.blink {
+            animation: blink 1s infinite;
+        }
+        .order-card.new {
+            animation: scaleIn 0.5s ease-out;
+        }
+        .order-card.remove {
+            animation: scaleOut 0.5s ease-in forwards;
+        }
+        .order-number {
+            font-size: 4.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        .order-status {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        .order-time {
+            font-size: 1.2rem;
+            color: #888;
+        }
+        @keyframes blink {
+            0% { background-color: #2d2d2d; }
+            50% { background-color: #3d3d3d; }
+            100% { background-color: #2d2d2d; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes scaleOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.5); opacity: 0; }
+        }
+        .current-time {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #888;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="current-time" id="currentTime"></div>
+    
+    <div class="header">
+        <h1>取餐號碼</h1>
+    </div>
+
+    <div class="orders-container" id="ordersContainer">
+        <!-- 訂單卡片將在這裡動態生成 -->
+    </div>
+
+    <audio id="notificationSound" src="assets/sounds/notification.mp3" preload="auto"></audio>
+
+    <script>
+        // 儲存當前顯示的訂單
+        const displayedOrders = new Map();
+        let isProcessing = false;
+
+        // 更新當前時間
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString();
+        }
+        
+        // 每秒更新時間
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime();
+
+        // 從訂單號碼中提取取餐號碼
+        function extractPickupNumber(orderNumber) {
+            try {
+                // 取最後四位數字作為取餐號碼
+                return orderNumber.slice(-4);
+            } catch (error) {
+                console.error('提取取餐號碼時發生錯誤:', error);
+                return orderNumber;
+            }
+        }
+
+        // 初始化時載入現有待取餐訂單
+        window.addEventListener('load', function() {
+            try {
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const readyOrders = orders.filter(order => order.status === 'READY')
+                    .slice(0, 5)
+                    .sort((a, b) => new Date(b.updatedAt || b.orderTime) - new Date(a.updatedAt || a.orderTime));
+                
+                readyOrders.forEach(order => {
+                    const fullOrderNumber = order.orderNumber || order.id;
+                    addOrder({
+                        orderNumber: fullOrderNumber,
+                        pickupNumber: extractPickupNumber(fullOrderNumber),
+                        timestamp: new Date(order.updatedAt || order.orderTime).getTime()
+                    });
+                });
+
+                // 定期更新顯示
+                setInterval(updateDisplayFromStorage, 1000);
+            } catch (e) {
+                console.error('載入訂單失敗:', e);
+            }
+        });
+
+        // 監聽來自後台的消息
+        window.addEventListener('message', function(event) {
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            try {
+                if (event.data.type === 'orderCall') {
+                    handleOrderCall(event.data);
+                } else if (event.data.type === 'orderComplete') {
+                    removeOrder(event.data.orderNumber);
+                }
+            } finally {
+                isProcessing = false;
+            }
+        });
+
+        // 監聽 localStorage 變化
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'orders') {
+                updateDisplayFromStorage();
+            }
+        });
+
+        // 從 localStorage 更新顯示
+        function updateDisplayFromStorage() {
+            if (isProcessing) return;
+            isProcessing = true;
+
+            try {
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const readyOrders = orders.filter(order => order.status === 'READY')
+                    .slice(0, 5)
+                    .sort((a, b) => new Date(b.updatedAt || b.orderTime) - new Date(a.updatedAt || a.orderTime));
+
+                // 移除不再是待取餐狀態的訂單
+                for (const [orderNumber] of displayedOrders) {
+                    if (!readyOrders.find(o => (o.orderNumber || o.id) === orderNumber)) {
+                        removeOrder(orderNumber);
+                    }
+                }
+
+                // 添加或更新待取餐訂單
+                readyOrders.forEach(order => {
+                    const fullOrderNumber = order.orderNumber || order.id;
+                    if (!displayedOrders.has(fullOrderNumber)) {
+                        addOrder({
+                            orderNumber: fullOrderNumber,
+                            pickupNumber: extractPickupNumber(fullOrderNumber),
+                            timestamp: new Date(order.updatedAt || order.orderTime).getTime()
+                        });
+                    }
+                });
+            } catch (e) {
+                console.error('更新顯示失敗:', e);
+            } finally {
+                isProcessing = false;
+            }
+        }
+
+        // 處理叫號
+        async function handleOrderCall(data) {
+            try {
+                // 如果訂單已經在顯示中，先移除它
+                if (displayedOrders.has(data.orderNumber)) {
+                    await removeOrder(data.orderNumber);
+                }
+                
+                // 如果已經顯示 5 筆訂單，移除最舊的一筆
+                if (displayedOrders.size >= 5) {
+                    const oldestOrder = Array.from(displayedOrders.entries())
+                        .sort((a, b) => a[1].timestamp - b[1].timestamp)[0];
+                    if (oldestOrder) {
+                        await removeOrder(oldestOrder[0]);
+                    }
+                }
+                
+                // 添加新訂單
+                await addOrder(data);
+                
+                // 播放提示音
+                playNotificationSound();
+            } catch (error) {
+                console.error('處理叫號時發生錯誤:', error);
+            }
+        }
+
+        // 添加訂單到顯示
+        function addOrder(data) {
+            return new Promise((resolve) => {
+                try {
+                    const orderCard = document.createElement('div');
+                    orderCard.className = 'order-card new';
+                    orderCard.innerHTML = `
+                        <div class="order-number">${data.pickupNumber}</div>
+                        <div class="order-status">請取餐</div>
+                        <div class="order-time">${new Date().toLocaleTimeString()}</div>
+                    `;
+                    
+                    document.getElementById('ordersContainer').appendChild(orderCard);
+                    displayedOrders.set(data.orderNumber, {
+                        element: orderCard,
+                        timestamp: data.timestamp || Date.now()
+                    });
+                    
+                    // 添加動畫結束監聽
+                    orderCard.addEventListener('animationend', () => {
+                        if (orderCard.classList.contains('new')) {
+                            orderCard.classList.remove('new');
+                            orderCard.classList.add('blink');
+                            setTimeout(() => {
+                                orderCard.classList.remove('blink');
+                            }, 3000);
+                        }
+                        resolve();
+                    });
+                } catch (error) {
+                    console.error('添加訂單顯示時發生錯誤:', error);
+                    resolve();
+                }
+            });
+        }
+
+        // 移除訂單
+        function removeOrder(orderNumber) {
+            return new Promise((resolve) => {
+                const orderData = displayedOrders.get(orderNumber);
+                if (orderData) {
+                    const element = orderData.element;
+                    element.classList.add('remove');
+                    element.addEventListener('animationend', () => {
+                        element.remove();
+                        displayedOrders.delete(orderNumber);
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
+        }
+
+        // 播放提示音
+        function playNotificationSound() {
+            const audio = document.getElementById('notificationSound');
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log('無法播放提示音效:', e));
+        }
+    </script>
+</body>
+</html> 

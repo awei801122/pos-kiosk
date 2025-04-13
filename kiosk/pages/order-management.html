@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單管理 - POS 系統</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">POS 系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">儀表板</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="order-management.html">訂單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu-management.html">菜單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user-management.html">用戶管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容 -->
+    <div class="container-fluid mt-4">
+        <!-- 報表區塊 -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">訂單報表</h5>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary" onclick="loadReport('daily')">日報表</button>
+                            <button class="btn btn-outline-primary" onclick="loadReport('weekly')">週報表</button>
+                            <button class="btn btn-outline-primary" onclick="loadReport('monthly')">月報表</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- 報表篩選器 -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <input type="date" id="reportDate" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <select id="reportType" class="form-select">
+                                    <option value="dine-in">內用</option>
+                                    <option value="takeout">外帶</option>
+                                    <option value="delivery">外送</option>
+                                    <option value="all">全部</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" onclick="loadReport()">
+                                    <i class="fas fa-sync"></i> 重新整理
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-success" onclick="exportReport()">
+                                    <i class="fas fa-file-export"></i> 匯出報表
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 報表摘要 -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h6 class="card-title">訂單總數</h6>
+                                        <h3 class="card-text" id="reportTotalOrders">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h6 class="card-title">營業額</h6>
+                                        <h3 class="card-text" id="reportTotalRevenue">$0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h6 class="card-title">平均訂單金額</h6>
+                                        <h3 class="card-text" id="reportAvgOrderAmount">$0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h6 class="card-title">取消訂單數</h6>
+                                        <h3 class="card-text" id="reportCancelledOrders">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 客戶分析摘要 -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h6 class="card-title">總客戶數</h6>
+                                        <h3 class="card-text" id="reportTotalCustomers">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h6 class="card-title">回購客戶數</h6>
+                                        <h3 class="card-text" id="reportRepeatCustomers">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h6 class="card-title">平均訂單數/客戶</h6>
+                                        <h3 class="card-text" id="reportAvgOrderPerCustomer">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 報表圖表 -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">訂單趨勢</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="orderTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">營業額趨勢</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="revenueTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 新增：客單價分布圖表 -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">客單價分布</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="orderAmountDistributionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">商品類別分析</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="productCategoryChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 新增：雷達圖 -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">時段分析（雷達圖）</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="timeAnalysisRadarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">訂單類型分析（雷達圖）</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="orderTypeRadarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 客戶趨勢圖表 -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">客戶趨勢</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="customerTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 熱門商品分析 -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">熱門商品</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="topProductsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">時段分析</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="timeAnalysisChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 客戶分析表格 -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">客戶分析</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>客戶名稱</th>
+                                                        <th>訂單數</th>
+                                                        <th>總消費金額</th>
+                                                        <th>平均訂單金額</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="customerAnalysisTable">
+                                                    <!-- 客戶分析數據將由 JavaScript 動態生成 -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 報表明細 -->
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>時間</th>
+                                        <th>訂單號碼</th>
+                                        <th>客戶名稱</th>
+                                        <th>訂單類型</th>
+                                        <th>商品總額</th>
+                                        <th>折扣</th>
+                                        <th>稅金</th>
+                                        <th>總金額</th>
+                                        <th>狀態</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportTableBody">
+                                    <!-- 報表明細將由 JavaScript 動態生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 統計區塊 -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">今日訂單數</h6>
+                        <h3 class="card-text" id="todayOrders">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">今日營業額</h6>
+                        <h3 class="card-text" id="todayRevenue">$0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">平均訂單金額</h6>
+                        <h3 class="card-text" id="avgOrderAmount">$0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">待處理訂單</h6>
+                        <h3 class="card-text" id="pendingOrders">0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 圖表區塊 -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">訂單類型分布</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="orderTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">訂單狀態分布</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜尋和篩選區塊 -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="搜尋訂單號碼或客戶名稱">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select id="statusFilter" class="form-select">
+                    <option value="">所有狀態</option>
+                    <option value="pending">待處理</option>
+                    <option value="confirmed">已確認</option>
+                    <option value="preparing">準備中</option>
+                    <option value="ready">已完成</option>
+                    <option value="delivered">已送達</option>
+                    <option value="cancelled">已取消</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="typeFilter" class="form-select">
+                    <option value="">所有類型</option>
+                    <option value="dine-in">內用</option>
+                    <option value="takeout">外帶</option>
+                    <option value="delivery">外送</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="date" id="dateFilter" class="form-control">
+            </div>
+        </div>
+
+        <!-- 訂單列表 -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">訂單列表</h5>
+                <div>
+                    <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#newOrderModal">
+                        <i class="fas fa-plus"></i> 新增訂單
+                    </button>
+                    <button class="btn btn-success" id="exportBtn">
+                        <i class="fas fa-file-export"></i> 匯出訂單
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>訂單號碼</th>
+                                <th>客戶名稱</th>
+                                <th>訂單類型</th>
+                                <th>總金額</th>
+                                <th>狀態</th>
+                                <th>建立時間</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <!-- 訂單列表將由 JavaScript 動態生成 -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 分頁 -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- 分頁將由 JavaScript 動態生成 -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增訂單 Modal -->
+    <div class="modal fade" id="newOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新增訂單</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newOrderForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">訂單類型</label>
+                                <select class="form-select" name="type" required>
+                                    <option value="dine-in">內用</option>
+                                    <option value="takeout">外帶</option>
+                                    <option value="delivery">外送</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">客戶資訊</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="customer_name" placeholder="客戶姓名" required>
+                                    <input type="tel" class="form-control" name="customer_phone" placeholder="電話">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">商品明細</label>
+                            <div id="orderItems">
+                                <div class="row mb-2">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="items[0][name]" placeholder="商品名稱" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" class="form-control" name="items[0][price]" placeholder="價格" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" class="form-control" name="items[0][quantity]" placeholder="數量" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="button" class="btn btn-danger" onclick="removeItem(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="addItem()">
+                                <i class="fas fa-plus"></i> 新增商品
+                            </button>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">折扣</label>
+                                <input type="number" class="form-control" name="discount" value="0" min="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">稅金</label>
+                                <input type="number" class="form-control" name="tax" value="0" min="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">總金額</label>
+                                <input type="number" class="form-control" name="total" readonly>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">備註</label>
+                            <textarea class="form-control" name="notes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="createOrder()">建立訂單</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 訂單詳情 Modal -->
+    <div class="modal fade" id="orderDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">訂單詳情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>訂單資訊</h6>
+                            <p><strong>訂單號碼：</strong><span id="detailOrderNumber"></span></p>
+                            <p><strong>訂單類型：</strong><span id="detailOrderType"></span></p>
+                            <p><strong>建立時間：</strong><span id="detailCreatedAt"></span></p>
+                            <p><strong>更新時間：</strong><span id="detailUpdatedAt"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>客戶資訊</h6>
+                            <p><strong>姓名：</strong><span id="detailCustomerName"></span></p>
+                            <p><strong>電話：</strong><span id="detailCustomerPhone"></span></p>
+                            <p><strong>Email：</strong><span id="detailCustomerEmail"></span></p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h6>商品明細</h6>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>商品名稱</th>
+                                    <th>價格</th>
+                                    <th>數量</th>
+                                    <th>小計</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailItems">
+                                <!-- 商品明細將由 JavaScript 動態生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <p><strong>商品總額：</strong><span id="detailSubtotal"></span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>折扣：</strong><span id="detailDiscount"></span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>稅金：</strong><span id="detailTax"></span></p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>總金額：</strong><span id="detailTotal"></span></p>
+                    </div>
+                    <div class="mb-3">
+                        <h6>備註</h6>
+                        <p id="detailNotes"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 更新狀態 Modal -->
+    <div class="modal fade" id="updateStatusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">更新訂單狀態</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateStatusForm">
+                        <input type="hidden" id="updateOrderId">
+                        <div class="mb-3">
+                            <label class="form-label">新狀態</label>
+                            <select class="form-select" id="newStatus" required>
+                                <option value="pending">待處理</option>
+                                <option value="confirmed">已確認</option>
+                                <option value="preparing">準備中</option>
+                                <option value="ready">已完成</option>
+                                <option value="delivered">已送達</option>
+                                <option value="cancelled">已取消</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">備註</label>
+                            <textarea class="form-control" id="statusNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="updateOrderStatus()">更新狀態</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/order-management.js"></script>
+</body>
+</html> 

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菜單 - 自助點餐系統</title>
+    <!-- 先載入 SweetAlert2 的 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 80px; /* 為底部購物車面板留出空間 */
+        }
+        .category-list {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            overflow-x: auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .category-item {
+            flex: 0 0 auto;
+            margin-right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #dee2e6;
+        }
+        .category-item:hover {
+            background-color: #e9ecef;
+        }
+        .category-item.active {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            flex: 1;
+        }
+        .menu-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .cart-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .item-detail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 1000;
+            display: none;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: auto;
+        }
+        .item-detail.active {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+        }
+        .item-detail .container {
+            max-width: 900px;
+            padding: 2rem 1rem;
+        }
+        .item-detail img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .stock-warning {
+            color: #dc3545;
+            font-size: 0.9rem;
+        }
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+        }
+        .cart-item-options {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        /* 添加返回按鈕樣式 */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        .back-button:hover {
+            color: #0a58ca;
+        }
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+        /* 數量調整按鈕組樣式 */
+        .quantity-control {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .quantity-control button {
+            border: none;
+            background: #f8f9fa;
+            padding: 0.5rem 1rem;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        .quantity-control button:hover {
+            background: #e9ecef;
+        }
+        .quantity-control input {
+            width: 60px;
+            border: none;
+            text-align: center;
+            font-size: 1rem;
+            padding: 0.5rem;
+            -moz-appearance: textfield;
+        }
+        .quantity-control input::-webkit-outer-spin-button,
+        .quantity-control input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加頂部導航欄 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">自助點餐系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order.html">點餐</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin.html">訂單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/menu-management.html">商品管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sales-report.html">銷售報表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/display.html">叫號顯示</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 分類列表 -->
+    <div class="category-list" id="categoryList"></div>
+
+    <!-- 菜單網格 -->
+    <div class="menu-grid" id="menuGrid"></div>
+
+    <!-- 購物車面板 -->
+    <div class="cart-panel">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <span class="h5 mb-0">總計: <span id="totalAmount">NT$ 0</span></span>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary position-relative" onclick="viewCart()">
+                        <i class="bi bi-cart"></i> 購物車
+                        <span class="cart-badge" id="cartCount">0</span>
+                    </button>
+                    <button class="btn btn-success" onclick="checkout()">結帳</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品詳細資訊頁面 -->
+    <div class="item-detail" id="itemDetail">
+        <div class="container">
+            <button class="btn btn-link mb-3 back-button" onclick="hideItemDetail()">
+                <i class="bi bi-arrow-left"></i> 返回
+            </button>
+            <div id="itemDetailContent"></div>
+        </div>
+    </div>
+
+    <!-- 購物車Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">購物車</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="cartContent">
+                    <!-- 購物車內容將在這裡動態生成 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">繼續購物</button>
+                    <button type="button" class="btn btn-success" onclick="checkout()">結帳</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品選項Modal -->
+    <div class="modal fade" id="itemOptionsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">選擇商品選項</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="itemOptionsForm"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="addToCart()">加入購物車</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 付款選擇 Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">選擇付款方式</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="border rounded p-3 mb-4">
+                        <h6 class="mb-3">訂單明細：</h6>
+                        ${cart.items.map(item => `
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="fw-medium">${item.name}</span>
+                                    <span class="text-muted"> x ${item.quantity}</span>
+                                    ${item.note ? `<small class="d-block text-muted">備註：${item.note}</small>` : ''}
+                                </div>
+                                <span>NT$ ${item.totalPrice}</span>
+                            </div>
+                        `).join('')}
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>總計：</strong>
+                            <strong>NT$ ${cart.getTotal()}</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-3">
+                        <button class="btn btn-lg btn-outline-primary payment-option" 
+                                onclick="processPayment('cash')">
+                            <i class="bi bi-cash me-2"></i>
+                            現金支付
+                            <small class="d-block text-muted">測試階段：點擊即視為已支付</small>
+                        </button>
+                        <button class="btn btn-lg btn-outline-primary payment-option" 
+                                onclick="processPayment('mobile')">
+                            <i class="bi bi-phone me-2"></i>
+                            行動支付
+                            <small class="d-block text-muted">LINE Pay / 街口支付</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 行動支付 Modal -->
+    <div class="modal fade" id="mobilePaymentModal" tabindex="-1" aria-labelledby="mobilePaymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mobilePaymentModalLabel">行動支付</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 內容將由 JavaScript 動態生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 顯示成功訂單 Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">訂單已成功送出！</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="text-center mb-4">
+                                <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
+                            </div>
+                            <h4 class="text-center mb-4">訂單編號：${orderData.orderNumber}</h4>
+                            <div class="alert alert-info">
+                                <p class="mb-0">請記住您的訂單編號，並至櫃檯結帳取餐。</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3">
+                                <h6 class="border-bottom pb-2 mb-3">訂單明細</h6>
+                                ${orderData.items.map(item => `
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <span class="fw-medium">${item.name}</span>
+                                            <span class="text-muted"> x ${item.quantity}</span>
+                                            ${item.note ? `<small class="d-block text-muted mt-1">備註：${item.note}</small>` : ''}
+                                        </div>
+                                        <span class="ms-3">NT$ ${item.totalPrice}</span>
+                                    </div>
+                                `).join('')}
+                                <div class="border-top pt-2 mt-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong>付款方式：</strong>
+                                        <span>${orderData.paymentMethod === 'cash' ? '現金' : '行動支付'}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <strong>總計金額：</strong>
+                                        <strong class="text-primary">NT$ ${orderData.total}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">繼續點餐</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 先載入 SweetAlert2 的 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 添加 jsPDF 庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        // 全局變量
+        let menuData = null;
+        let currentItem = null;
+        let cart = {
+            items: [],
+            addItem: function(item) {
+                const existingItem = this.items.find(i => i.id === item.id);
+                if (existingItem) {
+                    existingItem.quantity += item.quantity;
+                    existingItem.totalPrice = existingItem.price * existingItem.quantity;
+                    if (item.note) {
+                        existingItem.note = item.note;
+                    }
+                } else {
+                    this.items.push({
+                        id: item.id,
+                        name: item.name_zh || item.name,
+                        name_en: item.name_en || '',
+                        price: parseFloat(item.price),
+                        quantity: item.quantity || 1,
+                        note: item.note || '',
+                        totalPrice: parseFloat(item.price) * (item.quantity || 1),
+                        image: item.image || '/assets/images/no-image.svg'
+                    });
+                }
+                this.save();
+                this.updateUI();
+            },
+            removeItem: function(itemId) {
+                const index = this.items.findIndex(i => i.id === itemId);
+                if (index > -1) {
+                    this.items.splice(index, 1);
+                    this.save();
+                    this.updateUI();
+                }
+            },
+            updateQuantity: function(itemId, quantity) {
+                const item = this.items.find(i => i.id === itemId);
+                if (item) {
+                    quantity = parseInt(quantity) || 0;
+                    if (quantity <= 0) {
+                        this.removeItem(itemId);
+                    } else {
+                        item.quantity = quantity;
+                        item.totalPrice = item.price * quantity;
+                        this.save();
+                        this.updateUI();
+                    }
+                }
+            },
+            updateNote: function(itemId, note) {
+                const item = this.items.find(i => i.id === itemId);
+                if (item) {
+                    item.note = note;
+                    this.save();
+                }
+            },
+            clear: function() {
+                this.items = [];
+                localStorage.removeItem('cart');
+                this.updateUI();
+            },
+            save: function() {
+                localStorage.setItem('cart', JSON.stringify(this.items));
+            },
+            load: function() {
+                const savedCart = localStorage.getItem('cart');
+                if (savedCart) {
+                    try {
+                        this.items = JSON.parse(savedCart);
+                        this.updateUI();
+                    } catch (error) {
+                        console.error('載入購物車資料失敗:', error);
+                        this.clear();
+                    }
+                }
+            },
+            getTotal: function() {
+                return this.items.reduce((sum, item) => sum + item.totalPrice, 0);
+            },
+            updateUI: function() {
+                // 更新購物車圖標
+                const cartCount = document.getElementById('cartCount');
+                const totalAmount = document.getElementById('totalAmount');
+                if (cartCount && totalAmount) {
+                    const totalQuantity = this.items.reduce((sum, item) => sum + item.quantity, 0);
+                    cartCount.textContent = totalQuantity;
+                    totalAmount.textContent = `NT$ ${this.getTotal()}`;
+                }
+            }
+        };
+
+        // 初始化
+        window.onload = function() {
+            loadMenu();
+            cart.load();
+        };
+
+        // 載入菜單數據
+        async function loadMenu() {
+            try {
+                const response = await fetch('/menu.json');
+                if (!response.ok) {
+                    throw new Error('載入菜單失敗');
+                }
+                menuData = await response.json();
+                
+                renderCategories();
+                renderMenuItems();
+            } catch (error) {
+                console.error('載入菜單失敗:', error);
+                document.getElementById('menuGrid').innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        載入菜單失敗，請重新整理頁面或聯繫服務人員
+                    </div>
+                `;
+            }
+        }
+
+        // 渲染分類
+        function renderCategories() {
+            const categories = [...new Set(menuData.map(item => item.category || '其他'))];
+            const categoryList = document.getElementById('categoryList');
+            categoryList.innerHTML = categories.map(category => `
+                <div class="category-item" onclick="filterByCategory('${category}')">
+                    ${category}
+                </div>
+            `).join('');
+            // 默認選中第一個分類
+            if (categories.length > 0) {
+                categoryList.firstElementChild.classList.add('active');
+            }
+        }
+
+        // 渲染菜單項目
+        function renderMenuItems(category = null) {
+            const menuGrid = document.getElementById('menuGrid');
+            const items = category ? 
+                menuData.filter(item => (item.category || '其他') === category) : 
+                menuData;
+            
+            menuGrid.innerHTML = items.map(item => `
+                <div class="menu-item">
+                    <img src="${item.image}" alt="${item.name_zh}" onerror="this.src='/assets/images/default-food.jpg'">
+                    <div class="p-3">
+                        <h5>${item.name_zh}</h5>
+                        <p class="mb-2">${item.name_en}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h6 mb-0">NT$ ${item.price}</span>
+                            <button class="btn btn-primary btn-sm" onclick="showItemDetail(this.getAttribute('data-item'))" data-item='${JSON.stringify(item)}'>
+                                選擇
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 顯示商品詳細資訊
+        function showItemDetail(itemData) {
+            console.log('顯示商品詳情:', itemData); // 添加日誌
+            
+            const detailContent = document.getElementById('itemDetailContent');
+            const detailPanel = document.getElementById('itemDetail');
+            
+            let item;
+            // 確保傳入的 item 是物件
+            try {
+                item = typeof itemData === 'string' ? JSON.parse(itemData) : itemData;
+            } catch (e) {
+                console.error('解析商品數據失敗:', e);
+                return;
+            }
+            
+            if (!item) {
+                console.error('無效的商品數據');
+                return;
+            }
+            
+            currentItem = item; // 保存當前選中的商品
+            
+            // 先設置內容
+            detailContent.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <img src="${item.image}" alt="${item.name_zh}" class="img-fluid rounded shadow">
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="mb-2">${item.name_zh}</h2>
+                        <p class="text-muted mb-4">${item.name_en}</p>
+                        <h4 class="mb-4">NT$ ${item.price}</h4>
+                        <div class="mb-4">
+                            <label class="form-label">數量</label>
+                            <div class="quantity-control">
+                                <button type="button" onclick="adjustQuantity('decrease')">-</button>
+                                <input type="number" id="itemQuantity" value="1" min="1" max="99" readonly>
+                                <button type="button" onclick="adjustQuantity('increase')">+</button>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">備註</label>
+                            <textarea class="form-control" id="itemNote" rows="2" placeholder="有什麼特別要求嗎？"></textarea>
+                        </div>
+                        <button class="btn btn-primary btn-lg w-100" onclick="addToCart(currentItem)">
+                            加入購物車
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // 確保面板可見
+            detailPanel.style.display = 'block';
+            
+            // 使用 requestAnimationFrame 確保 DOM 更新
+            requestAnimationFrame(() => {
+                detailPanel.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        // 隱藏商品詳細資訊
+        function hideItemDetail() {
+            console.log('隱藏商品詳情'); // 添加日誌
+            const detailPanel = document.getElementById('itemDetail');
+            detailPanel.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // 延遲設置 display: none
+            setTimeout(() => {
+                detailPanel.style.display = 'none';
+            }, 300); // 與 transition 時間相同
+        }
+
+        // 調整數量
+        function adjustQuantity(action) {
+            const input = document.getElementById('itemQuantity');
+            let value = parseInt(input.value);
+            
+            if (action === 'increase' && value < 99) {
+                input.value = value + 1;
+            } else if (action === 'decrease' && value > 1) {
+                input.value = value - 1;
+            }
+        }
+
+        // 加入購物車
+        function addToCart(item) {
+            const quantity = parseInt(document.getElementById('itemQuantity').value);
+            const note = document.getElementById('itemNote').value.trim();
+            
+            cart.addItem({
+                ...item,
+                quantity: quantity,
+                note: note
+            });
+            
+            hideItemDetail();
+            showCartUpdateToast(item.name_zh, quantity);
+        }
+
+        // 顯示購物車更新提示
+        function showCartUpdateToast(itemName, quantity) {
+            const toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            toastContainer.style.zIndex = '1500';
+            
+            toastContainer.innerHTML = `
+                <div class="toast show bg-success text-white" role="alert">
+                    <div class="toast-body">
+                        已加入 ${quantity} 份 ${itemName} 到購物車
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(toastContainer);
+            
+            // 3秒後自動移除提示
+            setTimeout(() => {
+                toastContainer.remove();
+            }, 3000);
+        }
+
+        // 根據分類篩選
+        function filterByCategory(category) {
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent.trim() === category) {
+                    item.classList.add('active');
+                }
+            });
+            renderMenuItems(category);
+        }
+
+        // 查看購物車
+        function viewCart() {
+            const cartContent = document.getElementById('cartContent');
+            
+            if (cart.items.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-cart-x" style="font-size: 3rem; color: #dee2e6;"></i>
+                        <p class="mt-3 text-muted">購物車是空的</p>
+                    </div>
+                `;
+            } else {
+                cartContent.innerHTML = `
+                    <div class="cart-items">
+                        ${cart.items.map(item => `
+                            <div class="cart-item mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="${item.image}" alt="${item.name}" 
+                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;"
+                                         onerror="this.src='/assets/images/no-image.svg'">
+                                    <div class="ms-3 flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">${item.name}</h6>
+                                                <small class="text-muted">${item.name_en || ''}</small>
+                                                ${item.note ? `<p class="small text-muted mt-1">備註：${item.note}</p>` : ''}
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="mb-2">NT$ ${item.totalPrice}</div>
+                                                <div class="input-group input-group-sm" style="width: 100px;">
+                                                    <button class="btn btn-outline-secondary" type="button" 
+                                                        onclick="cart.updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                                                    <input type="number" class="form-control text-center" 
+                                                        value="${item.quantity}" min="1" max="99" 
+                                                        onchange="cart.updateQuantity('${item.id}', this.value)">
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        onclick="cart.updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-danger mt-2" onclick="cart.removeItem('${item.id}')">
+                                    <i class="bi bi-trash"></i> 刪除
+                                </button>
+                            </div>
+                        `).join('<hr>')}
+                    </div>
+                    <div class="border-top pt-3 mt-3">
+                        <div class="mb-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment" value="cash" checked>
+                                <label class="form-check-label" for="cashPayment">
+                                    <i class="bi bi-cash me-1"></i>現金
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="mobilePayment" value="mobile">
+                                <label class="form-check-label" for="mobilePayment">
+                                    <i class="bi bi-phone me-1"></i>行動支付
+                                </label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>總計金額：</h5>
+                            <h5 class="text-primary">NT$ ${cart.getTotal()}</h5>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('cartModal'));
+            modal.show();
+        }
+
+        // 結帳處理
+        function checkout() {
+            if (cart.items.length === 0) {
+                alert('購物車是空的！');
+                return;
+            }
+
+            // 更新付款 Modal 的內容
+            const paymentModalBody = document.querySelector('#paymentModal .modal-body');
+            paymentModalBody.innerHTML = `
+                <div class="border rounded p-3 mb-4">
+                    <h6 class="mb-3">訂單明細：</h6>
+                    ${cart.items.map(item => `
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="fw-medium">${item.name}</span>
+                                <span class="text-muted"> x ${item.quantity}</span>
+                                ${item.note ? `<small class="d-block text-muted">備註：${item.note}</small>` : ''}
+                            </div>
+                            <span>NT$ ${item.totalPrice}</span>
+                        </div>
+                    `).join('')}
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>總計：</strong>
+                        <strong>NT$ ${cart.getTotal()}</strong>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-3">
+                    <button class="btn btn-lg btn-outline-primary payment-option" 
+                            onclick="processPayment('cash')">
+                        <i class="bi bi-cash me-2"></i>
+                        現金支付
+                        <small class="d-block text-muted">測試階段：點擊即視為已支付</small>
+                    </button>
+                    <button class="btn btn-lg btn-outline-primary payment-option" 
+                            onclick="processPayment('mobile')">
+                        <i class="bi bi-phone me-2"></i>
+                        行動支付
+                        <small class="d-block text-muted">LINE Pay / 街口支付</small>
+                    </button>
+                </div>
+            `;
+
+            // 顯示付款選擇 Modal
+            const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            paymentModal.show();
+        }
+
+        /**
+         * 處理支付流程
+         * @param {string} paymentMethod - 支付方式 ('cash' 或 'mobile')
+         */
+        function processPayment(paymentMethod) {
+            try {
+                // 檢查購物車是否為空
+                if (cart.items.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '購物車是空的',
+                        text: '請先選擇商品加入購物車',
+                        confirmButtonText: '確定'
+                    });
+                    return;
+                }
+
+                // 生成訂單編號 (年月日時分秒毫秒)
+                const orderNumber = new Date().toISOString().replace(/[-:T.Z]/g, '');
+
+                // 建立訂單物件
+                const orderData = {
+                    id: orderNumber,
+                    orderNumber: orderNumber,
+                    orderTime: new Date().toISOString(),
+                    items: cart.items.map(item => ({
+                        id: item.id,
+                        name: item.name,
+                        name_en: item.name_en,
+                        price: item.price,
+                        quantity: item.quantity,
+                        note: item.note,
+                        totalPrice: item.totalPrice
+                    })),
+                    total: cart.getTotal(),
+                    status: 'PENDING',
+                    paymentMethod: paymentMethod,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                // 保存訂單
+                fetch('/save-order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.success) {
+                        console.log('訂單保存成功：', result.order_id);
+                        
+                        // 清空購物車
+                        cart.clear();
+                        
+                        // 儲存到 localStorage
+                        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                        orders.push(orderData);
+                        localStorage.setItem('orders', JSON.stringify(orders));
+                        
+                        // 觸發訂單更新事件
+                        window.dispatchEvent(new CustomEvent('orderUpdated', {
+                            detail: { orderId: orderData.id }
+                        }));
+
+                        // 根據支付方式處理後續流程
+                        if (paymentMethod === 'mobile') {
+                            handleMobilePayment(orderData);
+                        } else {
+                            // 關閉付款 Modal
+                            const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+                            if (paymentModal) {
+                                paymentModal.hide();
+                            }
+                            
+                            // 顯示收據選項
+                            showOrderComplete(orderData);
+                        }
+                    } else {
+                        throw new Error(result.message || '保存訂單失敗');
+                    }
+                })
+                .catch(error => {
+                    console.error('保存訂單時發生錯誤：', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '保存訂單失敗',
+                        text: error.message || '請稍後再試或聯繫工作人員',
+                        confirmButtonText: '確定'
+                    });
+                });
+            } catch (error) {
+                console.error('處理支付時發生錯誤：', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '處理支付失敗',
+                    text: error.message || '請稍後再試或聯繫工作人員',
+                    confirmButtonText: '確定'
+                });
+            }
+        }
+
+        /**
+         * 顯示訂單完成訊息
+         * @param {Object} orderData - 訂單資料
+         */
+        function showOrderComplete(orderData) {
+            // 使用 SweetAlert2 顯示成功訊息和取餐號碼，並詢問是否列印收據
+            Swal.fire({
+                icon: 'success',
+                title: '訂單已完成',
+                html: `
+                    <div class="text-center">
+                        <h3 class="mb-4">取餐號碼</h3>
+                        <div class="display-4 mb-4" style="color: #2563eb;">#${orderData.id.slice(-4)}</div>
+                        <p class="mb-3">請稍候至取餐櫃台領取餐點</p>
+                        <p class="text-muted small">訂單編號：${orderData.id}</p>
+                    </div>
+                `,
+                showDenyButton: true,
+                confirmButtonText: '列印收據',
+                denyButtonText: '不列印',
+                allowOutsideClick: false,
+                width: '24rem'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // 顯示收據預覽
+                    showReceiptPreview(orderData);
+                } else {
+                    // 直接重新載入頁面
+                    window.location.reload();
+                }
+            });
+        }
+
+        /**
+         * 處理行動支付流程
+         * @param {Object} orderData - 訂單資料
+         */
+        function handleMobilePayment(orderData) {
+            // 關閉付款選擇 Modal
+            const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+            if (paymentModal) {
+                paymentModal.hide();
+            }
+
+            // 顯示行動支付 Modal
+            const modalBody = document.querySelector('#mobilePaymentModal .modal-body');
+            modalBody.innerHTML = `
+                <div class="text-center">
+                    <div class="border rounded p-3 mb-4">
+                        <h6 class="mb-3">訂單明細：</h6>
+                        ${orderData.items.map(item => `
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="fw-medium">${item.name}</span>
+                                    <span class="text-muted"> x ${item.quantity}</span>
+                                    ${item.note ? `<small class="d-block text-muted">備註：${item.note}</small>` : ''}
+                                </div>
+                                <span>NT$ ${item.totalPrice}</span>
+                            </div>
+                        `).join('')}
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>總計：</strong>
+                            <strong>NT$ ${orderData.total}</strong>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <img src="https://via.placeholder.com/200x200.png?text=QR+Code" alt="QR Code" class="img-fluid">
+                    </div>
+                    <p class="mb-4">請使用行動支付 APP 掃描上方 QR Code 進行付款</p>
+                    <div class="alert alert-info">
+                        <small>測試階段：點擊下方按鈕模擬付款完成</small>
+                    </div>
+                    <button class="btn btn-primary" onclick="simulatePaymentComplete(${JSON.stringify(orderData)})">
+                        模擬付款完成
+                    </button>
+                </div>
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('mobilePaymentModal'));
+            modal.show();
+        }
+
+        /**
+         * 模擬付款完成
+         * @param {Object} orderData - 訂單資料
+         */
+        function simulatePaymentComplete(orderData) {
+            // 關閉行動支付 Modal
+            const mobilePaymentModal = bootstrap.Modal.getInstance(document.getElementById('mobilePaymentModal'));
+            if (mobilePaymentModal) {
+                mobilePaymentModal.hide();
+            }
+
+            // 顯示訂單完成訊息
+            showOrderComplete(orderData);
+        }
+
+        /**
+         * 初始化 jsPDF
+         */
+        window.jsPDF = window.jspdf.jsPDF;
+
+        /**
+         * 生成收據 PDF
+         * @param {Object} orderData - 訂單資料
+         */
+        function generateReceipt(orderData) {
+            try {
+                // 建立 PDF 文件
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: [80, 150] // 設定為熱感式印表機紙張大小
+                });
+
+                // 設定字體大小和行距
+                const lineHeight = 7;
+                let currentY = 10;
+
+                // 標題
+                doc.setFontSize(16);
+                doc.text('自助點餐系統', 40, currentY, { align: 'center' });
+                
+                // 分隔線
+                currentY += lineHeight;
+                doc.setLineWidth(0.3);
+                doc.line(5, currentY, 75, currentY);
+
+                // 訂單資訊
+                currentY += lineHeight;
+                doc.setFontSize(10);
+                doc.text(`訂單號: ${orderData.id}`, 5, currentY);
+                currentY += lineHeight;
+                doc.text(`取餐號: ${orderData.id.slice(-4)}`, 5, currentY);
+                currentY += lineHeight;
+                doc.text(`時間: ${new Date().toLocaleString()}`, 5, currentY);
+                currentY += lineHeight;
+                doc.text(`付款: ${orderData.paymentMethod === 'cash' ? '現金' : '行動支付'}`, 5, currentY);
+
+                // 分隔線
+                currentY += lineHeight;
+                doc.line(5, currentY, 75, currentY);
+
+                // 商品明細標題
+                currentY += lineHeight;
+                doc.text('商品明細:', 5, currentY);
+                currentY += lineHeight;
+
+                // 商品列表
+                orderData.items.forEach(item => {
+                    doc.text(item.name, 5, currentY);
+                    currentY += lineHeight;
+                    doc.text(`${item.quantity} x ${item.price}`, 10, currentY);
+                    doc.text(`${item.totalPrice}`, 65, currentY, { align: 'right' });
+                    if (item.note) {
+                        currentY += lineHeight;
+                        doc.setFontSize(8);
+                        doc.text(`備註: ${item.note}`, 10, currentY);
+                        doc.setFontSize(10);
+                    }
+                    currentY += lineHeight;
+                });
+
+                // 分隔線
+                doc.line(5, currentY, 75, currentY);
+                currentY += lineHeight;
+
+                // 總計
+                doc.setFontSize(12);
+                doc.text('總計:', 5, currentY);
+                doc.text(`NT$ ${orderData.total}`, 65, currentY, { align: 'right' });
+
+                // 分隔線
+                currentY += lineHeight;
+                doc.line(5, currentY, 75, currentY);
+                currentY += lineHeight;
+
+                // 頁尾
+                doc.setFontSize(8);
+                doc.text('*** 感謝您的光臨，請妥善保管收據 ***', 40, currentY, { align: 'center' });
+                
+                // 下載 PDF
+                doc.save(`receipt-${orderData.id}.pdf`);
+            } catch (error) {
+                console.error('生成收據時發生錯誤：', error);
+            }
+        }
+
+        /**
+         * 顯示收據預覽
+         * @param {Object} orderData - 訂單資料
+         */
+        function showReceiptPreview(orderData) {
+            Swal.fire({
+                title: '收據預覽',
+                html: `
+                    <div class="receipt-preview" style="background: white; padding: 20px; max-width: 300px; margin: 0 auto; border: 1px solid #ddd; font-family: monospace;">
+                        <div style="text-align: center; font-size: 16px; margin-bottom: 10px;">
+                            自助點餐系統
+                        </div>
+                        <div style="border-top: 1px dashed #000; margin: 10px 0;"></div>
+                        <div style="font-size: 12px;">
+                            訂單號: ${orderData.id}<br>
+                            取餐號: ${orderData.id.slice(-4)}<br>
+                            時間: ${new Date().toLocaleString()}<br>
+                            付款: ${orderData.paymentMethod === 'cash' ? '現金' : '行動支付'}
+                        </div>
+                        <div style="border-top: 1px dashed #000; margin: 10px 0;"></div>
+                        <div style="font-size: 12px;">
+                            商品明細:<br>
+                            ${orderData.items.map(item => `
+                                ${item.name}<br>
+                                ${item.quantity} x ${item.price} ${' '.repeat(8)} ${item.totalPrice}<br>
+                                ${item.note ? `備註: ${item.note}<br>` : ''}
+                            `).join('')}
+                        </div>
+                        <div style="border-top: 1px dashed #000; margin: 10px 0;"></div>
+                        <div style="font-size: 14px; text-align: right;">
+                            總計: NT$ ${orderData.total}
+                        </div>
+                        <div style="border-top: 1px dashed #000; margin: 10px 0;"></div>
+                        <div style="font-size: 10px; text-align: center;">
+                            *** 感謝您的光臨，請妥善保管收據 ***
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '列印收據',
+                cancelButtonText: '取消',
+                width: '24rem'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    generateReceipt(orderData);
+                    // 顯示列印成功訊息
+                    Swal.fire({
+                        icon: 'success',
+                        title: '收據已列印',
+                        text: '請取走您的收據',
+                        confirmButtonText: '完成',
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    window.location.reload();
+                }
+            });
+        }
+
+        // 查看所有訂單（測試用）
+        function viewAllOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            console.log('所有訂單：', orders);
+            return orders;
+        }
+
+        // 添加導航處理函數
+        function handleNavigation(event) {
+            const link = event.target.closest('a');
+            if (link && link.classList.contains('nav-link')) {
+                event.preventDefault();
+                const href = link.getAttribute('href');
+                // 如果當前頁面有未完成的訂單，提示用戶
+                if (cart.items.length > 0) {
+                    Swal.fire({
+                        title: '確定要離開嗎？',
+                        text: '您的購物車中還有未完成的訂單',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: '確定離開',
+                        cancelButtonText: '取消'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = href;
+                        }
+                    });
+                } else {
+                    window.location.href = href;
+                }
+            }
+        }
+
+        // 添加導航事件監聽
+        document.getElementById('navbarNav').addEventListener('click', handleNavigation);
+    </script>
+</body>
+</html> 

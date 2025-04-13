@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>銷售報表 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, "Microsoft JhengHei", sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            text-align: center;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            position: relative;
+            z-index: 2;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .title {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card .icon {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            font-size: 5rem;
+            opacity: 0.2;
+            transform: rotate(-15deg);
+        }
+
+        .table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            border-top: none;
+            padding: 1rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+        }
+
+        .btn-export {
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .date-input {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .date-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.2rem rgba(59,130,246,0.25);
+        }
+
+        .card-header {
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 1rem 1.5rem;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .payment-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .payment-cash {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        .payment-mobile {
+            background-color: #cff4fc;
+            color: #055160;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .percentage-bar {
+            height: 24px;
+            background: #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .percentage-bar-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            border-radius: 12px;
+            transition: width 0.6s ease;
+        }
+
+        .percentage-text {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1e40af;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-shadow: 0 0 2px rgba(255,255,255,0.8);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shop me-2"></i>自助點餐系統
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">
+                            <i class="bi bi-list-check me-1"></i>訂單管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu-management.html">
+                            <i class="bi bi-grid me-1"></i>商品管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="sales-report.html">
+                            <i class="bi bi-graph-up me-1"></i>銷售報表
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="report.html">
+                            <i class="bi bi-file-text me-1"></i>歷史報表
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- 統計卡片 -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card bg-primary text-white animate-fade-in">
+                    <div class="title">總營業額</div>
+                    <div class="value" id="totalRevenue">NT$ 0</div>
+                    <i class="bi bi-cash-stack icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card bg-success text-white animate-fade-in" style="animation-delay: 0.2s">
+                    <div class="title">訂單數量</div>
+                    <div class="value" id="orderCount">0</div>
+                    <i class="bi bi-receipt icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card bg-info text-white animate-fade-in" style="animation-delay: 0.4s">
+                    <div class="title">平均單價</div>
+                    <div class="value" id="averageOrderPrice">NT$ 0</div>
+                    <i class="bi bi-calculator icon"></i>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card bg-warning text-dark animate-fade-in" style="animation-delay: 0.6s">
+                    <div class="title">商品總數</div>
+                    <div class="value" id="totalItems">0</div>
+                    <i class="bi bi-box icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 日期選擇和匯出按鈕 -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex gap-3">
+                <input type="date" class="form-control date-input" id="reportDate">
+                <button class="btn btn-primary btn-export" onclick="loadReport()">
+                    <i class="bi bi-search me-2"></i>查詢
+                </button>
+                <button class="btn btn-warning btn-export" onclick="loadArchivedOrders()">
+                    <i class="bi bi-clock-history me-2"></i>歸檔當前訂單
+                </button>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary btn-export" onclick="exportCSV()">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i>匯出 CSV
+                </button>
+                <button class="btn btn-outline-primary btn-export" onclick="exportJSON()">
+                    <i class="bi bi-file-earmark-code me-2"></i>匯出 JSON
+                </button>
+            </div>
+        </div>
+
+        <!-- 商品銷售統計 -->
+        <div class="card mb-4 animate-fade-in" style="animation-delay: 0.8s">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-graph-up me-2"></i>商品銷售統計
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="itemSalesTable">
+                        <thead>
+                            <tr>
+                                <th>商品名稱</th>
+                                <th>分類</th>
+                                <th>銷售數量</th>
+                                <th>銷售金額</th>
+                                <th>佔比</th>
+                                <th>趨勢</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 付款方式統計 -->
+        <div class="card mb-4 animate-fade-in" style="animation-delay: 1s">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-credit-card me-2"></i>付款方式統計
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="paymentMethodTable">
+                        <thead>
+                            <tr>
+                                <th>付款方式</th>
+                                <th>訂單數</th>
+                                <th>金額</th>
+                                <th>佔比</th>
+                                <th>分布</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 訂單明細 -->
+        <div class="card animate-fade-in" style="animation-delay: 1.2s">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-check me-2"></i>訂單明細
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>訂單編號</th>
+                                <th>時間</th>
+                                <th>品項</th>
+                                <th>付款方式</th>
+                                <th>金額</th>
+                                <th>狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderDetailsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // 初始化頁面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 設置日期選擇器為今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reportDate').value = today;
+            
+            // 載入報表資料
+            loadReport();
+
+            // 添加日期變更事件監聽
+            document.getElementById('reportDate').addEventListener('change', loadReport);
+        });
+
+        /**
+         * 載入報表資料
+         */
+        function loadReport() {
+            try {
+                const selectedDate = document.getElementById('reportDate').value;
+                const startDate = new Date(selectedDate);
+                startDate.setHours(0, 0, 0, 0);
+                const endDate = new Date(selectedDate);
+                endDate.setHours(23, 59, 59, 999);
+
+                // 從 localStorage 獲取訂單資料
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders') || '[]');
+
+                // 合併當前訂單和歸檔訂單
+                const allOrders = [...orders, ...archivedOrders];
+
+                // 篩選指定日期內的訂單
+                const dateOrders = allOrders.filter(order => {
+                    const orderDate = new Date(order.orderTime || order.createdAt);
+                    return orderDate >= startDate && orderDate <= endDate;
+                });
+
+                console.log('當日訂單：', dateOrders); // 修改調試日誌
+
+                // 更新統計資料
+                updateStatistics(dateOrders);
+
+                // 更新商品銷售統計
+                updateItemSales(dateOrders);
+
+                // 更新支付方式統計
+                updatePaymentMethods(dateOrders);
+
+                // 更新訂單明細
+                updateOrderDetails(dateOrders);
+
+            } catch (error) {
+                console.error('載入報表時發生錯誤：', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '載入失敗',
+                    text: '載入報表資料時發生錯誤'
+                });
+            }
+        }
+
+        /**
+         * 更新統計資料
+         * @param {Array} orders - 訂單資料
+         */
+        function updateStatistics(orders) {
+            try {
+                // 計算總營業額
+                const totalRevenue = orders.reduce((sum, order) => sum + (parseFloat(order.total) || 0), 0);
+                
+                // 計算訂單數量
+                const orderCount = orders.length;
+                
+                // 計算平均訂單金額
+                const averageOrderPrice = orderCount > 0 ? totalRevenue / orderCount : 0;
+                
+                // 計算商品總數量
+                const totalItems = orders.reduce((sum, order) => {
+                    return sum + order.items.reduce((itemSum, item) => itemSum + (parseInt(item.quantity) || 0), 0);
+                }, 0);
+
+                // 更新顯示
+                const totalRevenueElement = document.getElementById('totalRevenue');
+                const orderCountElement = document.getElementById('orderCount');
+                const averageOrderPriceElement = document.getElementById('averageOrderPrice');
+                const totalItemsElement = document.getElementById('totalItems');
+
+                if (totalRevenueElement) totalRevenueElement.textContent = `NT$ ${totalRevenue.toFixed(0)}`;
+                if (orderCountElement) orderCountElement.textContent = orderCount;
+                if (averageOrderPriceElement) averageOrderPriceElement.textContent = `NT$ ${averageOrderPrice.toFixed(0)}`;
+                if (totalItemsElement) totalItemsElement.textContent = totalItems;
+
+            } catch (error) {
+                console.error('更新統計資料時發生錯誤：', error);
+                throw error;
+            }
+        }
+
+        /**
+         * 更新商品銷售統計
+         * @param {Array} orders - 訂單資料
+         */
+        function updateItemSales(orders) {
+            try {
+                // 從 localStorage 獲取商品資料
+                const menuItems = JSON.parse(localStorage.getItem('menuItems') || '[]');
+                const menuItemsMap = new Map(menuItems.map(item => [item.name, item]));
+
+                // 統計每個商品的銷售數量和金額
+                const itemStats = {};
+                orders.forEach(order => {
+                    order.items.forEach(item => {
+                        if (!itemStats[item.name]) {
+                            // 從商品資料中獲取分類
+                            const menuItem = menuItemsMap.get(item.name);
+                            itemStats[item.name] = {
+                                quantity: 0,
+                                revenue: 0,
+                                category: menuItem ? menuItem.category : '未分類'
+                            };
+                        }
+                        itemStats[item.name].quantity += parseInt(item.quantity) || 0;
+                        itemStats[item.name].revenue += parseFloat(item.totalPrice) || 0;
+                    });
+                });
+
+                // 計算總營業額（用於計算佔比）
+                const totalRevenue = orders.reduce((sum, order) => sum + (parseFloat(order.total) || 0), 0);
+
+                // 轉換為陣列並排序
+                const itemStatsArray = Object.entries(itemStats)
+                    .map(([name, stats]) => ({
+                        name,
+                        ...stats,
+                        percentage: totalRevenue > 0 ? (stats.revenue / totalRevenue * 100) : 0
+                    }))
+                    .sort((a, b) => b.revenue - a.revenue);
+
+                // 更新表格
+                const tbody = document.querySelector('#itemSalesTable tbody');
+                if (!tbody) {
+                    console.error('找不到商品銷售統計表格');
+                    return;
+                }
+
+                tbody.innerHTML = itemStatsArray.length > 0 ? 
+                    itemStatsArray.map(item => `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.category}</td>
+                            <td>${item.quantity}</td>
+                            <td>NT$ ${item.revenue.toFixed(0)}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2">${item.percentage.toFixed(1)}%</span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar bg-primary" 
+                                             role="progressbar" 
+                                             style="width: ${item.percentage}%" 
+                                             aria-valuenow="${item.percentage}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="percentage-bar">
+                                    <div class="percentage-bar-fill" style="width: ${item.percentage}%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('') : 
+                    '<tr><td colspan="6" class="text-center">無銷售資料</td></tr>';
+
+            } catch (error) {
+                console.error('更新商品銷售統計時發生錯誤：', error);
+                throw error;
+            }
+        }
+
+        /**
+         * 更新支付方式統計
+         * @param {Array} orders - 訂單資料
+         */
+        function updatePaymentMethods(orders) {
+            // 統計各支付方式的訂單數量和金額
+            const paymentStats = {
+                cash: { count: 0, amount: 0 },
+                mobile: { count: 0, amount: 0 }
+            };
+
+            orders.forEach(order => {
+                const method = order.paymentMethod === 'cash' ? 'cash' : 'mobile';
+                paymentStats[method].count++;
+                paymentStats[method].amount += parseFloat(order.total) || 0;
+            });
+
+            // 計算總數用於百分比
+            const totalOrders = orders.length;
+            const totalAmount = orders.reduce((sum, order) => sum + (parseFloat(order.total) || 0), 0);
+
+            // 更新表格
+            const tbody = document.querySelector('#paymentMethodTable tbody');
+            if (!tbody) {
+                console.error('找不到支付方式統計表格');
+                return;
+            }
+
+            tbody.innerHTML = orders.length > 0 ? `
+                <tr>
+                    <td>現金支付</td>
+                    <td>${paymentStats.cash.count}</td>
+                    <td>NT$ ${paymentStats.cash.amount.toFixed(0)}</td>
+                    <td>${totalOrders > 0 ? ((paymentStats.cash.count / totalOrders) * 100).toFixed(1) : 0}%</td>
+                    <td>
+                        <div class="percentage-bar">
+                            <div class="percentage-bar-fill" style="width: ${totalOrders > 0 ? ((paymentStats.cash.count / totalOrders) * 100) : 0}%"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>行動支付</td>
+                    <td>${paymentStats.mobile.count}</td>
+                    <td>NT$ ${paymentStats.mobile.amount.toFixed(0)}</td>
+                    <td>${totalOrders > 0 ? ((paymentStats.mobile.count / totalOrders) * 100).toFixed(1) : 0}%</td>
+                    <td>
+                        <div class="percentage-bar">
+                            <div class="percentage-bar-fill" style="width: ${totalOrders > 0 ? ((paymentStats.mobile.count / totalOrders) * 100) : 0}%"></div>
+                        </div>
+                    </td>
+                </tr>
+            ` : '<tr><td colspan="5" class="text-center">無支付資料</td></tr>';
+        }
+
+        /**
+         * 更新訂單明細
+         * @param {Array} orders - 訂單資料
+         */
+        function updateOrderDetails(orders) {
+            const tbody = document.querySelector('#orderDetailsTable');
+            if (!tbody) {
+                console.error('找不到訂單明細表格');
+                return;
+            }
+
+            // 定義狀態對應的樣式
+            const statusStyles = {
+                'PENDING': 'bg-warning',
+                'PROCESSING': 'bg-primary',
+                'COMPLETED': 'bg-success',
+                'CANCELLED': 'bg-danger'
+            };
+
+            // 定義狀態對應的中文
+            const statusText = {
+                'PENDING': '待處理',
+                'PROCESSING': '製作中',
+                'COMPLETED': '已完成',
+                'CANCELLED': '已取消'
+            };
+
+            tbody.innerHTML = orders.length > 0 ? 
+                orders.map(order => `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${new Date(order.orderTime || order.createdAt).toLocaleString()}</td>
+                        <td>
+                            ${order.items.map(item => `
+                                ${item.name} x ${item.quantity}
+                                ${item.note ? `<br><small class="text-muted">備註：${item.note}</small>` : ''}
+                            `).join('<br>')}
+                        </td>
+                        <td>
+                            <span class="badge ${order.paymentMethod === 'cash' ? 'bg-secondary' : 'bg-info'}">
+                                ${order.paymentMethod === 'cash' ? '現金' : '行動支付'}
+                            </span>
+                        </td>
+                        <td>NT$ ${order.total}</td>
+                        <td>
+                            <span class="badge ${statusStyles[order.status] || 'bg-secondary'}">
+                                ${statusText[order.status] || '未知狀態'}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('') : 
+                '<tr><td colspan="6" class="text-center">無訂單資料</td></tr>';
+        }
+
+        /**
+         * 匯出 CSV 報表
+         */
+        function exportCSV() {
+            try {
+                const selectedDate = document.getElementById('reportDate').value;
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders') || '[]');
+                
+                // 合併並篩選訂單
+                const allOrders = [...orders, ...archivedOrders].filter(order => {
+                    return order.status === 'COMPLETED' && 
+                           order.orderTime.startsWith(selectedDate);
+                });
+
+                // 準備 CSV 內容
+                let csvContent = '訂單編號,訂購時間,商品名稱,數量,單價,總價,支付方式\n';
+                
+                allOrders.forEach(order => {
+                    order.items.forEach(item => {
+                        csvContent += `${order.id},${order.orderTime},${item.name},${item.quantity},${item.price},${item.totalPrice},${order.paymentMethod === 'cash' ? '現金' : '行動支付'}\n`;
+                    });
+                });
+
+                // 建立下載連結
+                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `sales-report-${selectedDate}.csv`;
+                link.click();
+
+            } catch (error) {
+                console.error('匯出 CSV 時發生錯誤：', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '匯出失敗',
+                    text: '匯出報表時發生錯誤'
+                });
+            }
+        }
+
+        /**
+         * 匯出 JSON 報表
+         */
+        function exportJSON() {
+            try {
+                const selectedDate = document.getElementById('reportDate').value;
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders') || '[]');
+                
+                // 合併並篩選訂單
+                const allOrders = [...orders, ...archivedOrders].filter(order => {
+                    return order.status === 'COMPLETED' && 
+                           order.orderTime.startsWith(selectedDate);
+                });
+
+                // 建立下載連結
+                const blob = new Blob([JSON.stringify(allOrders, null, 2)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `sales-report-${selectedDate}.json`;
+                link.click();
+
+            } catch (error) {
+                console.error('匯出 JSON 時發生錯誤：', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '匯出失敗',
+                    text: '匯出報表時發生錯誤'
+                });
+            }
+        }
+
+        // 修改歸檔功能，使用 SweetAlert2
+        function loadArchivedOrders() {
+            try {
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders') || '[]');
+                
+                // 找出所有已完成的訂單
+                const completedOrders = orders.filter(order => order.status === 'COMPLETED');
+                
+                if (completedOrders.length === 0) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: '無可歸檔訂單',
+                        text: '目前沒有已完成的訂單可以歸檔'
+                    });
+                    return;
+                }
+
+                // 將已完成訂單移至歸檔
+                completedOrders.forEach(order => {
+                    order.archivedAt = new Date().toISOString();
+                    archivedOrders.unshift(order);
+                });
+
+                // 更新 localStorage
+                const remainingOrders = orders.filter(order => order.status !== 'COMPLETED');
+                localStorage.setItem('orders', JSON.stringify(remainingOrders));
+                localStorage.setItem('archivedOrders', JSON.stringify(archivedOrders));
+
+                // 重新載入報表
+                loadReport();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '歸檔完成',
+                    text: `已歸檔 ${completedOrders.length} 筆訂單`
+                });
+
+            } catch (error) {
+                console.error('歸檔訂單時發生錯誤：', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '歸檔失敗',
+                    text: '歸檔訂單時發生錯誤'
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

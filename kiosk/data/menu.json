@@ -1,0 +1,71 @@
+{
+    "categories": [
+        {
+            "id": "C001",
+            "name": "主食",
+            "sort_order": 1,
+            "image": "rice.jpg"
+        },
+        {
+            "id": "C002",
+            "name": "湯品",
+            "sort_order": 2,
+            "image": "soup.jpg"
+        },
+        {
+            "id": "C003",
+            "name": "飲料",
+            "sort_order": 3,
+            "image": "drinks.jpg"
+        }
+    ],
+    "items": [
+        {
+            "id": "P001",
+            "category_id": "C001",
+            "name": "炒飯",
+            "description": "美味的蛋炒飯",
+            "price": 80,
+            "image": "fried-rice.jpg",
+            "options": [
+                {
+                    "name": "辣度",
+                    "choices": ["不辣", "小辣", "中辣", "大辣"],
+                    "required": true
+                },
+                {
+                    "name": "加蛋",
+                    "choices": ["不加", "加一顆", "加兩顆"],
+                    "prices": [0, 10, 20],
+                    "required": false
+                }
+            ],
+            "status": "active",
+            "stock": 100
+        },
+        {
+            "id": "P002",
+            "category_id": "C002",
+            "name": "玉米濃湯",
+            "description": "香濃可口的玉米濃湯",
+            "price": 50,
+            "image": "corn-soup.jpg",
+            "options": [
+                {
+                    "name": "大小",
+                    "choices": ["小碗", "大碗"],
+                    "prices": [0, 20],
+                    "required": true
+                }
+            ],
+            "status": "active",
+            "stock": 50
+        }
+    ],
+    "settings": {
+        "tax_rate": 0.05,
+        "service_charge": 0.1,
+        "min_order_amount": 0,
+        "max_items_per_order": 20
+    }
+} 

@@ -1,124 +1,456 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <title>每日報表</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歷史報表 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
-      padding: 2em;
-      background-color: #f0f0f0;
-    }
-    h1 {
-      color: #333;
-    }
-    label, input {
-      font-size: 1em;
-    }
-    .report {
+            background-color: #f8f9fa;
+            font-family: -apple-system, "Microsoft JhengHei", sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .table {
       background: white;
-      padding: 1em;
-      margin-top: 1em;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .btn-export {
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 500;
+        }
+
+        .date-group {
+            background: #e9ecef;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .order-item {
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .order-item:hover {
+            border-left-color: #3b82f6;
+            background: #f8f9fa;
+        }
+
+        .payment-badge {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .payment-cash {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .payment-mobile {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .search-box {
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            border: 2px solid #e9ecef;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: #3b82f6;
+            box-shadow: none;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-input {
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1em;
-    }
-    th, td {
-      padding: 0.5em;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-    #exportBtn {
-      margin-top: 1em;
-      padding: 0.5em 1em;
-      font-size: 1em;
-      background-color: #007bff;
+            border: 2px solid #e9ecef;
+            padding: 0.5rem;
+        }
+
+        .status-badge {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .pagination {
+            margin-bottom: 0;
+        }
+
+        .pagination .page-link {
+            border-radius: 8px;
+            margin: 0 2px;
+            border: none;
+            color: #3b82f6;
+        }
+
+        .pagination .page-link:hover {
+            background: #e9ecef;
+        }
+
+        .pagination .page-item.active .page-link {
+            background: #3b82f6;
       color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
     }
   </style>
-
-  <!-- ✅ 引入 SheetJS CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-  <h1>📊 每日報表</h1>
-  <label for="reportDate">選擇日期：</label>
-  <input type="date" id="reportDate" />
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shop me-2"></i>自助點餐系統
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">
+                            <i class="bi bi-list-check me-1"></i>訂單管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu-management.html">
+                            <i class="bi bi-grid me-1"></i>商品管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sales-report.html">
+                            <i class="bi bi-graph-up me-1"></i>銷售報表
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="report.html">
+                            <i class="bi bi-file-text me-1"></i>歷史報表
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <div class="report" id="reportArea">請選擇日期查看報表</div>
-  <button id="exportBtn">⬇️ 下載 Excel</button>
+    <div class="container mt-4">
+        <!-- 搜尋和篩選 -->
+        <div class="card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control search-box" id="searchInput" 
+                               placeholder="搜尋訂單編號或商品...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="date-range">
+                            <input type="date" class="form-control date-input" id="startDate">
+                            <span>至</span>
+                            <input type="date" class="form-control date-input" id="endDate">
+                            <button class="btn btn-primary" onclick="filterOrders()">
+                                <i class="bi bi-search me-1"></i>查詢
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <script>
-    document.getElementById("reportDate").addEventListener("change", loadReport);
-    document.getElementById("exportBtn").addEventListener("click", exportToExcel);
+        <!-- 訂單列表 -->
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">歷史訂單記錄</h5>
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary btn-export" onclick="exportToCSV()">
+                        <i class="bi bi-file-earmark-spreadsheet me-1"></i>匯出 CSV
+                    </button>
+                    <button class="btn btn-outline-primary btn-export" onclick="exportToJSON()">
+                        <i class="bi bi-file-earmark-code me-1"></i>匯出 JSON
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>訂單編號</th>
+                                <th>訂單時間</th>
+                                <th>商品明細</th>
+                                <th>付款方式</th>
+                                <th>金額</th>
+                                <th>狀態</th>
+                                <th>歸檔時間</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderList"></tbody>
+                    </table>
+                </div>
+                <!-- 分頁 -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted">
+                        共 <span id="totalOrders">0</span> 筆訂單
+                    </div>
+                    <nav>
+                        <ul class="pagination" id="pagination"></ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    function loadReport() {
-      const date = document.getElementById("reportDate").value;
-      if (!date) return;
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 分頁設置
+        const PAGE_SIZE = 10;
+        let currentPage = 1;
+        let filteredOrders = [];
 
-      fetch(`backend/report.php?date=${date}`)
-        .then(res => res.json())
-        .then(data => {
-          window.currentReportData = data; // 🔒 儲存目前報表資料給匯出用
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 設置日期選擇器的預設值
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            document.getElementById('startDate').valueAsDate = thirtyDaysAgo;
+            document.getElementById('endDate').valueAsDate = today;
 
-          const area = document.getElementById("reportArea");
-          area.innerHTML = `
-            <h2>📅 日期：${data.date}</h2>
-            <p>🧾 訂單數量：${data.total_orders}</p>
-            <p>💰 總營業額：$${data.total_sales}</p>
-            <p>📦 成本總額：$${data.total_cost}</p>
-            <p>📈 淨利潤：$${data.profit}</p>
+            // 載入訂單
+            filterOrders();
 
-            <h3>品項銷售統計：</h3>
-            <table>
-              <tr><th>品項</th><th>數量</th></tr>
-              ${Object.entries(data.items).map(([name, qty]) => `
-                <tr><td>${name}</td><td>${qty}</td></tr>
-              `).join('')}
-            </table>
-          `;
+            // 添加搜尋功能
+            document.getElementById('searchInput').addEventListener('input', function() {
+                filterOrders();
+            });
         });
-    }
 
-    function exportToExcel() {
-      const data = window.currentReportData;
-      if (!data) {
-        alert("請先載入報表！");
-        return;
-      }
+        // 過濾訂單
+        function filterOrders() {
+            try {
+                const startDate = new Date(document.getElementById('startDate').value);
+                const endDate = new Date(document.getElementById('endDate').value);
+                endDate.setHours(23, 59, 59, 999);  // 設置為當天最後一刻
+                
+                const searchText = document.getElementById('searchInput').value.toLowerCase();
+                
+                // 從 localStorage 讀取歸檔訂單
+                const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders') || '[]');
+                
+                // 過濾訂單
+                filteredOrders = archivedOrders.filter(order => {
+                    const orderDate = new Date(order.orderTime || order.createdAt);
+                    const dateInRange = orderDate >= startDate && orderDate <= endDate;
+                    
+                    // 搜尋條件
+                    const matchesSearch = searchText === '' || 
+                        (order.orderNumber || order.id || '').toLowerCase().includes(searchText) ||
+                        (order.items || []).some(item => 
+                            (item.name || '').toLowerCase().includes(searchText)
+                        );
+                    
+                    return dateInRange && matchesSearch;
+                });
 
-      const rows = [
-        ["日期", data.date],
-        ["訂單數量", data.total_orders],
-        ["總營業額", data.total_sales],
-        ["總成本", data.total_cost],
-        ["利潤", data.profit],
-        [],
-        ["品項", "數量"]
-      ];
+                // 更新總數顯示
+                document.getElementById('totalOrders').textContent = filteredOrders.length;
 
-      for (const [name, qty] of Object.entries(data.items)) {
-        rows.push([name, qty]);
-      }
+                // 重置到第一頁
+                currentPage = 1;
+                
+                // 更新顯示
+                updateDisplay();
+                
+            } catch (error) {
+                console.error('過濾訂單時發生錯誤：', error);
+                alert('過濾訂單時發生錯誤');
+            }
+        }
 
-      const worksheet = XLSX.utils.aoa_to_sheet(rows);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "報表");
+        // 更新顯示
+        function updateDisplay() {
+            try {
+                // 計算分頁
+                const totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE);
+                const start = (currentPage - 1) * PAGE_SIZE;
+                const end = start + PAGE_SIZE;
+                const pageOrders = filteredOrders.slice(start, end);
 
-      const filename = `報表_${data.date}.xlsx`;
-      XLSX.writeFile(workbook, filename);
-    }
+                // 生成訂單列表
+                const orderList = document.getElementById('orderList');
+                orderList.innerHTML = pageOrders.map(order => `
+                    <tr class="order-item">
+                        <td>${order.orderNumber || order.id || '未知'}</td>
+                        <td>${new Date(order.orderTime || order.createdAt).toLocaleString()}</td>
+                        <td>
+                            ${(order.items || []).map(item => 
+                                `${item.name} × ${item.quantity || 1}`
+                            ).join(', ')}
+                        </td>
+                        <td>
+                            <span class="payment-badge ${order.paymentMethod === 'cash' ? 'payment-cash' : 'payment-mobile'}">
+                                ${order.paymentMethod === 'cash' ? '現金' : '行動支付'}
+                            </span>
+                        </td>
+                        <td>NT$ ${order.total || 0}</td>
+                        <td>
+                            <span class="status-badge status-completed">
+                                已完成
+                            </span>
+                        </td>
+                        <td>${new Date(order.archivedAt).toLocaleString()}</td>
+                    </tr>
+                `).join('');
 
-    // 預設今天日期
-    document.getElementById("reportDate").value = new Date().toISOString().slice(0, 10);
-    loadReport();
+                // 更新分頁
+                updatePagination(totalPages);
+                
+            } catch (error) {
+                console.error('更新顯示時發生錯誤：', error);
+                alert('更新顯示時發生錯誤');
+            }
+        }
+
+        // 更新分頁
+        function updatePagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            let html = '';
+
+            // 上一頁
+            html += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+
+            // 頁碼
+            for (let i = 1; i <= totalPages; i++) {
+                if (
+                    i === 1 || // 第一頁
+                    i === totalPages || // 最後一頁
+                    (i >= currentPage - 2 && i <= currentPage + 2) // 當前頁附近
+                ) {
+                    html += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                        </li>
+                    `;
+                } else if (
+                    i === currentPage - 3 || // 當前頁前的省略號
+                    i === currentPage + 3 // 當前頁後的省略號
+                ) {
+                    html += `
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    `;
+                }
+            }
+
+            // 下一頁
+            html += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+
+            pagination.innerHTML = html;
+        }
+
+        // 切換頁面
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            updateDisplay();
+        }
+
+        // 匯出 CSV
+        function exportToCSV() {
+            try {
+                // 準備 CSV 內容
+                const headers = ['訂單編號', '訂單時間', '商品明細', '付款方式', '金額', '狀態', '歸檔時間'];
+                const rows = filteredOrders.map(order => [
+                    order.orderNumber || order.id || '未知',
+                    new Date(order.orderTime || order.createdAt).toLocaleString(),
+                    (order.items || []).map(item => `${item.name} × ${item.quantity || 1}`).join('; '),
+                    order.paymentMethod === 'cash' ? '現金' : '行動支付',
+                    order.total || 0,
+                    '已完成',
+                    new Date(order.archivedAt).toLocaleString()
+                ]);
+
+                // 組合 CSV 字串
+                const csvContent = [
+                    headers.join(','),
+                    ...rows.map(row => row.join(','))
+                ].join('\n');
+
+                // 建立下載連結
+                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `historical-orders-${new Date().toISOString().slice(0,10)}.csv`;
+                link.click();
+
+            } catch (error) {
+                console.error('匯出 CSV 時發生錯誤：', error);
+                alert('匯出 CSV 時發生錯誤');
+            }
+        }
+
+        // 匯出 JSON
+        function exportToJSON() {
+            try {
+                // 建立下載連結
+                const blob = new Blob([JSON.stringify(filteredOrders, null, 2)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `historical-orders-${new Date().toISOString().slice(0,10)}.json`;
+                link.click();
+
+            } catch (error) {
+                console.error('匯出 JSON 時發生錯誤：', error);
+                alert('匯出 JSON 時發生錯誤');
+            }
+        }
   </script>
 </body>
 </html>

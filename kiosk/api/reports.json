@@ -1,0 +1,10 @@
+{
+    "daily_reports": [],
+    "monthly_reports": [],
+    "yearly_reports": [],
+    "report_settings": {
+        "auto_generate": true,
+        "generate_time": "23:59",
+        "retention_days": 365
+    }
+} 

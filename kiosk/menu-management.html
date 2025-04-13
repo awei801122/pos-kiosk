@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品管理 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">自助點餐系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">訂單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="menu-management.html">商品管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sales-report.html">銷售報表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="report.html">歷史報表</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- 搜尋和篩選 -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="搜尋商品...">
+                    <button class="btn btn-outline-secondary" type="button" onclick="searchProducts()">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="categoryFilter" onchange="filterProducts()">
+                    <option value="">所有分類</option>
+                    <option value="主餐">主餐</option>
+                    <option value="飲料">飲料</option>
+                    <option value="點心">點心</option>
+                    <option value="套餐">套餐</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#productModal">
+                    <i class="bi bi-plus-lg"></i> 新增商品
+                </button>
+            </div>
+        </div>
+
+        <!-- 商品列表 -->
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>圖片</th>
+                        <th>商品名稱</th>
+                        <th>分類</th>
+                        <th>價格</th>
+                        <th>庫存</th>
+                        <th>狀態</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="productList"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 商品編輯模態框 -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">新增商品</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="mb-3">
+                            <label class="form-label">商品名稱</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">分類</label>
+                            <select class="form-select" id="productCategory" required>
+                                <option value="主餐">主餐</option>
+                                <option value="飲料">飲料</option>
+                                <option value="點心">點心</option>
+                                <option value="套餐">套餐</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">價格</label>
+                            <input type="number" class="form-control" id="productPrice" min="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">庫存</label>
+                            <input type="number" class="form-control" id="productStock" min="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">商品圖片</label>
+                            <input type="file" class="form-control" id="productImage" accept="image/*">
+                            <div class="mt-2">
+                                <img id="imagePreview" src="assets/images/no-image.svg" class="image-preview">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">商品描述</label>
+                            <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="productStatus" checked>
+                            <label class="form-check-label">商品上架</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 商品資料
+        let products = [];
+        let currentFilter = '';
+        let searchQuery = '';
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            
+            // 圖片預覽
+            document.getElementById('productImage').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('imagePreview').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // 重置表單
+            document.getElementById('productModal').addEventListener('hidden.bs.modal', function() {
+                document.getElementById('productForm').reset();
+                document.getElementById('productId').value = '';
+                document.getElementById('imagePreview').src = 'assets/images/no-image.svg';
+                document.getElementById('modalTitle').textContent = '新增商品';
+            });
+        });
+
+        // 載入商品
+        function loadProducts() {
+            try {
+                const savedProducts = localStorage.getItem('products');
+                if (savedProducts) {
+                    products = JSON.parse(savedProducts);
+                }
+            } catch (e) {
+                console.error('載入商品失敗:', e);
+                products = [];
+            }
+            renderProducts();
+        }
+
+        // 渲染商品列表
+        function renderProducts() {
+            let filteredProducts = products;
+            
+            // 套用分類篩選
+            if (currentFilter) {
+                filteredProducts = filteredProducts.filter(p => p.category === currentFilter);
+            }
+            
+            // 套用搜尋
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filteredProducts = filteredProducts.filter(p => 
+                    p.name.toLowerCase().includes(query) || 
+                    p.description.toLowerCase().includes(query)
+                );
+            }
+
+            const tbody = document.getElementById('productList');
+            tbody.innerHTML = filteredProducts.map(product => `
+                <tr class="product-card">
+                    <td>
+                        <img src="${product.image || 'assets/images/no-image.svg'}" 
+                             class="product-image" alt="${product.name}">
+                    </td>
+                    <td>${product.name}</td>
+                    <td>${product.category}</td>
+                    <td>NT$ ${product.price}</td>
+                    <td>${product.stock}</td>
+                    <td>
+                        <span class="badge bg-${product.status ? 'success' : 'secondary'}">
+                            ${product.status ? '已上架' : '已下架'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" 
+                                onclick="editProduct('${product.id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="deleteProduct('${product.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 搜尋商品
+        function searchProducts() {
+            searchQuery = document.getElementById('searchInput').value.trim();
+            renderProducts();
+        }
+
+        // 篩選商品
+        function filterProducts() {
+            currentFilter = document.getElementById('categoryFilter').value;
+            renderProducts();
+        }
+
+        // 編輯商品
+        function editProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('modalTitle').textContent = '編輯商品';
+            document.getElementById('productId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productStatus').checked = product.status;
+            document.getElementById('imagePreview').src = product.image || 'assets/images/no-image.svg';
+
+            new bootstrap.Modal(document.getElementById('productModal')).show();
+        }
+
+        // 儲存商品
+        function saveProduct() {
+            const form = document.getElementById('productForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const productId = document.getElementById('productId').value;
+            const productData = {
+                id: productId || Date.now().toString(),
+                name: document.getElementById('productName').value,
+                category: document.getElementById('productCategory').value,
+                price: parseInt(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                description: document.getElementById('productDescription').value,
+                status: document.getElementById('productStatus').checked,
+                image: document.getElementById('imagePreview').src
+            };
+
+            if (productId) {
+                // 更新現有商品
+                const index = products.findIndex(p => p.id === productId);
+                if (index !== -1) {
+                    products[index] = productData;
+                }
+            } else {
+                // 新增商品
+                products.push(productData);
+            }
+
+            localStorage.setItem('products', JSON.stringify(products));
+            bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+            renderProducts();
+        }
+
+        // 刪除商品
+        function deleteProduct(productId) {
+            if (!confirm('確定要刪除此商品嗎？')) return;
+
+            products = products.filter(p => p.id !== productId);
+            localStorage.setItem('products', JSON.stringify(products));
+            renderProducts();
+        }
+    </script>
+</body>
+</html> 

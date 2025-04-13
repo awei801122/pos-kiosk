@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台管理 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #475569;
+            --success-color: #16a34a;
+            --warning-color: #ca8a04;
+            --danger-color: #dc2626;
+            --light-bg: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            font-family: -apple-system, "Microsoft JhengHei", sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-tabs {
+            border: none;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--secondary-color);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            margin: 0 0.25rem;
+            font-weight: 500;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: var(--light-bg);
+            color: var(--primary-color) !important;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-color);
+            color: white !important;
+        }
+
+        .badge {
+            padding: 0.35em 0.65em;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .table thead {
+            background: var(--light-bg);
+        }
+
+        .table th {
+            font-weight: 600;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding: 1rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-hover tbody tr:hover {
+            background: var(--light-bg);
+        }
+
+        .order-items {
+            max-width: 300px;
+        }
+
+        .btn-group-sm > .btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+        }
+
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-outline-success {
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .btn-outline-success:hover {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-outline-danger {
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .btn-outline-danger:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .badge.bg-light {
+            background: var(--light-bg) !important;
+            color: var(--secondary-color) !important;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive {
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            
+            .nav-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding: 0.5rem;
+            }
+            
+            .nav-tabs .nav-link {
+                white-space: nowrap;
+            }
+        }
+
+        /* 訂單卡片樣式 */
+        .order-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* 取餐號碼樣式 */
+        .pickup-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #1a73e8;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* 訂單編號樣式 */
+        .order-id {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* 訂單時間樣式 */
+        .order-time {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* 訂單內容區域 */
+        .order-items {
+            margin: 15px 0;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        /* 訂單總計樣式 */
+        .order-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #1a73e8;
+            margin-top: 10px;
+        }
+
+        /* 操作按鈕樣式 */
+        .order-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .order-actions button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        /* 支付方式標籤 */
+        .payment-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-right: 10px;
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        /* 狀態標籤 */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shop me-2"></i>自助點餐系統
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.html">
+                            <i class="bi bi-list-check me-1"></i>訂單管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu-management.html">
+                            <i class="bi bi-grid me-1"></i>商品管理
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sales-report.html">
+                            <i class="bi bi-graph-up me-1"></i>銷售報表
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="report.html">
+                            <i class="bi bi-file-text me-1"></i>歷史報表
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="display.html" target="_blank">
+                            <i class="bi bi-display me-1"></i>叫號顯示器
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 設置面板 -->
+    <div class="settings-panel">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="soundToggle" checked>
+            <label class="form-check-label" for="soundToggle">
+                <i class="bi bi-volume-up"></i> 音效
+            </label>
+        </div>
+        <div class="mt-2" id="volumeControl" style="display: none;">
+            <label class="form-label small">音量</label>
+            <input type="range" class="form-range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <!-- 訂單狀態分類標籤 -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" onclick="filterOrders('all')">
+                    <i class="bi bi-collection me-1"></i>全部訂單
+                    <span class="badge bg-secondary ms-1" id="count-all">0</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterOrders('pending')">
+                    <i class="bi bi-hourglass me-1"></i>待處理
+                    <span class="badge bg-warning ms-1" id="count-pending">0</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterOrders('preparing')">
+                    <i class="bi bi-tools me-1"></i>製作中
+                    <span class="badge bg-info ms-1" id="count-preparing">0</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterOrders('ready')">
+                    <i class="bi bi-check2-circle me-1"></i>待取餐
+                    <span class="badge bg-success ms-1" id="count-ready">0</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="filterOrders('completed')">
+                    <i class="bi bi-archive me-1"></i>已完成
+                    <span class="badge bg-secondary ms-1" id="count-completed">0</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- 訂單列表 -->
+        <div class="row" id="orderList">
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-inbox me-2"></i>
+                    目前沒有訂單
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 音效元素 -->
+    <audio id="newOrderSound" src="assets/sounds/new-order.mp3" preload="auto"></audio>
+    <audio id="statusChangeSound" src="assets/sounds/status-change.mp3" preload="auto"></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // 訂單狀態定義
+        const ORDER_STATUS = {
+            PENDING: 'PENDING',      // 待處理
+            PREPARING: 'PREPARING',  // 製作中
+            READY: 'READY',         // 待取餐
+            COMPLETED: 'COMPLETED',  // 已完成
+            CANCELLED: 'CANCELLED'   // 已取消
+        };
+
+        // 狀態顯示文字
+        const STATUS_TEXT = {
+            [ORDER_STATUS.PENDING]: '待處理',
+            [ORDER_STATUS.PREPARING]: '製作中',
+            [ORDER_STATUS.READY]: '待取餐',
+            [ORDER_STATUS.COMPLETED]: '已完成',
+            [ORDER_STATUS.CANCELLED]: '已取消'
+        };
+
+        // 狀態對應的顏色
+        const STATUS_COLOR = {
+            [ORDER_STATUS.PENDING]: 'warning',
+            [ORDER_STATUS.PREPARING]: 'primary',
+            [ORDER_STATUS.READY]: 'success',
+            [ORDER_STATUS.COMPLETED]: 'secondary',
+            [ORDER_STATUS.CANCELLED]: 'danger'
+        };
+
+        // 狀態轉換規則
+        const STATUS_TRANSITIONS = {
+            [ORDER_STATUS.PENDING]: [ORDER_STATUS.PREPARING, ORDER_STATUS.CANCELLED],
+            [ORDER_STATUS.PREPARING]: [ORDER_STATUS.READY],
+            [ORDER_STATUS.READY]: [ORDER_STATUS.COMPLETED],
+            [ORDER_STATUS.COMPLETED]: [],
+            [ORDER_STATUS.CANCELLED]: []
+        };
+
+        let currentFilter = 'all';
+        let orders = [];
+        
+        // 聲音設置
+        const SOUND_SETTINGS = {
+            enabled: true,
+            volume: 0.5,
+            sounds: {
+                statusChange: {
+                    src: '/assets/sounds/status-change.mp3',
+                    volume: 0.5
+                },
+                newOrder: {
+                    src: '/assets/sounds/new-order.mp3',
+                    volume: 0.5
+                }
+            }
+        };
+
+        // 初始化聲音設置
+        function initSoundSettings() {
+            const savedSettings = localStorage.getItem('soundSettings');
+            if (savedSettings) {
+                try {
+                    const settings = JSON.parse(savedSettings);
+                    SOUND_SETTINGS.enabled = settings.enabled;
+                    SOUND_SETTINGS.volume = settings.volume;
+                } catch (error) {
+                    console.error('載入聲音設置失敗：', error);
+                }
+            }
+            
+            // 更新聲音開關狀態
+            const soundToggle = document.getElementById('soundToggle');
+            if (soundToggle) {
+                soundToggle.checked = SOUND_SETTINGS.enabled;
+                document.getElementById('volumeControl').style.display = SOUND_SETTINGS.enabled ? 'block' : 'none';
+            }
+
+            // 更新音量滑桿
+            const volumeSlider = document.getElementById('volumeSlider');
+            if (volumeSlider) {
+                volumeSlider.value = SOUND_SETTINGS.volume;
+            }
+        }
+
+        // 保存聲音設置
+        function saveSoundSettings() {
+            localStorage.setItem('soundSettings', JSON.stringify({
+                enabled: SOUND_SETTINGS.enabled,
+                volume: SOUND_SETTINGS.volume
+            }));
+        }
+
+        // 播放聲音
+        async function playSound(type) {
+            if (!SOUND_SETTINGS.enabled) return;
+
+            const soundConfig = SOUND_SETTINGS.sounds[type];
+            if (!soundConfig) return;
+
+            try {
+                const audio = new Audio(soundConfig.src);
+                audio.volume = soundConfig.volume * SOUND_SETTINGS.volume;
+                await audio.play();
+            } catch (error) {
+                console.log(`播放${type}音效失敗：`, error);
+                // 如果是 404 錯誤，禁用聲音功能
+                if (error.name === 'NotFoundError' || error.name === 'NotSupportedError') {
+                    SOUND_SETTINGS.enabled = false;
+                    saveSoundSettings();
+                    const soundToggle = document.getElementById('soundToggle');
+                    if (soundToggle) {
+                        soundToggle.checked = false;
+                    }
+                }
+            }
+        }
+
+        // 過濾訂單顯示
+        function filterOrders(filter) {
+            try {
+                currentFilter = filter;
+                
+                // 更新標籤頁狀態
+                document.querySelectorAll('.nav-tabs .nav-link').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.getAttribute('onclick')?.includes(filter)) {
+                        tab.classList.add('active');
+                    }
+                });
+
+                // 重新載入並顯示訂單
+                loadOrders();
+            } catch (error) {
+                console.error('過濾訂單時發生錯誤：', error);
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 載入訂單並顯示
+            loadOrders();
+            
+            // 監聽訂單更新事件
+            window.addEventListener('orderUpdated', function(event) {
+                console.log('收到訂單更新事件：', event.detail);
+                loadOrders();  // 重新載入訂單
+            });
+
+            // 監聽 storage 事件（用於跨頁面通訊）
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'lastOrderUpdate' || event.key === 'orders') {
+                    console.log('收到 storage 事件：', event.key);
+                    loadOrders();  // 重新載入訂單
+                }
+            });
+
+            // 定期檢查訂單更新
+            setInterval(function() {
+                loadOrders();  // 重新載入訂單
+            }, 1000);  // 每秒檢查一次
+
+            // 初始化音效設置
+            initSoundSettings();
+
+            // 初始顯示全部訂單
+            filterOrders('all');
+        });
+
+        /**
+         * 載入訂單
+         */
+        async function loadOrders() {
+            try {
+                // 從 PHP 檔案獲取訂單資料
+                const response = await fetch('/get-orders.php');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const ordersData = await response.json();
+                
+                if (!Array.isArray(ordersData)) {
+                    throw new Error('訂單資料格式錯誤');
+                }
+
+                // 更新全局訂單列表
+                orders = ordersData.map(order => ({
+                    ...order,
+                    status: normalizeOrderStatus(order.status)
+                }));
+
+                // 根據訂單狀態分類
+                const pendingOrders = orders.filter(order => order.status === ORDER_STATUS.PENDING);
+                const preparingOrders = orders.filter(order => order.status === ORDER_STATUS.PREPARING);
+                const readyOrders = orders.filter(order => order.status === ORDER_STATUS.READY);
+                const completedOrders = orders.filter(order => order.status === ORDER_STATUS.COMPLETED);
+                const cancelledOrders = orders.filter(order => order.status === ORDER_STATUS.CANCELLED);
+
+                // 更新訂單數量標籤
+                const counts = {
+                    pending: pendingOrders.length,
+                    preparing: preparingOrders.length,
+                    ready: readyOrders.length,
+                    completed: completedOrders.length,
+                    cancelled: cancelledOrders.length,
+                    total: orders.length
+                };
+                updateOrderCounts(counts);
+
+                // 顯示過濾後的訂單
+                showFilteredOrders(orders);
+
+                // 如果有新的待處理訂單，播放提示音
+                const previousPendingCount = parseInt(document.getElementById('count-pending').textContent) || 0;
+                if (SOUND_SETTINGS.enabled && pendingOrders.length > previousPendingCount) {
+                    playSound('newOrder');
+                }
+
+            } catch (error) {
+                console.error('載入訂單時發生錯誤:', error);
+                showErrorMessage(`載入訂單失敗：${error.message}`);
+            }
+        }
+
+        // 顯示錯誤訊息的輔助函數
+        function showErrorMessage(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.querySelector('.container').prepend(alertDiv);
+        }
+
+        // 更新訂單數量顯示
+        function updateOrderCounts(counts) {
+            try {
+                document.getElementById('count-all').textContent = counts.total || 0;
+                document.getElementById('count-pending').textContent = counts.pending || 0;
+                document.getElementById('count-preparing').textContent = counts.preparing || 0;
+                document.getElementById('count-ready').textContent = counts.ready || 0;
+                document.getElementById('count-completed').textContent = counts.completed || 0;
+            } catch (error) {
+                console.error('更新訂單數量顯示時發生錯誤：', error);
+            }
+        }
+
+        // 顯示過濾後的訂單
+        function showFilteredOrders(orders) {
+            try {
+                const orderList = document.getElementById('orderList');
+                if (!orderList) return;
+
+                // 根據當前過濾器過濾訂單
+                let filteredOrders = orders;
+                if (currentFilter && currentFilter !== 'all') {
+                    const filterStatus = currentFilter.toUpperCase();
+                    filteredOrders = orders.filter(order => order && order.status === filterStatus);
+                }
+
+                // 如果沒有訂單
+                if (!filteredOrders || filteredOrders.length === 0) {
+                    orderList.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">
+                                <i class="bi bi-inbox me-2"></i>
+                                目前沒有${currentFilter === 'all' ? '' : STATUS_TEXT[currentFilter.toUpperCase()]}訂單
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // 顯示訂單列表
+                orderList.innerHTML = filteredOrders.map(order => generateOrderCard(order)).join('');
+
+            } catch (error) {
+                console.error('顯示訂單時發生錯誤：', error);
+                if (orderList) {
+                    orderList.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-danger text-center">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                載入訂單時發生錯誤：${error.message}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // 生成訂單卡片 HTML
+        function generateOrderCard(order) {
+            try {
+                if (!order) return '';
+                
+                // 提取取餐號碼（訂單號碼的最後4位）
+                const pickupNumber = (order.orderNumber || order.id || '').slice(-4);
+                
+                return `
+                    <div class="col-12 mb-4">
+                        <div class="order-card">
+                            <div class="pickup-number">#${pickupNumber}</div>
+                            <div class="order-header">
+                                <div class="order-id">
+                                    訂單編號：${order.orderNumber || order.id || '未知'}
+                                </div>
+                                <div class="order-time">
+                                    訂單時間：${new Date(order.orderTime || order.createdAt).toLocaleString()}
+                                </div>
+                                <div class="d-flex align-items-center mt-2">
+                                    <div class="payment-badge">
+                                        <i class="bi bi-${order.paymentMethod === 'cash' ? 'cash' : 'phone'}"></i>
+                                        ${order.paymentMethod === 'cash' ? '現金' : '行動支付'}
+                                    </div>
+                                    <div class="status-badge ${getStatusClass(order.status)}">
+                                        <i class="bi bi-${getStatusIcon(order.status)}"></i>
+                                        ${getStatusText(order.status)}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-items">
+                                ${(order.items || []).map(item => `
+                                    <div class="order-item">
+                                        <div>
+                                            <span class="fw-medium">${item.name || '未知商品'}</span>
+                                            <span class="text-muted"> x ${item.quantity || 1}</span>
+                                            ${item.note ? `<small class="d-block text-muted">備註：${item.note}</small>` : ''}
+                                        </div>
+                                        <span>NT$ ${item.totalPrice || 0}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="order-total">
+                                總計：NT$ ${order.total || 0}
+                            </div>
+                            <div class="order-actions">
+                                ${getActionButtons(order)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('生成訂單卡片時發生錯誤：', error);
+                return '';
+            }
+        }
+
+        /**
+         * 取得狀態對應的圖標
+         */
+        function getStatusIcon(status) {
+            const icons = {
+                [ORDER_STATUS.PENDING]: 'hourglass',
+                [ORDER_STATUS.PREPARING]: 'tools',
+                [ORDER_STATUS.READY]: 'check2-circle',
+                [ORDER_STATUS.COMPLETED]: 'archive',
+                [ORDER_STATUS.CANCELLED]: 'x-circle'
+            };
+            return icons[status] || 'question-circle';
+        }
+
+        /**
+         * 取得訂單操作按鈕
+         */
+        function getActionButtons(order) {
+            const orderId = order.orderNumber || order.id;
+            const currentStatus = order.status;
+            const allowedTransitions = STATUS_TRANSITIONS[currentStatus] || [];
+
+            if (allowedTransitions.length === 0) return '';
+
+            return allowedTransitions.map(newStatus => {
+                const buttonConfig = {
+                    [ORDER_STATUS.PREPARING]: {
+                        class: 'btn-primary',
+                        icon: 'play-fill',
+                        text: '開始製作'
+                    },
+                    [ORDER_STATUS.READY]: {
+                        class: 'btn-success',
+                        icon: 'check-lg',
+                        text: '製作完成'
+                    },
+                    [ORDER_STATUS.COMPLETED]: {
+                        class: 'btn-success',
+                        icon: 'bag-check',
+                        text: '已取餐'
+                    },
+                    [ORDER_STATUS.CANCELLED]: {
+                        class: 'btn-danger',
+                        icon: 'x-circle',
+                        text: '取消訂單'
+                    }
+                };
+
+                const config = buttonConfig[newStatus];
+                if (!config) return '';
+
+                return `
+                    <button class="btn ${config.class}" onclick="updateOrderStatus('${orderId}', '${newStatus}')">
+                        <i class="bi bi-${config.icon}"></i> ${config.text}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        /**
+         * 更新訂單狀態
+         * @param {string} orderId - 訂單編號
+         * @param {string} status - 新狀態
+         */
+        async function updateOrderStatus(orderId, status) {
+            try {
+                // 發送更新請求
+                const response = await fetch('/update-order-status.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderId: orderId,
+                        status: status
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // 播放提示音效（如果啟用）
+                    if (SOUND_SETTINGS.enabled) {
+                        playSound('status-change');
+                    }
+
+                    // 觸發訂單更新事件
+                    window.dispatchEvent(new CustomEvent('orderUpdated', {
+                        detail: { orderId: orderId }
+                    }));
+
+                    // 更新 localStorage
+                    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                    const updatedOrders = orders.map(order => {
+                        if (order.id === orderId) {
+                            return { ...order, status: status };
+                        }
+                        return order;
+                    });
+                    localStorage.setItem('orders', JSON.stringify(updatedOrders));
+
+                    // 重新載入訂單列表
+            loadOrders();
+                } else {
+                    throw new Error(data.message || '更新失敗');
+                }
+            } catch (error) {
+                console.error('更新訂單狀態時發生錯誤：', error);
+                await Swal.fire({
+                    title: '更新失敗',
+                    text: error.message || '請稍後再試',
+                    icon: 'error'
+                });
+            }
+        }
+
+        // 刪除訂單
+        function deleteOrder(orderId) {
+            try {
+                if (!confirm('確定要刪除此訂單嗎？')) {
+                    return;
+                }
+                
+                // 從當前訂單中刪除
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const updatedOrders = orders.filter(order => (order.orderNumber || order.id) !== orderId);
+                localStorage.setItem('orders', JSON.stringify(updatedOrders));
+                
+                // 從歸檔訂單中刪除
+                const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders') || '[]');
+                const updatedArchivedOrders = archivedOrders.filter(order => (order.orderNumber || order.id) !== orderId);
+                localStorage.setItem('archivedOrders', JSON.stringify(updatedArchivedOrders));
+                
+                // 更新 localStorage 最後更新時間
+                localStorage.setItem('lastOrderUpdate', new Date().toISOString());
+                
+                // 重新載入訂單列表
+                loadOrders();
+            } catch (error) {
+                console.error('刪除訂單時發生錯誤：', error);
+            }
+        }
+
+        // 取得狀態對應的 CSS 類別
+        function getStatusClass(status) {
+            const statusClasses = {
+                [ORDER_STATUS.PENDING]: 'bg-warning text-dark',
+                [ORDER_STATUS.PREPARING]: 'bg-primary text-white',
+                [ORDER_STATUS.READY]: 'bg-success text-white',
+                [ORDER_STATUS.COMPLETED]: 'bg-secondary text-white',
+                [ORDER_STATUS.CANCELLED]: 'bg-danger text-white'
+            };
+            return statusClasses[status] || 'bg-secondary text-white';
+        }
+
+        // 取得狀態對應的文字
+        function getStatusText(status) {
+            return STATUS_TEXT[status] || '未知狀態';
+        }
+
+        // 更新訂單時間顯示
+        function updateOrderTimes() {
+            document.querySelectorAll('.order-time').forEach(timeElement => {
+                const orderTime = new Date(timeElement.dataset.time);
+                const timeDiff = Math.floor((new Date() - orderTime) / 1000);
+                
+                let timeText = '';
+                if (timeDiff < 60) {
+                    timeText = `${timeDiff} 秒前`;
+                } else if (timeDiff < 3600) {
+                    timeText = `${Math.floor(timeDiff / 60)} 分鐘前`;
+                } else {
+                    timeText = orderTime.toLocaleTimeString();
+                }
+                
+                timeElement.textContent = timeText;
+            });
+        }
+
+        // 標準化訂單狀態
+        function normalizeOrderStatus(status) {
+            // 將所有可能的狀態值標準化
+            const statusMap = {
+                'pending': ORDER_STATUS.PENDING,
+                'PENDING': ORDER_STATUS.PENDING,
+                'preparing': ORDER_STATUS.PREPARING,
+                'PREPARING': ORDER_STATUS.PREPARING,
+                'ready': ORDER_STATUS.READY,
+                'READY': ORDER_STATUS.READY,
+                'completed': ORDER_STATUS.COMPLETED,
+                'COMPLETED': ORDER_STATUS.COMPLETED,
+                'cancelled': ORDER_STATUS.CANCELLED,
+                'CANCELLED': ORDER_STATUS.CANCELLED,
+                'processing': ORDER_STATUS.PREPARING,  // 相容舊的狀態名稱
+                'done': ORDER_STATUS.COMPLETED,       // 相容舊的狀態名稱
+                'paid': ORDER_STATUS.PENDING          // 已付款狀態視為待處理
+            };
+            
+            return statusMap[status] || ORDER_STATUS.PENDING;
+        }
+
+        // 添加聲音控制事件監聽
+        document.getElementById('soundToggle').addEventListener('change', function(e) {
+            SOUND_SETTINGS.enabled = e.target.checked;
+            document.getElementById('volumeControl').style.display = e.target.checked ? 'block' : 'none';
+            saveSoundSettings();
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', function(e) {
+            SOUND_SETTINGS.volume = parseFloat(e.target.value);
+            saveSoundSettings();
+        });
+
+        // 定期檢查新訂單
+        setInterval(loadOrders, 5000);
+
+        // 初始載入
+        loadOrders();
+
+        // 更新訂單表格
+        function updateOrdersTable(tableId, orders) {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            orders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${order.orderId}</td>
+                    <td>${order.pickupNumber || '-'}</td>
+                    <td>
+                        <ul class="list-unstyled mb-0">
+                                ${order.items.map(item => `
+                                <li>${item.name} x ${item.quantity}</li>
+                                `).join('')}
+                        </ul>
+                    </td>
+                    <td>$${order.totalPrice.toFixed(2)}</td>
+                    <td>${order.paymentMethod}</td>
+                    <td>${formatDate(order.orderTime)}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                                ${getActionButtons(order)}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('zh-TW', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        // 更新訂單數量標籤
+        function updateOrderCountBadges(pending, processing, completed, cancelled) {
+            document.getElementById('pending-count').textContent = pending;
+            document.getElementById('processing-count').textContent = processing;
+            document.getElementById('completed-count').textContent = completed;
+            document.getElementById('cancelled-count').textContent = cancelled;
+        }
+    </script>
+</body>
+</html> 

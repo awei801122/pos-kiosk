@@ -1,6 +1,5 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require_once __DIR__ . '/api/middleware/auth.php';
 
 // 允許跨域訪問
 header('Access-Control-Allow-Origin: *');
@@ -8,104 +7,104 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // 記錄所有請求的詳細資訊到文件
-$logFile = __DIR__ . '/debug.log';
+$logFile = __DIR__ . '/logs/router.log';
 file_put_contents($logFile, "\n\n=== New Request ===\n", FILE_APPEND);
 file_put_contents($logFile, date('Y-m-d H:i:s') . "\n", FILE_APPEND);
 
-try {
-    // 設定正確的 Content-Type
-    $requestUri = $_SERVER["REQUEST_URI"];
-    $extension = pathinfo($requestUri, PATHINFO_EXTENSION);
+// 路由配置
+$routes = [
+    // 系統API
+    '/api/system/check-client' => ['file' => __DIR__ . '/api/system/check-client.php', 'auth' => false],
+    
+    // 認證相關
+    '/api/auth/login' => ['file' => __DIR__ . '/api/auth.php', 'auth' => false],
+    '/api/auth/verify' => ['file' => __DIR__ . '/api/auth.php', 'auth' => false],
+    
+    // 點餐機API
+    '/api/kiosk/menu' => ['file' => __DIR__ . '/api/kiosk/menu.php', 'auth' => false],
+    '/api/kiosk/order' => ['file' => __DIR__ . '/api/kiosk/order.php', 'auth' => false],
+    
+    // 後台管理API
+    '/api/admin/products' => ['file' => __DIR__ . '/api/admin/products.php', 'auth' => true, 'permission' => 'manage_products'],
+    '/api/admin/inventory' => ['file' => __DIR__ . '/api/admin/inventory.php', 'auth' => true, 'permission' => 'manage_inventory'],
+    '/api/admin/reports' => ['file' => __DIR__ . '/api/admin/reports.php', 'auth' => true, 'permission' => 'view_reports'],
+    '/api/admin/orders' => ['file' => __DIR__ . '/api/admin/orders.php', 'auth' => true, 'permission' => 'process_orders'],
+    '/api/admin/users' => ['file' => __DIR__ . '/api/admin/users.php', 'auth' => true, 'permission' => 'manage_users']
+];
 
-    // 記錄所有相關的伺服器變數
+try {
+    // 記錄請求信息
     $debug_info = [
         'REQUEST_URI' => $_SERVER['REQUEST_URI'],
         'SCRIPT_NAME' => $_SERVER['SCRIPT_NAME'],
         'PHP_SELF' => $_SERVER['PHP_SELF'],
-        'DOCUMENT_ROOT' => $_SERVER['DOCUMENT_ROOT'],
-        'SCRIPT_FILENAME' => $_SERVER['SCRIPT_FILENAME'],
-        '__DIR__' => __DIR__,
-        'getcwd()' => getcwd(),
-        'include_path' => get_include_path()
+        'REMOTE_ADDR' => $_SERVER['REMOTE_ADDR']
     ];
-
-    // 記錄到文件
     foreach ($debug_info as $key => $value) {
         file_put_contents($logFile, "$key: $value\n", FILE_APPEND);
     }
 
-    // 移除查詢字串和開頭的 /kiosk
-    $path = parse_url($requestUri, PHP_URL_PATH);
-    $originalPath = $path;
-
-    // 處理根路徑
-    if (empty($path) || $path === '/' || $path === '/kiosk/') {
-        $indexFile = __DIR__ . '/index.html';
-        file_put_contents($logFile, "Trying to serve index.html from: $indexFile\n", FILE_APPEND);
-        if (file_exists($indexFile)) {
-            header('Content-Type: text/html; charset=UTF-8');
-            readfile($indexFile);
-            exit;
-        }
-    }
-
-    // 移除開頭的 /kiosk
-    $path = preg_replace('/^\/kiosk\//', '/', $path);
-
-    // 構建完整的文件路徑
-    $file = __DIR__ . $path;
-    file_put_contents($logFile, "Looking for file: $file\n", FILE_APPEND);
-
-    // 如果是 PHP 檔案，直接包含它
-    if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'php') {
-        if (file_exists($file)) {
-            file_put_contents($logFile, "Including PHP file: $file\n", FILE_APPEND);
-            include $file;
-            exit;
-        }
-    }
-
-    // 處理其他檔案
-    if (file_exists($file) && is_file($file)) {
-        // 設定正確的 Content-Type
-        $mime_types = [
-            'js' => 'application/javascript; charset=UTF-8',
-            'json' => 'application/json; charset=UTF-8',
-            'html' => 'text/html; charset=UTF-8',
-            'ico' => 'image/x-icon',
-            'css' => 'text/css; charset=UTF-8',
-            'png' => 'image/png',
-            'jpg' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'gif' => 'image/gif'
-        ];
-
-        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-        if (isset($mime_types[$ext])) {
-            header('Content-Type: ' . $mime_types[$ext]);
-        }
-
-        file_put_contents($logFile, "Serving file: $file\n", FILE_APPEND);
-        readfile($file);
-        exit;
-    } else {
-        file_put_contents($logFile, "File not found: $file\n", FILE_APPEND);
-        
-        // 嘗試在 backend 目錄中查找
-        $backendFile = __DIR__ . '/backend' . $path;
-        if (file_exists($backendFile) && is_file($backendFile)) {
-            file_put_contents($logFile, "Found in backend: $backendFile\n", FILE_APPEND);
-            if (strtolower(pathinfo($backendFile, PATHINFO_EXTENSION)) === 'php') {
-                include $backendFile;
-                exit;
+    // 取得當前請求的路徑
+    $request_uri = $_SERVER['REQUEST_URI'];
+    $path = parse_url($request_uri, PHP_URL_PATH);
+    
+    // 檢查是否為API請求
+    if (strpos($path, '/api/') === 0) {
+        // API請求處理
+        $matched_route = null;
+        foreach ($routes as $route => $config) {
+            if (strpos($path, $route) === 0) {
+                $matched_route = $config;
+                break;
             }
         }
         
-        http_response_code(404);
-        echo "File not found: " . htmlspecialchars($path);
+        if ($matched_route) {
+            if ($matched_route['auth']) {
+                $user = authenticate();
+                if (isset($matched_route['permission'])) {
+                    checkPermission($matched_route['permission']);
+                }
+            }
+            require_once $matched_route['file'];
+        } else {
+            http_response_code(404);
+            echo json_encode(['message' => '未找到對應的API']);
+        }
+    } else {
+        // 靜態文件處理
+        $file = ltrim($path, '/');
+        if (empty($file)) {
+            $file = 'index.html';
+        }
+        
+        // 檢查文件是否存在
+        if (file_exists($file)) {
+            // 根據文件類型設置Content-Type
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $content_types = [
+                'html' => 'text/html',
+                'css' => 'text/css',
+                'js' => 'application/javascript',
+                'json' => 'application/json',
+                'png' => 'image/png',
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'gif' => 'image/gif'
+            ];
+            
+            if (isset($content_types[$ext])) {
+                header('Content-Type: ' . $content_types[$ext]);
+            }
+            
+            readfile($file);
+        } else {
+            http_response_code(404);
+            echo '404 Not Found';
+        }
     }
 } catch (Exception $e) {
     file_put_contents($logFile, "Error: " . $e->getMessage() . "\n", FILE_APPEND);
     http_response_code(500);
-    echo "Server error: " . htmlspecialchars($e->getMessage());
+    echo json_encode(['message' => '系統錯誤：' . $e->getMessage()]);
 } 

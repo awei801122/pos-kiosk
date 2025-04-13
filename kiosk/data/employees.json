@@ -1,0 +1,74 @@
+{
+    "employees": [
+        {
+            "id": "employee_1",
+            "name": "張經理",
+            "phone": "0934567890",
+            "email": "zhang@example.com",
+            "birthday": "1985-03-10",
+            "address": "台北市中山區南京東路三段1號",
+            "hire_date": "2023-01-01",
+            "position": "店經理",
+            "department": "管理部",
+            "salary": 50000,
+            "status": "在職",
+            "working_hours": {
+                "monday": ["09:00", "18:00"],
+                "tuesday": ["09:00", "18:00"],
+                "wednesday": ["09:00", "18:00"],
+                "thursday": ["09:00", "18:00"],
+                "friday": ["09:00", "18:00"],
+                "saturday": ["10:00", "17:00"],
+                "sunday": ["休息"]
+            },
+            "performance": {
+                "total_orders": 100,
+                "total_sales": 50000,
+                "average_rating": 4.8,
+                "attendance_rate": 0.98
+            },
+            "permissions": {
+                "inventory_management": true,
+                "menu_management": true,
+                "order_management": true,
+                "employee_management": true,
+                "report_generation": true
+            }
+        },
+        {
+            "id": "employee_2",
+            "name": "林店員",
+            "phone": "0945678901",
+            "email": "lin@example.com",
+            "birthday": "1995-07-20",
+            "address": "台北市松山區八德路四段1號",
+            "hire_date": "2024-01-15",
+            "position": "正職店員",
+            "department": "營運部",
+            "salary": 35000,
+            "status": "在職",
+            "working_hours": {
+                "monday": ["13:00", "22:00"],
+                "tuesday": ["13:00", "22:00"],
+                "wednesday": ["13:00", "22:00"],
+                "thursday": ["13:00", "22:00"],
+                "friday": ["13:00", "22:00"],
+                "saturday": ["休息"],
+                "sunday": ["休息"]
+            },
+            "performance": {
+                "total_orders": 50,
+                "total_sales": 25000,
+                "average_rating": 4.5,
+                "attendance_rate": 0.95
+            },
+            "permissions": {
+                "inventory_management": false,
+                "menu_management": false,
+                "order_management": true,
+                "employee_management": false,
+                "report_generation": false
+            }
+        }
+    ]
+} 

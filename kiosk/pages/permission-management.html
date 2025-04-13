@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>權限管理 - POS 自助點餐系統</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">POS 自助點餐系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">首頁</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu-management.html">商品管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html">庫存管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user-management.html">使用者管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="permission-management.html">權限管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容 -->
+    <div class="container mt-4">
+        <!-- 標題和新增按鈕 -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>權限管理</h1>
+            <div>
+                <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#roleModal">
+                    <i class="fas fa-plus"></i> 新增角色
+                </button>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#permissionModal">
+                    <i class="fas fa-plus"></i> 新增權限
+                </button>
+            </div>
+        </div>
+
+        <!-- 角色列表 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">角色列表</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>角色代碼</th>
+                                <th>角色名稱</th>
+                                <th>描述</th>
+                                <th>權限數量</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roleTableBody">
+                            <!-- 角色列表將由 JavaScript 動態生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 權限列表 -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">權限列表</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>權限代碼</th>
+                                <th>權限名稱</th>
+                                <th>描述</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="permissionTableBody">
+                            <!-- 權限列表將由 JavaScript 動態生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 角色表單 Modal -->
+    <div class="modal fade" id="roleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roleModalTitle">新增角色</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="roleForm">
+                        <input type="hidden" id="roleId">
+                        <div class="mb-3">
+                            <label for="roleCode" class="form-label">角色代碼</label>
+                            <input type="text" class="form-control" id="roleCode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roleName" class="form-label">角色名稱</label>
+                            <input type="text" class="form-control" id="roleName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roleDescription" class="form-label">描述</label>
+                            <textarea class="form-control" id="roleDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">權限</label>
+                            <div id="permissionCheckboxes">
+                                <!-- 權限選項將由 JavaScript 動態生成 -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveRoleButton">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 權限表單 Modal -->
+    <div class="modal fade" id="permissionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="permissionModalTitle">新增權限</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="permissionForm">
+                        <input type="hidden" id="permissionId">
+                        <div class="mb-3">
+                            <label for="permissionCode" class="form-label">權限代碼</label>
+                            <input type="text" class="form-control" id="permissionCode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="permissionName" class="form-label">權限名稱</label>
+                            <input type="text" class="form-control" id="permissionName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="permissionDescription" class="form-label">描述</label>
+                            <textarea class="form-control" id="permissionDescription" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="savePermissionButton">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知容器 -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- 通知將由 JavaScript 動態生成 -->
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/permission-management.js"></script>
+</body>
+</html> 

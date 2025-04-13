@@ -4,10 +4,26 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "dev": "vite",
+    "build": "tsc && vite build",
     "package": "electron-packager . pos-kiosk-app --platform=win32 --arch=x64 --out=dist --overwrite"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.0",
+    "@mui/icons-material": "^5.15.0"
   },
   "devDependencies": {
     "electron": "^28.1.0",
-    "electron-packager": "^17.1.2"
+    "electron-packager": "^17.1.2",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "typescript": "^5.0.2",
+    "vite": "^5.0.0"
   }
 }

@@ -1,0 +1,151 @@
+{
+    "system": {
+        "name": "POS 自助點餐機系統",
+        "version": "1.0.0",
+        "environment": "production",
+        "debug_mode": false,
+        "maintenance_mode": false,
+        "timezone": "Asia/Taipei",
+        "language": "zh-TW",
+        "currency": "TWD",
+        "date_format": "YYYY-MM-DD",
+        "time_format": "HH:mm:ss",
+        "decimal_places": 2,
+        "tax_rate": 0.05,
+        "receipt_template": "default",
+        "printer_settings": {
+            "type": "thermal",
+            "width": 80,
+            "font_size": "normal",
+            "header": "POS 自助點餐機系統",
+            "footer": "感謝您的光臨"
+        }
+    },
+    "database": {
+        "type": "json",
+        "path": "./data",
+        "backup_path": "./backups",
+        "backup_interval": 86400,
+        "retention_days": 30
+    },
+    "security": {
+        "password_policy": {
+            "min_length": 8,
+            "require_uppercase": true,
+            "require_lowercase": true,
+            "require_numbers": true,
+            "require_special_chars": true,
+            "expiry_days": 90
+        },
+        "session_timeout": 1800,
+        "max_login_attempts": 5,
+        "lockout_duration": 1800,
+        "two_factor_auth": false,
+        "encryption": {
+            "algorithm": "aes-256-cbc",
+            "key": "********"
+        }
+    },
+    "api": {
+        "enabled": true,
+        "base_url": "http://localhost:3000",
+        "version": "v1",
+        "rate_limit": {
+            "enabled": true,
+            "requests": 100,
+            "period": 60
+        },
+        "authentication": {
+            "type": "jwt",
+            "expiry": 3600,
+            "refresh_expiry": 86400
+        }
+    },
+    "notifications": {
+        "enabled": true,
+        "types": [
+            "email",
+            "sms",
+            "push"
+        ],
+        "email": {
+            "enabled": true,
+            "smtp_server": "smtp.example.com",
+            "smtp_port": 587,
+            "smtp_username": "noreply@example.com",
+            "smtp_password": "********"
+        },
+        "sms": {
+            "enabled": false,
+            "provider": "twilio",
+            "account_sid": "********",
+            "auth_token": "********"
+        },
+        "push": {
+            "enabled": false,
+            "provider": "firebase",
+            "server_key": "********"
+        }
+    },
+    "payment": {
+        "enabled": true,
+        "methods": [
+            "cash",
+            "credit_card",
+            "line_pay"
+        ],
+        "cash": {
+            "enabled": true,
+            "rounding": true
+        },
+        "credit_card": {
+            "enabled": true,
+            "provider": "ecpay",
+            "merchant_id": "********",
+            "hash_key": "********",
+            "hash_iv": "********"
+        },
+        "line_pay": {
+            "enabled": true,
+            "channel_id": "********",
+            "channel_secret": "********"
+        }
+    },
+    "inventory": {
+        "enabled": true,
+        "low_stock_alert": true,
+        "alert_threshold": 10,
+        "auto_restock": false,
+        "restock_threshold": 20,
+        "supplier_notification": true
+    },
+    "reporting": {
+        "enabled": true,
+        "types": [
+            "daily",
+            "weekly",
+            "monthly",
+            "yearly"
+        ],
+        "auto_generate": true,
+        "retention_days": 365,
+        "export_formats": [
+            "pdf",
+            "excel",
+            "csv"
+        ]
+    },
+    "logging": {
+        "enabled": true,
+        "level": "info",
+        "file_path": "./logs",
+        "max_file_size": "10MB",
+        "retention_days": 30,
+        "categories": [
+            "system",
+            "security",
+            "business",
+            "error"
+        ]
+    }
+} 

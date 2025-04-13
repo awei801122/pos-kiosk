@@ -1,82 +1,155 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <title>自助點餐 Kiosk</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f8f8f8;
-    }
-    header {
-      background-color: #333;
-      color: white;
-      text-align: center;
-      padding: 1em;
-    }
-    .lang-toggle {
-      position: absolute;
-      right: 1em;
-      top: 1em;
-    }
-    .menu {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 1em;
-    }
-    .item {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      margin: 1em;
-      padding: 1em;
-      width: 200px;
-      text-align: center;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-    }
-    .item img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-    .cart {
-      background: #fff8dc;
-      padding: 1em;
-      margin: 1em;
-      border-radius: 10px;
-    }
-    button {
-      padding: 0.5em 1em;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 0.5em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .start-button {
+            font-size: 2rem;
+            padding: 20px 60px;
+            border-radius: 50px;
+            margin-top: 30px;
+        }
+        .footer {
+            background-color: #fff;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>自助點餐 Kiosk</h1>
-    <button id="langBtn" class="lang-toggle">English</button>
-  </header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">自助點餐系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">訂單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">商品管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sales-report.html">銷售報表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="report.html">歷史報表</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <div id="menu" class="menu"></div>
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">自助點餐系統</h1>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <a href="order.html" class="text-decoration-none text-dark">
+                    <div class="feature-card bg-light">
+                        <i class="bi bi-cart-plus feature-icon text-primary"></i>
+                        <h4>開始點餐</h4>
+                        <p class="text-muted">立即開始您的點餐</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="admin.html" class="text-decoration-none text-dark">
+                    <div class="feature-card bg-light">
+                        <i class="bi bi-list-check feature-icon text-success"></i>
+                        <h4>訂單管理</h4>
+                        <p class="text-muted">管理所有訂單</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="products.html" class="text-decoration-none text-dark">
+                    <div class="feature-card bg-light">
+                        <i class="bi bi-box-seam feature-icon text-warning"></i>
+                        <h4>商品管理</h4>
+                        <p class="text-muted">管理商品資訊</p>
+                    </div>
+                </a>
+            </div>
+        </div>
 
-  <section class="cart">
-    <h2>🧾 購物清單 / Order</h2>
-    <ul id="cart"></ul>
-    <p>總金額 / Total: <span id="total">$0</span></p>
-    <button id="submitOrder">送出訂單 / Submit</button>
-  </section>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-3">
+                <a href="sales-report.html" class="text-decoration-none text-dark">
+                    <div class="feature-card bg-light">
+                        <i class="bi bi-graph-up feature-icon text-info"></i>
+                        <h4>銷售報表</h4>
+                        <p class="text-muted">查看銷售統計</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="report.html" class="text-decoration-none text-dark">
+                    <div class="feature-card bg-light">
+                        <i class="bi bi-file-earmark-text feature-icon text-secondary"></i>
+                        <h4>歷史報表</h4>
+                        <p class="text-muted">查看歷史記錄</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="display.html" class="text-decoration-none text-dark">
+                    <div class="feature-card bg-light">
+                        <i class="bi bi-display feature-icon text-danger"></i>
+                        <h4>叫號顯示</h4>
+                        <p class="text-muted">訂單叫號系統</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
 
-  <!-- 主程式 -->
-  <script src="order.js"></script>
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p class="mb-0">© 2024 POS自助點餐系統</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html> 

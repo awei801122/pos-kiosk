@@ -1,0 +1,62 @@
+{
+    "staff": [
+        {
+            "id": "staff_1",
+            "name": "張經理",
+            "phone": "0934567890",
+            "email": "zhang@example.com",
+            "position": "manager",
+            "department": "management",
+            "hire_date": "2022-01-01",
+            "status": "active",
+            "permissions": [
+                "inventory_management",
+                "staff_management",
+                "report_viewing",
+                "system_settings"
+            ],
+            "schedule": {
+                "monday": ["09:00-18:00"],
+                "tuesday": ["09:00-18:00"],
+                "wednesday": ["09:00-18:00"],
+                "thursday": ["09:00-18:00"],
+                "friday": ["09:00-18:00"],
+                "saturday": ["10:00-17:00"],
+                "sunday": ["10:00-17:00"]
+            },
+            "performance": {
+                "attendance_rate": 98,
+                "customer_rating": 4.8,
+                "sales_target": 95
+            }
+        },
+        {
+            "id": "staff_2",
+            "name": "林店員",
+            "phone": "0945678901",
+            "email": "lin@example.com",
+            "position": "cashier",
+            "department": "sales",
+            "hire_date": "2023-01-01",
+            "status": "active",
+            "permissions": [
+                "order_processing",
+                "inventory_viewing"
+            ],
+            "schedule": {
+                "monday": ["12:00-21:00"],
+                "tuesday": ["12:00-21:00"],
+                "wednesday": ["12:00-21:00"],
+                "thursday": ["12:00-21:00"],
+                "friday": ["12:00-21:00"],
+                "saturday": ["10:00-19:00"],
+                "sunday": ["10:00-19:00"]
+            },
+            "performance": {
+                "attendance_rate": 100,
+                "customer_rating": 4.9,
+                "sales_target": 100
+            }
+        }
+    ]
+} 

@@ -1,0 +1,33 @@
+{
+    "devices": {
+        "kiosk": {
+            "name": "點餐機",
+            "allowed_ips": [
+                "192.168.1.100",
+                "192.168.1.101"
+            ],
+            "description": "客戶自助點餐機"
+        },
+        "pos": {
+            "name": "POS後台",
+            "allowed_ips": [
+                "192.168.1.200",
+                "192.168.1.201"
+            ],
+            "description": "店員POS管理系統"
+        }
+    },
+    "network": {
+        "subnet": "192.168.1.0/24",
+        "gateway": "192.168.1.1",
+        "dns": [
+            "192.168.1.1",
+            "8.8.8.8"
+        ]
+    },
+    "server": {
+        "host": "localhost",
+        "port": 80,
+        "debug": true
+    }
+} 

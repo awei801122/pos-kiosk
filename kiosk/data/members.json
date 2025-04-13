@@ -1,0 +1,54 @@
+{
+    "members": [
+        {
+            "id": "member_1",
+            "name": "王小明",
+            "phone": "0912345678",
+            "email": "wang@example.com",
+            "birthday": "1990-01-01",
+            "address": "台北市信義區信義路五段7號",
+            "join_date": "2023-01-01",
+            "membership_level": "gold",
+            "points": 1000,
+            "total_spent": 15000,
+            "last_visit": "2024-03-15",
+            "favorite_items": [
+                "product_1",
+                "product_3"
+            ],
+            "preferences": {
+                "language": "zh-TW",
+                "notifications": {
+                    "email": true,
+                    "sms": true,
+                    "app": true
+                }
+            }
+        },
+        {
+            "id": "member_2",
+            "name": "李小華",
+            "phone": "0923456789",
+            "email": "li@example.com",
+            "birthday": "1995-05-05",
+            "address": "台北市大安區忠孝東路四段1號",
+            "join_date": "2023-06-01",
+            "membership_level": "silver",
+            "points": 500,
+            "total_spent": 8000,
+            "last_visit": "2024-03-15",
+            "favorite_items": [
+                "product_2",
+                "product_3"
+            ],
+            "preferences": {
+                "language": "zh-TW",
+                "notifications": {
+                    "email": true,
+                    "sms": false,
+                    "app": true
+                }
+            }
+        }
+    ]
+} 

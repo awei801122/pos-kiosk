@@ -1,0 +1,22 @@
+{
+    "categories": [
+        {
+            "id": "category_1",
+            "name": "肉類",
+            "description": "各種肉類食材",
+            "items": ["牛肉", "豬肉", "雞肉"]
+        },
+        {
+            "id": "category_2",
+            "name": "蔬菜",
+            "description": "各種蔬菜食材",
+            "items": ["高麗菜", "青江菜", "空心菜"]
+        },
+        {
+            "id": "category_3",
+            "name": "主食",
+            "description": "各種主食食材",
+            "items": ["白米", "麵粉", "食用油"]
+        }
+    ]
+} 

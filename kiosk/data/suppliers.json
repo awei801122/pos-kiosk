@@ -1,0 +1,37 @@
+{
+    "suppliers": [
+        {
+            "id": "supplier_1",
+            "name": "優質肉品供應商",
+            "contact": "張先生",
+            "phone": "0912-345-678",
+            "email": "meat@example.com",
+            "address": "台北市信義區信義路五段7號",
+            "categories": ["category_1"],
+            "payment_terms": "月結30天",
+            "status": "active"
+        },
+        {
+            "id": "supplier_2",
+            "name": "新鮮蔬果供應商",
+            "contact": "李小姐",
+            "phone": "0923-456-789",
+            "email": "vegetable@example.com",
+            "address": "台北市大安區仁愛路四段1號",
+            "categories": ["category_2"],
+            "payment_terms": "月結15天",
+            "status": "active"
+        },
+        {
+            "id": "supplier_3",
+            "name": "糧食供應商",
+            "contact": "王先生",
+            "phone": "0934-567-890",
+            "email": "grain@example.com",
+            "address": "台北市中正區忠孝東路一段1號",
+            "categories": ["category_3"],
+            "payment_terms": "月結30天",
+            "status": "active"
+        }
+    ]
+} 
