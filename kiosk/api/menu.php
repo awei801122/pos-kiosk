@@ -30,12 +30,17 @@ try {
                     name_zh AS name, 
                     price, 
                     category AS category_id, 
-                    CONCAT('img/products/food-', id, '.jpg') AS image_url, 
+                    image,
                     is_active AS is_available 
                 FROM menu 
                 WHERE is_active = 1
             ");
             $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // 加入 image_url 欄位
+            foreach ($items as &$row) {
+                $row['image_url'] = empty($row['image']) ? '/img/default-food.jpg' : ('/' . $row['image']);
+            }
+            unset($row);
             echo json_encode([
                 'success' => true,
                 'categories' => $categories,

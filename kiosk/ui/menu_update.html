@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>商品管理 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #475569;
+            --light-bg: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+        body { background-color: var(--light-bg);}
+        .navbar { background: linear-gradient(to right, #1e40af, #3b82f6); }
+        .table { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
+        .table th, .table td { vertical-align: middle;}
+        .table th { background: var(--light-bg);}
+        .img-thumb { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; }
+        .switch { width: 48px; height: 24px; position: relative; display: inline-block;}
+        .switch input { opacity: 0; width: 0; height: 0;}
+        .slider { position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0; background: #ccc; border-radius: 24px; transition:.4s;}
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition:.4s;}
+        input:checked + .slider { background: #4ade80;}
+        input:checked + .slider:before { transform: translateX(24px);}
+        .add-btn { float: right; }
+        .action-btn { border: none; background: none; color: #2563eb; font-size: 1.2rem;}
+        .action-btn:hover { color: #dc2626;}
+        .badge-active { background: #4ade80; color: #222;}
+        .badge-inactive { background: #d1d5db; color: #888;}
+    </style>
+</head>
+<body>
+    <!-- 導覽列 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shop me-2"></i>自助點餐系統
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="admin.html"><i class="bi bi-list-check me-1"></i>訂單管理</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="manu_update.html"><i class="bi bi-grid me-1"></i>商品管理</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sales-report.html"><i class="bi bi-graph-up me-1"></i>銷售報表</a></li>
+                    <li class="nav-item"><a class="nav-link" href="report.html"><i class="bi bi-file-text me-1"></i>歷史報表</a></li>
+                    <li class="nav-item"><a class="nav-link" href="call.html"><i class="bi bi-display me-1"></i>叫號顯示器</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="mb-3">商品管理
+            <button class="btn btn-primary btn-sm add-btn" onclick="openEditModal()">
+                <i class="bi bi-plus-circle"></i> 新增商品
+            </button>
+        </h2>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>圖片</th>
+                        <th>中文名稱</th>
+                        <th>英文名稱</th>
+                        <th>分類</th>
+                        <th>價格</th>
+                        <th>庫存</th>
+                        <th>狀態</th>
+                        <th>建立時間</th>
+                        <th>更新時間</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="menuTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 編輯/新增 Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editForm" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalTitle">新增商品</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="menuId">
+                        <div class="mb-2">
+                            <label class="form-label">中文名稱</label>
+                            <input type="text" id="name_zh" class="form-control" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">英文名稱</label>
+                            <input type="text" id="name_en" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">分類</label>
+                            <input type="text" id="category" class="form-control" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">價格</label>
+                            <input type="number" id="price" class="form-control" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">商品圖片</label>
+                            <input type="file" id="image_file" class="form-control" accept="image/*" onchange="previewImage(event)">
+                            <input type="hidden" id="image" name="image">
+                            <img id="image_preview" style="max-width:100%;max-height:120px;margin-top:6px;display:none;border-radius:8px;">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">庫存</label>
+                            <input type="number" id="stock" class="form-control" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">上架狀態</label>
+                            <select id="is_active" class="form-select">
+                                <option value="1">上架</option>
+                                <option value="0">下架</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">儲存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // 用API自動抓資料
+        let menuData = [];
+        let editingItem = null;
+        window.onload = function(){
+            const tbody = document.getElementById('menuTable');
+            tbody.innerHTML = `<tr><td colspan="11" class="text-center">載入中...</td></tr>`;
+            fetch('/api/menu-crud.php?action=list')
+              .then(r => r.json())
+              .then(data => {
+                  menuData = data;
+                  renderMenuTable();
+              })
+              .catch(err=>{
+                  tbody.innerHTML = `<tr><td colspan="11" class="text-danger text-center">載入失敗：${err}</td></tr>`;
+              });
+        };
+
+        function renderMenuTable(){
+            const tbody = document.getElementById('menuTable');
+            tbody.innerHTML = menuData.map(item=>`
+                <tr>
+                    <td>${item.id}</td>
+                    <td><img src="${item.image}" class="img-thumb"></td>
+                    <td>${item.name_zh}</td>
+                    <td>${item.name_en}</td>
+                    <td>${item.category}</td>
+                    <td>NT$${item.price}</td>
+                    <td>${item.stock}</td>
+                    <td>
+                        <span class="badge ${item.is_active==1?'badge-active':'badge-inactive'}">
+                            ${item.is_active==1?'上架':'下架'}
+                        </span>
+                    </td>
+                    <td>${item.created_at}</td>
+                    <td>${item.updated_at}</td>
+                    <td>
+                        <button class="action-btn" title="編輯" onclick="openEditModal(${item.id})"><i class="bi bi-pencil-square"></i></button>
+                        <button class="action-btn" title="刪除" onclick="deleteMenuItem(${item.id})"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openEditModal(id){
+            // 預設圖片預覽/表單內容
+            const preview = document.getElementById('image_preview');
+            editingItem = menuData.find(i=>i.id==id) || null;
+            document.getElementById('editModalTitle').innerText = editingItem ? "編輯商品" : "新增商品";
+            document.getElementById('editForm').reset();
+            document.getElementById('menuId').value = editingItem?editingItem.id:"";
+            document.getElementById('name_zh').value = editingItem?editingItem.name_zh:"";
+            document.getElementById('name_en').value = editingItem?editingItem.name_en:"";
+            document.getElementById('category').value = editingItem?editingItem.category:"";
+            document.getElementById('price').value = editingItem?editingItem.price:"";
+            document.getElementById('stock').value = editingItem?editingItem.stock:"";
+            document.getElementById('is_active').value = editingItem?editingItem.is_active:1;
+            // 預設圖片路徑與預覽
+            if (editingItem && editingItem.image) {
+                preview.src = editingItem.image;
+                preview.style.display = 'block';
+                document.getElementById('image').value = editingItem.image;
+            } else {
+                preview.src = "";
+                preview.style.display = 'none';
+                document.getElementById('image').value = "";
+            }
+            // 清空 file input
+            document.getElementById('image_file').value = '';
+            let modal = new bootstrap.Modal(document.getElementById('editModal'));
+            modal.show();
+        }
+
+        document.getElementById('editForm').onsubmit = function(e){
+            e.preventDefault();
+            const id = document.getElementById('menuId').value;
+            const name_zh = document.getElementById('name_zh').value;
+            const name_en = document.getElementById('name_en').value;
+            const category = document.getElementById('category').value;
+            const price = document.getElementById('price').value;
+            const stock = document.getElementById('stock').value;
+            const is_active = document.getElementById('is_active').value;
+            const old_image = document.getElementById('image').value;
+            const fileInput = document.getElementById('image_file');
+            const formData = new FormData();
+            formData.append('name_zh', name_zh);
+            formData.append('name_en', name_en);
+            formData.append('category', category);
+            formData.append('price', price);
+            formData.append('stock', stock);
+            formData.append('is_active', is_active);
+
+            let apiUrl = '/api/menu-crud.php';
+            if (fileInput.files && fileInput.files[0]) {
+                formData.append('image', fileInput.files[0]);
+            }
+            if(id){
+                formData.append('action','edit');
+                formData.append('id', id);
+                formData.append('old_image', old_image);
+            }else{
+                formData.append('action','add');
+            }
+
+            fetch(apiUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(r=>r.json())
+            .then(data=>{
+                if(data.success){
+                    bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+                    Swal.fire({icon:'success',title:'儲存成功'}).then(()=>location.reload());
+                }else{
+                    Swal.fire({icon:'error',title:'儲存失敗',text:data.msg});
+                }
+            });
+        };
+
+        function deleteMenuItem(id){
+            Swal.fire({
+                title: "確定要刪除嗎？",
+                icon: "warning", showCancelButton: true,
+                confirmButtonText: "刪除", cancelButtonText: "取消"
+            }).then(res=>{
+                if(res.isConfirmed){
+                    const formData = new FormData();
+                    formData.append('action','delete');
+                    formData.append('id',id);
+                    fetch('/api/menu-crud.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(r=>r.json())
+                    .then(data=>{
+                        if(data.success){
+                            Swal.fire({icon:'success',title:'已刪除'}).then(()=>location.reload());
+                        }else{
+                            Swal.fire({icon:'error',title:'刪除失敗',text:data.msg});
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+    <script>
+        // 預覽圖片
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('image_preview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = "";
+                preview.style.display = "none";
+            }
+        }
+    </script>

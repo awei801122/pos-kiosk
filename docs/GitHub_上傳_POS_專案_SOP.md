@@ -69,7 +69,7 @@ https://github.com/awei801122/pos-mvp
 
 ```bash
 git add .
-git commit -m "v2,0:結帳頁面完成"
+git commit -m "v2,3:結帳，點餐，銷售報表功能mvp完成"
 git push
 ```
 
