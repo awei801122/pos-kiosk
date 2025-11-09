@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:8.0
+    container_name: pos-mvp-db
+    command: --sql-mode=""
+    restart: always
+    environment:
+      MYSQL_DATABASE: pos_db
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Taipei
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./logs:/var/www/html/logs
+      - ./ui/img/products:/var/www/html/ui/img/products  # 只有商品圖片對應資料夾掛載（安全交付）
+      - ./ui/img/qr:/var/www/html/ui/img/qr  # 只讀掛載，避免修改原始圖片
+
+
+  php:
+    build: .
+    container_name: pos-mvp-web
+    restart: always
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    volumes:
+      - ./api:/var/www/html/api                  # 掛你的 API 原始碼
+      - ./ui/img/products:/var/www/html/ui/img/products # 掛商品圖片目錄
+      - ./logs:/var/www/html/logs                      # 掛你的 logs 資料夾（如果有用）
+      - ./data:/var/www/html/data                  # 掛你的 data 資料夾（如果有用）
+      - ./ui:/var/www/html/ui                      # 掛你的 UI 原始碼
+

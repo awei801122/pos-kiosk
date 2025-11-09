@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>系統設定 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8fafc; }
+        .navbar {
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 70px;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .card { border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
+        .form-label { font-weight: bold;}
+        .btn-primary { background: #2563eb; border-color: #2563eb;}
+    </style>
+</head>
+<body>
+    <!-- 導覽列（與 menu_update.html 一致） -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand fw-bold text-white" href="order.html">
+          <i class="bi bi-shop me-2"></i>YJOVA自助點餐系統
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link text-white" id="nav-order" href="order.html"><i class="bi bi-bag-check me-1"></i>點餐頁</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-admin" href="admin.html"><i class="bi bi-list-check me-1"></i>訂單管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-menu" href="menu_update.html"><i class="bi bi-grid me-1"></i>商品管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-inventory" href="inventory.html"><i class="bi bi-box-seam me-1"></i>庫存管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-call" href="call.html" target="_blank"><i class="bi bi-display me-1"></i>叫號顯示</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-user" href="user.html"><i class="bi bi-shield-lock me-1"></i>權限管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-sales" href="sales-report.html"><i class="bi bi-graph-up me-1"></i>銷售報表</a></li>
+            <li class="nav-item"><a class="nav-link text-white active fw-bold" id="nav-system" href="system-setting.html"><i class="bi bi-gear me-1"></i>系統設定</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-logout" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>登出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container my-4">
+        <div class="card p-4 mx-auto" style="max-width:600px;">
+            <h3 class="mb-3"><i class="bi bi-gear me-2"></i>系統設定</h3>
+            <form id="settingForm">
+                <!-- 出單策略 -->
+                <div class="mb-3">
+                    <label for="printer_strategy" class="form-label">出單策略</label>
+                    <select id="printer_strategy" name="printer_strategy" class="form-select" required>
+                        <option value="front">點餐出單（客人下單即列印）</option>
+                        <option value="counter">櫃檯出單（由櫃檯操作列印）</option>
+                        <option value="both">兩者皆可</option>
+                    </select>
+                </div>
+                <!-- 其他全局設定可持續擴充：例 -->
+                <!--
+                <div class="mb-3">
+                    <label for="business_hours" class="form-label">營業時間</label>
+                    <input type="text" id="business_hours" name="business_hours" class="form-control" placeholder="如 10:00-22:00">
+                </div>
+                -->
+                <button type="submit" class="btn btn-primary w-100">儲存設定</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // 頁面載入時抓取設定
+        window.onload = function() {
+            fetch('/api/system-setting.php?action=get')
+            .then(r => r.json())
+            .then(data => {
+                if(data.printer_strategy)
+                    document.getElementById('printer_strategy').value = data.printer_strategy;
+                // 其他欄位同步（如有）
+            });
+        };
+        // 表單送出
+        document.getElementById('settingForm').onsubmit = function(e){
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('action', 'save');
+            formData.append('printer_strategy', document.getElementById('printer_strategy').value);
+            // 若有其他欄位一併 append
+            fetch('/api/system-setting.php', {
+                method:'POST',
+                body: formData
+            }).then(r=>r.json())
+              .then(data=>{
+                if(data.success){
+                    Swal.fire({icon:'success',title:'設定已儲存'});
+                }else{
+                    Swal.fire({icon:'error',title:'儲存失敗',text:data.msg||''});
+                }
+              });
+        };
+    </script>
+</body>
+</html>

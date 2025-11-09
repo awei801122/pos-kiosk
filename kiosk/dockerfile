@@ -1,0 +1,21 @@
+FROM php:8.2-apache
+
+RUN docker-php-ext-install pdo_mysql
+
+WORKDIR /var/www/html
+
+# 將所有主程式包進 image
+COPY ./api/ /var/www/html/api/
+COPY ./ui/ /var/www/html/ui/
+COPY ./ui/assets/ /var/www/html/ui/assets/
+COPY ./ui/css/ /var/www/html/ui/css/
+COPY ./ui/js/ /var/www/html/ui/js/
+
+# 商品圖片交由 volume 掛載，其他圖片（預設圖、圖示）可直接包進 image
+COPY ./ui/img/ /var/www/html/ui/img/
+
+# 建立上傳資料夾（確保可被掛載覆蓋）
+RUN mkdir -p /var/www/html/ui/img/products
+
+EXPOSE 80
+RUN mkdir -p /var/www/html/logs /var/www/html/ui/img/products /var/www/html/ui/assets/sounds

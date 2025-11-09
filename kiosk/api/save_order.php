@@ -9,9 +9,9 @@ date_default_timezone_set('Asia/Taipei');
 header('Content-Type: application/json');
 
 // 建立資料庫連線
-$dsn = "mysql:host=localhost;dbname=pos_db;charset=utf8mb4";
+$dsn = "mysql:host=pos-mvp-db;dbname=pos_db;charset=utf8mb4";
 $user = "root";
-$password = "";
+$password = "root";
 
 try {
     $pdo = new PDO($dsn, $user, $password, [

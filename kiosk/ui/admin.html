@@ -27,6 +27,9 @@
         .navbar {
             background: linear-gradient(to right, #1e40af, #3b82f6);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 70px;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
         }
 
         .navbar-brand {
@@ -175,6 +178,23 @@
             color: white;
         }
 
+        .view-switch .btn {
+            min-width: 120px;
+        }
+
+        .view-switch .btn.active {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        #categoryFilterWrapper {
+            display: none;
+        }
+
+        #categoryFilter {
+            min-width: 180px;
+        }
+
         .alert {
             border-radius: 12px;
             border: none;
@@ -305,44 +325,27 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="bi bi-shop me-2"></i>自助點餐系統
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="admin.html">
-                            <i class="bi bi-list-check me-1"></i>訂單管理
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="menu_update.html">
-                            <i class="bi bi-grid me-1"></i>商品管理
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="sales-report.html">
-                            <i class="bi bi-graph-up me-1"></i>銷售報表
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="report.html">
-                            <i class="bi bi-file-text me-1"></i>歷史報表
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="call.html" target="_blank">
-                            <i class="bi bi-display me-1"></i>叫號顯示器
-                        </a>
-                    </li>
-                </ul>
-            </div>
+    <nav class="navbar navbar-expand-lg" style="background-color: #2563eb;">
+      <div class="container">
+        <a class="navbar-brand fw-bold text-white" href="order.html">
+          <i class="bi bi-shop me-2"></i>YJOVA自助點餐系統
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link text-white" id="nav-order" href="order.html"><i class="bi bi-bag-check me-1"></i>點餐頁</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-admin" href="admin.html"><i class="bi bi-list-check me-1"></i>訂單管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-menu" href="menu_update.html"><i class="bi bi-grid me-1"></i>商品管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-inventory" href="inventory.html"><i class="bi bi-box-seam me-1"></i>庫存管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-call" href="call.html" target="_blank"><i class="bi bi-display me-1"></i>叫號顯示</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-user" href="user.html"><i class="bi bi-shield-lock me-1"></i>權限管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-sales" href="sales-report.html"><i class="bi bi-graph-up me-1"></i>銷售報表</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-logout" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>登出</a></li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <!-- 設置面板 -->
@@ -360,6 +363,23 @@
     </div>
 
     <div class="container mt-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3 view-switch">
+            <div class="btn-group" role="group" aria-label="View switch">
+                <button type="button" class="btn btn-outline-primary active" id="viewOrdersBtn" onclick="switchView('orders')">
+                    <i class="bi bi-list-ul me-1"></i>依訂單
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="viewItemsBtn" onclick="switchView('items')">
+                    <i class="bi bi-grid-3x3-gap me-1"></i>依品項
+                </button>
+            </div>
+            <div class="d-flex align-items-center gap-2" id="categoryFilterWrapper">
+                <label for="categoryFilter" class="form-label mb-0 text-muted">分類</label>
+                <select class="form-select" id="categoryFilter" onchange="handleCategoryChange(this.value)">
+                    <option value="all">全部分類</option>
+                </select>
+            </div>
+        </div>
+
         <!-- 訂單狀態分類標籤 -->
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
@@ -450,7 +470,17 @@
 
         let currentFilter = 'all';
         let orders = [];
-        
+        let currentView = 'orders';
+        let itemGroupsRaw = [];
+        let currentCategoryFilter = 'all';
+        let lastOrdersFetch = 0;
+        let lastItemsFetch = 0;
+        let isLoadingOrders = false;
+        let isLoadingItems = false;
+        const ORDERS_REFRESH_INTERVAL = 1000;   // 1 秒輪詢訂單狀態
+        const ITEMS_REFRESH_INTERVAL = 4000;    // 4 秒更新一次品項視圖
+        let lastItemGroupsSnapshot = '';
+
         // 聲音設置
         const SOUND_SETTINGS = {
             enabled: true,
@@ -527,6 +557,15 @@
             }
         }
 
+        const escapeHtml = (unsafe = '') => {
+            return String(unsafe)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
         // 過濾訂單顯示
         function filterOrders(filter) {
             try {
@@ -540,61 +579,356 @@
                     }
                 });
 
-                // 重新載入並顯示訂單
-                loadOrders();
+                refreshView(true);
             } catch (error) {
                 console.error('過濾訂單時發生錯誤：', error);
             }
         }
 
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 載入訂單並顯示
-            loadOrders();
-            
-            // 監聽訂單更新事件
-            window.addEventListener('orderUpdated', function(event) {
-                console.log('收到訂單更新事件：', event.detail);
-                loadOrders();  // 重新載入訂單
+        function switchView(view) {
+            if (currentView === view) return;
+
+            currentView = view;
+
+            const ordersBtn = document.getElementById('viewOrdersBtn');
+            const itemsBtn = document.getElementById('viewItemsBtn');
+            const categoryWrapper = document.getElementById('categoryFilterWrapper');
+
+            if (ordersBtn && itemsBtn) {
+                ordersBtn.classList.toggle('active', view === 'orders');
+                itemsBtn.classList.toggle('active', view === 'items');
+            }
+
+            if (categoryWrapper) {
+                categoryWrapper.style.display = view === 'items' ? 'flex' : 'none';
+            }
+
+            refreshView(true);
+        }
+
+        function handleCategoryChange(value) {
+            currentCategoryFilter = value || 'all';
+            if (currentView === 'items') {
+                renderItemView();
+            }
+        }
+
+        function refreshView(force = false) {
+            const now = Date.now();
+            if (currentView === 'orders') {
+                if (!force && (now - lastOrdersFetch) < ORDERS_REFRESH_INTERVAL) {
+                    return;
+                }
+                loadOrders(force);
+            } else {
+                if (!force && (now - lastItemsFetch) < ITEMS_REFRESH_INTERVAL) {
+                    return;
+                }
+                loadItemGroups(force);
+            }
+        }
+
+        async function loadItemGroups(force = false) {
+            if (isLoadingItems) return;
+            isLoadingItems = true;
+            lastItemsFetch = Date.now();
+
+            try {
+                const container = document.getElementById('orderList');
+                if (container && (force || itemGroupsRaw.length === 0)) {
+                    container.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-light text-center">
+                                <i class="bi bi-arrow-repeat me-2"></i>載入品項中…
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const response = await fetch('../api/get-orders.php?mode=items');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                if (!Array.isArray(data)) throw new Error('品項資料格式錯誤');
+
+                const snapshot = JSON.stringify(data);
+                if (!force && snapshot === lastItemGroupsSnapshot) {
+                    lastItemsFetch = Date.now();
+                    return;
+                }
+                lastItemGroupsSnapshot = snapshot;
+                itemGroupsRaw = data;
+                lastItemsFetch = Date.now();
+                updateCategoryFilterOptions(itemGroupsRaw);
+                renderItemView();
+            } catch (error) {
+                console.error('載入品項資料時發生錯誤：', error);
+                showErrorMessage(`載入品項資料失敗：${error.message}`);
+            } finally {
+                isLoadingItems = false;
+            }
+        }
+
+        function updateCategoryFilterOptions(groups) {
+            const categorySelect = document.getElementById('categoryFilter');
+            if (!categorySelect) return;
+
+            const categories = Array.from(new Set(
+                groups
+                    .map(group => group.category || '未分類')
+                    .filter(Boolean)
+            )).sort((a, b) => a.localeCompare(b, 'zh-Hant'));
+
+            const previousValue = currentCategoryFilter || 'all';
+            const options = ['<option value="all">全部分類</option>']
+                .concat(categories.map(category => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`));
+
+            categorySelect.innerHTML = options.join('');
+            if (categories.includes(previousValue)) {
+                categorySelect.value = previousValue;
+            } else {
+                categorySelect.value = 'all';
+                currentCategoryFilter = 'all';
+            }
+        }
+
+        function matchesItemStatusFilter(group) {
+            const activeCounts = (group.pendingQuantity || 0) + (group.preparingQuantity || 0) + (group.readyQuantity || 0);
+            switch (currentFilter) {
+                case 'pending':
+                    return (group.pendingQuantity || 0) > 0;
+                case 'preparing':
+                    return (group.preparingQuantity || 0) > 0;
+                case 'ready':
+                    return (group.readyQuantity || 0) > 0;
+                case 'completed':
+                    return (group.completedQuantity || 0) > 0 && activeCounts === 0;
+                case 'all':
+                default:
+                    return activeCounts > 0;
+            }
+        }
+
+        function updateItemCountBadges(groups) {
+            try {
+                const activeGroups = groups.filter(group => {
+                    const activeTotal = (group.pendingQuantity || 0) + (group.preparingQuantity || 0) + (group.readyQuantity || 0);
+                    return activeTotal > 0;
+                });
+
+                const counts = {
+                    all: activeGroups.length,
+                    pending: groups.filter(group => (group.pendingQuantity || 0) > 0).length,
+                    preparing: groups.filter(group => (group.preparingQuantity || 0) > 0).length,
+                    ready: groups.filter(group => (group.readyQuantity || 0) > 0).length,
+                    completed: groups.filter(group => {
+                        const completedQty = group.completedQuantity || 0;
+                        const activeQty = (group.pendingQuantity || 0) + (group.preparingQuantity || 0) + (group.readyQuantity || 0);
+                        return completedQty > 0 && activeQty === 0;
+                    }).length
+                };
+
+                document.getElementById('count-all').textContent = counts.all || 0;
+                document.getElementById('count-pending').textContent = counts.pending || 0;
+                document.getElementById('count-preparing').textContent = counts.preparing || 0;
+                document.getElementById('count-ready').textContent = counts.ready || 0;
+                document.getElementById('count-completed').textContent = counts.completed || 0;
+            } catch (error) {
+                console.error('更新品項統計時發生錯誤：', error);
+            }
+        }
+
+        function renderItemView() {
+            const orderList = document.getElementById('orderList');
+            if (!orderList) return;
+
+            const baseGroups = itemGroupsRaw || [];
+            let displayGroups = baseGroups.slice();
+
+            if (currentCategoryFilter !== 'all') {
+                displayGroups = displayGroups.filter(group => (group.category || '未分類') === currentCategoryFilter);
+            }
+
+            updateItemCountBadges(displayGroups);
+
+            const filteredGroups = displayGroups.filter(matchesItemStatusFilter);
+
+            if (!filteredGroups.length) {
+                orderList.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-inbox me-2"></i>
+                            目前沒有符合條件的品項
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            orderList.innerHTML = filteredGroups.map(generateItemCard).join('');
+        }
+
+        function generateItemCard(group) {
+            const pendingOrders = (group.orders || []).filter(order => order.status === ORDER_STATUS.PENDING);
+            const preparingOrders = (group.orders || []).filter(order => order.status === ORDER_STATUS.PREPARING);
+
+            const pendingNumbers = pendingOrders.map(order => order.orderNumber);
+            const preparingNumbers = preparingOrders.map(order => order.orderNumber);
+
+            const actionButtons = [];
+            if (pendingNumbers.length) {
+                actionButtons.push(`
+                    <button class="btn btn-primary" onclick='bulkUpdateStatus(${JSON.stringify(pendingNumbers)}, "${ORDER_STATUS.PREPARING}")'>
+                        <i class="bi bi-play-fill me-1"></i>全部開始製作
+                    </button>
+                `);
+            }
+            if (preparingNumbers.length) {
+                actionButtons.push(`
+                    <button class="btn btn-success" onclick='bulkUpdateStatus(${JSON.stringify(preparingNumbers)}, "${ORDER_STATUS.READY}")'>
+                        <i class="bi bi-check2-circle me-1"></i>全部完成製作
+                    </button>
+                `);
+            }
+
+            const statusSummary = `
+                <div class="small text-muted">
+                    <span class="me-3"><i class="bi bi-hourglass-split text-warning me-1"></i>待處理 ${group.pendingQuantity || 0}</span>
+                    <span class="me-3"><i class="bi bi-tools text-primary me-1"></i>製作中 ${group.preparingQuantity || 0}</span>
+                    <span class="me-3"><i class="bi bi-bag-check text-success me-1"></i>待取餐 ${group.readyQuantity || 0}</span>
+                    <span><i class="bi bi-archive text-secondary me-1"></i>已完成 ${group.completedQuantity || 0}</span>
+                </div>
+            `;
+
+            const orderListHtml = (group.orders || []).map(order => {
+                const badgeClass = getStatusClass(order.status);
+                const statusText = getStatusText(order.status);
+                const noteText = order.note ? `<div class="text-muted small mt-1">備註：${escapeHtml(order.note)}</div>` : '';
+                const callNumber = order.callNumber ? `#${order.callNumber}` : '--';
+
+                return `
+                    <div class="order-item">
+                        <div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-medium">${escapeHtml(order.orderNumber || '')}</span>
+                                <span class="badge ${badgeClass}">${statusText}</span>
+                            </div>
+                            <div class="text-muted small mt-1">
+                                取餐號：${escapeHtml(callNumber)}｜數量：${order.quantity || 0}
+                            </div>
+                            ${noteText}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="col-12 mb-4">
+                    <div class="order-card">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                            <div>
+                                <h4 class="mb-1">${escapeHtml(group.itemName)}</h4>
+                                <span class="badge bg-light text-dark">${escapeHtml(group.category || '未分類')}</span>
+                            </div>
+                            <div class="text-end">
+                                <div class="fs-3 fw-bold text-primary">${group.totalQuantity || 0} 份</div>
+                                ${statusSummary}
+                            </div>
+                        </div>
+                        <div class="order-items">
+                            ${orderListHtml}
+                        </div>
+                        ${actionButtons.length ? `<div class="order-actions">${actionButtons.join('')}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function bulkUpdateStatus(orderNumbers, targetStatus) {
+            if (!Array.isArray(orderNumbers) || !orderNumbers.length) return;
+
+            const uniqueOrders = Array.from(new Set(orderNumbers.filter(Boolean)));
+            if (!uniqueOrders.length) return;
+
+            const statusText = getStatusText(targetStatus) || targetStatus;
+
+            const confirmResult = await Swal.fire({
+                title: '批次更新確認',
+                html: `將 ${uniqueOrders.length} 筆訂單更新為「${statusText}」，是否繼續？`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '確認',
+                cancelButtonText: '取消'
             });
 
-            // 監聽 storage 事件（用於跨頁面通訊）
+            if (!confirmResult.isConfirmed) return;
+
+            try {
+                for (const orderNumber of uniqueOrders) {
+                    await updateOrderStatus(orderNumber, targetStatus, {
+                        showNotification: false,
+                        refresh: false,
+                        playAudio: false
+                    });
+                }
+
+                refreshView(true);
+                setTimeout(() => refreshView(true), 300);
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: `已更新 ${uniqueOrders.length} 筆訂單`,
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            } catch (error) {
+                console.error('批次更新時發生錯誤：', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '批次更新失敗',
+                    text: error.message || '請稍後再試'
+                });
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initSoundSettings();
+
+            window.addEventListener('orderUpdated', function(event) {
+                console.log('收到訂單更新事件：', event.detail);
+                refreshView(true);
+            });
+
             window.addEventListener('storage', function(event) {
                 if (event.key === 'lastOrderUpdate' || event.key === 'orders') {
                     console.log('收到 storage 事件：', event.key);
-                    loadOrders();  // 重新載入訂單
+                    refreshView(true);
                 }
             });
 
-            // 定期檢查訂單更新
             setInterval(function() {
-                loadOrders();  // 重新載入訂單
-            }, 1000);  // 每秒檢查一次
+                refreshView(false);
+            }, 2000);
 
-            // 初始化音效設置
-            initSoundSettings();
-
-            // 初始顯示全部訂單
             filterOrders('all');
         });
 
         /**
          * 載入訂單
          */
-        async function loadOrders() {
-            try {
-                // 從 PHP 檔案獲取訂單資料
-                const response = await fetch('../api/get-orders.php' + (currentFilter !== 'all' ? `?status=${currentFilter}` : ''));
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const ordersData = await response.json();
-                
-                if (!Array.isArray(ordersData)) {
-                    throw new Error('訂單資料格式錯誤');
-                }
+        async function loadOrders(force = false) {
+            if (isLoadingOrders) return;
+            isLoadingOrders = true;
+            lastOrdersFetch = Date.now();
 
-                // 更新全局訂單列表
+            try {
+                const response = await fetch('../api/get-orders.php');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const ordersData = await response.json();
+                if (!Array.isArray(ordersData)) throw new Error('訂單資料格式錯誤');
+
                 orders = ordersData.map(order => ({
                     ...order,
                     status: normalizeOrderStatus(order.status),
@@ -602,36 +936,47 @@
                     items: order.items || []
                 }));
 
-                // 根據訂單狀態分類
-                const pendingOrders = orders.filter(order => order.status === ORDER_STATUS.PENDING);
+                // 只統計今日的已完成訂單
+                const today = new Date();
+                const completedTodayOrders = orders.filter(order => {
+                    if (order.status !== ORDER_STATUS.COMPLETED) return false;
+                    const dt = new Date(order.orderTime || order.createdAt);
+                    return dt.getFullYear() === today.getFullYear() &&
+                        dt.getMonth() === today.getMonth() &&
+                        dt.getDate() === today.getDate();
+                });
+
+                // 只統計待處理、製作中、待取餐
+                const pendingOrders   = orders.filter(order => order.status === ORDER_STATUS.PENDING);
                 const preparingOrders = orders.filter(order => order.status === ORDER_STATUS.PREPARING);
-                const readyOrders = orders.filter(order => order.status === ORDER_STATUS.READY);
-                const completedOrders = orders.filter(order => order.status === ORDER_STATUS.COMPLETED);
-                const cancelledOrders = orders.filter(order => order.status === ORDER_STATUS.CANCELLED);
+                const readyOrders     = orders.filter(order => order.status === ORDER_STATUS.READY);
 
-                // 更新訂單數量標籤
-                const counts = {
-                    pending: pendingOrders.length,
-                    preparing: preparingOrders.length,
-                    ready: readyOrders.length,
-                    completed: completedOrders.length,
-                    cancelled: cancelledOrders.length,
-                    total: orders.length
-                };
-                updateOrderCounts(counts);
+                // 全部訂單 = 待處理 + 製作中 + 待取餐
+                const allActiveOrders = [].concat(pendingOrders, preparingOrders, readyOrders);
 
-                // 顯示過濾後的訂單
-                showFilteredOrders(orders);
+                // 更新 badge
+                document.getElementById('count-all').textContent       = allActiveOrders.length;
+                document.getElementById('count-pending').textContent   = pendingOrders.length;
+                document.getElementById('count-preparing').textContent = preparingOrders.length;
+                document.getElementById('count-ready').textContent     = readyOrders.length;
+                document.getElementById('count-completed').textContent = completedTodayOrders.length;
 
-                // 如果有新的待處理訂單，播放提示音
-                const previousPendingCount = parseInt(document.getElementById('count-pending').textContent) || 0;
-                if (SOUND_SETTINGS.enabled && pendingOrders.length > previousPendingCount) {
-                    playSound('newOrder');
-                }
+                // 分頁顯示
+                let filteredOrders = [];
+                if (currentFilter === 'all')           filteredOrders = allActiveOrders;
+                else if (currentFilter === 'pending')  filteredOrders = pendingOrders;
+                else if (currentFilter === 'preparing')filteredOrders = preparingOrders;
+                else if (currentFilter === 'ready')    filteredOrders = readyOrders;
+                else if (currentFilter === 'completed')filteredOrders = completedTodayOrders;
+
+                showFilteredOrders(filteredOrders);
+                lastOrdersFetch = Date.now();
 
             } catch (error) {
                 console.error('載入訂單時發生錯誤:', error);
                 showErrorMessage(`載入訂單失敗：${error.message}`);
+            } finally {
+                isLoadingOrders = false;
             }
         }
 
@@ -831,7 +1176,13 @@
          * @param {string} orderId - 訂單編號
          * @param {string} status - 新狀態
          */
-        async function updateOrderStatus(orderId, status) {
+        async function updateOrderStatus(orderId, status, options = {}) {
+            const {
+                showNotification = true,
+                refresh = true,
+                playAudio = true
+            } = options;
+
             try {
                 // 發送更新請求
                 const response = await fetch('../api/update-order-status.php', {
@@ -853,43 +1204,52 @@
 
                 if (data.success) {
                     // 播放提示音效（如果啟用）
-                    if (SOUND_SETTINGS.enabled) {
+                    if (SOUND_SETTINGS.enabled && playAudio) {
                         playSound('statusChange');
                     }
 
                     // 若更新成功，寫入 queue.json
-                    await fetch('../api/queue.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ order_number: orderId })
-                    });
+                    try {
+                        await fetch('../api/queue.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ order_number: orderId })
+                        });
+                    } catch (queueError) {
+                        console.warn('更新 queue 時發生錯誤：', queueError);
+                    }
 
-                    // 重新載入訂單列表
-                    loadOrders();
-                    
-                    setTimeout(() => {
-                        loadOrders();  // 第二次載入，避免異步延遲
-                    }, 500);
-                    
-                    // 顯示成功消息
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: data.message || '狀態已更新',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
+                    if (refresh) {
+                        refreshView(true);
+                        setTimeout(() => refreshView(true), 500);
+                    }
+
+                    if (showNotification) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: data.message || '狀態已更新',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
+
+                    return data;
                 } else {
                     throw new Error(data.message || '更新失敗');
                 }
             } catch (error) {
                 console.error('更新訂單狀態時發生錯誤：', error);
-                await Swal.fire({
-                    title: '更新失敗',
-                    text: error.message || '請稍後再試',
-                    icon: 'error'
-                });
+                if (showNotification) {
+                    await Swal.fire({
+                        title: '更新失敗',
+                        text: error.message || '請稍後再試',
+                        icon: 'error'
+                    });
+                } else {
+                    throw error;
+                }
             }
         }
 
@@ -913,8 +1273,7 @@
                 // 更新 localStorage 最後更新時間
                 localStorage.setItem('lastOrderUpdate', new Date().toISOString());
                 
-                // 重新載入訂單列表
-                loadOrders();
+                refreshView(true);
             } catch (error) {
                 console.error('刪除訂單時發生錯誤：', error);
             }
@@ -991,8 +1350,6 @@
         });
 
         // 定期檢查新訂單
-        setInterval(loadOrders, 5000);
-
         // 初始載入
         loadOrders();
 
@@ -1050,5 +1407,24 @@
             document.getElementById('cancelled-count').textContent = cancelled;
         }
     </script>
+</script>
+<script>
+  // 導覽列自動高亮
+  const map = {
+    'order.html': 'nav-order',
+    'admin.html': 'nav-admin',
+    'menu_update.html': 'nav-menu',
+    'inventory.html': 'nav-inventory',
+    'call.html': 'nav-call',
+    'user.html': 'nav-user',
+    'sales-report.html': 'nav-sales',
+    'login.html': 'nav-logout'
+  };
+  const now = location.pathname.split('/').pop();
+  if(map[now]) {
+    document.getElementById(map[now]).classList.add('active', 'fw-bold');
+    document.getElementById(map[now]).setAttribute('aria-current', 'page');
+  }
+</script>
 </body>
 </html> 

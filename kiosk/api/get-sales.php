@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 $date = $_GET['date'] ?? date('Y-m-d');
 
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=pos_db', 'root', '');
+    $pdo = new PDO('mysql:host=pos-mvp-db;dbname=pos_db', 'root', 'root');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $pdo->prepare("SELECT * FROM orders WHERE DATE(order_time) = ? AND status = 'COMPLETED'");

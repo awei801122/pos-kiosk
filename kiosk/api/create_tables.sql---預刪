@@ -1,0 +1,187 @@
+-- ===========================
+-- 1. 分類表 categories
+-- ===========================
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `display_order` INT DEFAULT 0,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2. 菜單表 menu
+--    - 單一菜色或商品的基本資料
+--    - 透過 section/group 與組合表做更細緻的排版或套餐設定
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name_zh` VARCHAR(255) NOT NULL COMMENT '菜名（中文）',
+  `name_en` VARCHAR(255) DEFAULT NULL COMMENT '菜名（英文或其他語系）',
+  `slug` VARCHAR(255) DEFAULT NULL COMMENT '唯一代號，方便路由或整合',
+  `price` DECIMAL(10,2) NOT NULL COMMENT '售價',
+  `image` VARCHAR(255) DEFAULT NULL COMMENT '圖片檔名或 URL',
+  `category` VARCHAR(255) DEFAULT NULL COMMENT '舊版分類欄位，仍保留相容',
+  `section_id` INT DEFAULT NULL COMMENT '所屬章節（menu_sections.id）',
+  `group_id` INT DEFAULT NULL COMMENT '所屬群組（menu_groups.id）',
+  `display_order` INT DEFAULT 0 COMMENT '章節內顯示順序',
+  `is_featured` TINYINT(1) DEFAULT 0 COMMENT '是否為推薦或冠軍菜色',
+  `badge_icon` VARCHAR(64) DEFAULT NULL COMMENT '小圖示或徽章，例如豬/牛/Crown',
+  `tags` JSON DEFAULT NULL COMMENT '自由標籤（例如辣度、特色）',
+  `stock` INT DEFAULT 0 COMMENT '庫存或可販售數量',
+  `is_active` TINYINT(1) DEFAULT 1 COMMENT '是否啟用',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_menu_slug` (`slug`),
+  KEY `idx_menu_section` (`section_id`),
+  KEY `idx_menu_group` (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2-1. 菜單章節（表頭/冊別）menu_sections
+--      對應紙本菜單的大章節：嚴選套餐、單點、海鮮、湯底等
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu_sections` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL COMMENT '章節名稱',
+  `subtitle` VARCHAR(255) DEFAULT NULL COMMENT '副標題或簡短描述',
+  `description` TEXT DEFAULT NULL COMMENT '章節說明文字（可放消費方式等）',
+  `display_order` INT DEFAULT 0 COMMENT '整本菜單顯示順序',
+  `is_active` TINYINT(1) DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2-2. 菜單群組 menu_groups
+--      章節內的子分類，例如「豬」「牛」「海鮮」「附餐」
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu_groups` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `section_id` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL COMMENT '群組名稱',
+  `icon` VARCHAR(64) DEFAULT NULL COMMENT '小圖示（豬、牛、魚…）',
+  `description` TEXT DEFAULT NULL COMMENT '額外說明或備註',
+  `display_order` INT DEFAULT 0,
+  `is_active` TINYINT(1) DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_menu_groups_section` (`section_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2-3. 菜單群組關聯表 menu_group_items
+--      讓既有 menu 資料與群組建立多對一關係
+--      若未來需要一品多群，可改成多對多結構
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu_group_items` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `group_id` INT NOT NULL,
+  `menu_id` INT NOT NULL,
+  `display_order` INT DEFAULT 0,
+  `note` VARCHAR(255) DEFAULT NULL COMMENT '群組顯示用備註，例如「限量」「招牌」',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_group_menu` (`group_id`, `menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2-4. 菜單章節文字備註 menu_section_notes
+--      用來存放「消費方式」「套餐內容說明」等純文字段落
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu_section_notes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `section_id` INT NOT NULL,
+  `title` VARCHAR(255) DEFAULT NULL,
+  `content` TEXT NOT NULL,
+  `display_order` INT DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_section_notes_section` (`section_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2-5. 套餐定義 menu_sets
+--      每個套餐對應一筆記錄，可與 menu.id 對應或獨立存在
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu_sets` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `menu_id` INT DEFAULT NULL COMMENT '對應 menu 表中的套餐品項（如嚴選套餐）',
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `display_order` INT DEFAULT 0,
+  `is_active` TINYINT(1) DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_menu_sets_menu` (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2-6. 套餐選項群組 menu_set_groups
+--      例如「主食可選一份」「湯底四選一」
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu_set_groups` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `set_id` INT NOT NULL,
+  `group_name` VARCHAR(255) NOT NULL,
+  `selection_type` ENUM('single','multi') NOT NULL DEFAULT 'single' COMMENT 'single=單選、multi=多選',
+  `min_select` INT DEFAULT 1 COMMENT '至少要選幾項',
+  `max_select` INT DEFAULT 1 COMMENT '最多可選幾項（NULL 代表不限）',
+  `display_order` INT DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_set_groups_set` (`set_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 2-7. 套餐選項明細 menu_set_items
+--      列出每個選項群組可被選擇的品項
+-- ===========================
+CREATE TABLE IF NOT EXISTS `menu_set_items` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `set_group_id` INT NOT NULL,
+  `menu_id` INT DEFAULT NULL COMMENT '對應 menu 表的品項，若為自定義文字可為 NULL',
+  `custom_name` VARCHAR(255) DEFAULT NULL COMMENT '若不是既有品項，可直接填入名稱',
+  `custom_price` DECIMAL(10,2) DEFAULT NULL COMMENT '額外加價（若有）',
+  `display_order` INT DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_set_items_group` (`set_group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 3. 訂單明細表 order_items
+-- ===========================
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order_id` INT NOT NULL,
+  `menu_id` INT NOT NULL,
+  `item_name` VARCHAR(255) NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
+  `quantity` INT NOT NULL DEFAULT 1,
+  `total_price` DECIMAL(10,2) NOT NULL,
+  `note` TEXT DEFAULT NULL,
+  `category` VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`)
+  -- 如果需要關聯 orders，可加外鍵（依需求）
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===========================
+-- 4. 訂單主表 orders
+-- ===========================
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order_number` VARCHAR(20) NOT NULL,
+  `order_time` DATETIME DEFAULT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `status` ENUM('PENDING','PROCESSING','PAID','COMPLETED','CANCELLED') NOT NULL DEFAULT 'PENDING',
+  `payment_method` ENUM('CASH','CARD','MOBILE') NOT NULL DEFAULT 'CASH',
+  `created_at` DATETIME DEFAULT NULL,
+  `updated_at` DATETIME DEFAULT NULL,
+  `call_number` INT DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_number` (`order_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

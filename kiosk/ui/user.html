@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>權限管理 - 自助點餐系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, "Microsoft JhengHei", sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 70px;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .btn-edit, .btn-delete {
+            padding: 4px 14px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 統一導覽列 -->
+    <nav class="navbar navbar-expand-lg" style="background: linear-gradient(to right, #1e40af, #3b82f6); box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-height: 70px; padding-top: 0.5rem; padding-bottom: 0.5rem;">
+      <div class="container">
+        <a class="navbar-brand fw-bold text-white" href="order.html">
+          <i class="bi bi-shop me-2"></i>YJOVA自助點餐系統
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link text-white" id="nav-order" href="order.html"><i class="bi bi-bag-check me-1"></i>點餐頁</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-admin" href="admin.html"><i class="bi bi-list-check me-1"></i>訂單管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-menu" href="menu_update.html"><i class="bi bi-grid me-1"></i>商品管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-inventory" href="inventory.html"><i class="bi bi-box-seam me-1"></i>庫存管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-call" href="call.html" target="_blank"><i class="bi bi-display me-1"></i>叫號顯示</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-user" href="user.html"><i class="bi bi-shield-lock me-1"></i>權限管理</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-sales" href="sales-report.html"><i class="bi bi-graph-up me-1"></i>銷售報表</a></li>
+            <li class="nav-item"><a class="nav-link text-white" id="nav-logout" href="login.html"><i class="bi bi-box-arrow-right me-1"></i>登出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card p-4 mb-4">
+            <h4 class="mb-3"><i class="bi bi-shield-lock me-2"></i>權限管理</h4>
+            <div class="row g-3 mb-3 align-items-center">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="searchInput" placeholder="搜尋員工名稱、帳號...">
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-primary" onclick="showEditModal()"><i class="bi bi-person-plus"></i> 新增帳號</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle table-bordered" id="userTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>名稱</th>
+                            <th>帳號</th>
+                            <th>角色</th>
+                            <th>狀態</th>
+                            <th>最近登入</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 由 JS 動態插入資料 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 編輯/新增帳號 Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <form class="modal-content" id="editForm" onsubmit="submitEdit(event)">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel"><i class="bi bi-person-gear me-2"></i><span id="modalTitle">新增帳號</span></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="editId">
+            <div class="mb-3">
+              <label for="editName" class="form-label">名稱</label>
+              <input type="text" class="form-control" id="editName" required>
+            </div>
+            <div class="mb-3">
+              <label for="editAccount" class="form-label">帳號</label>
+              <input type="text" class="form-control" id="editAccount" required>
+            </div>
+            <div class="mb-3">
+              <label for="editRole" class="form-label">角色</label>
+              <select class="form-select" id="editRole">
+                <option value="admin">管理員</option>
+                <option value="staff">一般員工</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="editStatus" class="form-label">狀態</label>
+              <select class="form-select" id="editStatus">
+                <option value="啟用">啟用</option>
+                <option value="停用">停用</option>
+              </select>
+            </div>
+            <div class="mb-3" id="editPasswordRow">
+              <label for="editPassword" class="form-label">密碼</label>
+              <input type="password" class="form-control" id="editPassword">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary">儲存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // 假資料（正式請用API取得）
+      let users = [
+        {id: 1, name: '老闆', account: 'admin', role: 'admin', status: '啟用', lastLogin: '2024-07-10 09:30'},
+        {id: 2, name: '小明', account: 'staff1', role: 'staff', status: '啟用', lastLogin: '2024-07-11 15:20'},
+        {id: 3, name: '小美', account: 'staff2', role: 'staff', status: '停用', lastLogin: '2024-07-01 12:00'}
+      ];
+
+      function renderTable(data) {
+        const tbody = document.querySelector('#userTable tbody');
+        if (!data.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center">查無資料</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data.map(row => `
+          <tr>
+            <td>${row.name}</td>
+            <td>${row.account}</td>
+            <td>
+                <span class="badge ${row.role === 'admin' ? 'bg-primary' : 'bg-secondary'}">
+                  ${row.role === 'admin' ? '管理員' : '一般員工'}
+                </span>
+            </td>
+            <td>
+                <span class="badge ${row.status === '啟用' ? 'bg-success' : 'bg-secondary'}">
+                  ${row.status}
+                </span>
+            </td>
+            <td>${row.lastLogin || '-'}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary btn-edit" onclick="showEditModal(${row.id})"><i class="bi bi-pencil"></i> 編輯</button>
+              <button class="btn btn-sm btn-outline-danger btn-delete" onclick="deleteUser(${row.id})"><i class="bi bi-trash"></i> 刪除</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function loadUsers() {
+        const q = document.getElementById('searchInput').value.trim();
+        let filtered = users;
+        if(q) {
+          filtered = users.filter(u =>
+            u.name.includes(q) ||
+            u.account.includes(q)
+          );
+        }
+        renderTable(filtered);
+      }
+
+      // 搜尋即時過濾
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchInput').addEventListener('input', loadUsers);
+        loadUsers();
+      });
+
+      // 編輯/新增 Modal
+      function showEditModal(id) {
+        document.getElementById('editForm').reset();
+        document.getElementById('editPasswordRow').style.display = '';
+        if (id) {
+          const user = users.find(u => u.id === id);
+          if (!user) return;
+          document.getElementById('editId').value = user.id;
+          document.getElementById('editName').value = user.name;
+          document.getElementById('editAccount').value = user.account;
+          document.getElementById('editRole').value = user.role;
+          document.getElementById('editStatus').value = user.status;
+          document.getElementById('modalTitle').textContent = '編輯帳號';
+          document.getElementById('editPassword').placeholder = '(若不修改則留空)';
+        } else {
+          document.getElementById('editId').value = '';
+          document.getElementById('modalTitle').textContent = '新增帳號';
+          document.getElementById('editPassword').placeholder = '';
+        }
+        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+        modal.show();
+      }
+
+      // 提交編輯/新增
+      function submitEdit(e) {
+        e.preventDefault();
+        const id = document.getElementById('editId').value;
+        const name = document.getElementById('editName').value.trim();
+        const account = document.getElementById('editAccount').value.trim();
+        const role = document.getElementById('editRole').value;
+        const status = document.getElementById('editStatus').value;
+        const password = document.getElementById('editPassword').value;
+        if (id) {
+          // 編輯
+          const idx = users.findIndex(u => u.id == id);
+          if (idx !== -1) {
+            users[idx].name = name;
+            users[idx].account = account;
+            users[idx].role = role;
+            users[idx].status = status;
+            // 不處理密碼
+          }
+        } else {
+          // 新增
+          users.push({
+            id: users.length ? Math.max(...users.map(u => u.id)) + 1 : 1,
+            name, account, role, status, lastLogin: '-'
+          });
+        }
+        loadUsers();
+        bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+      }
+
+      // 刪除帳號
+      function deleteUser(id) {
+        if (!confirm('確定要刪除這個帳號嗎？')) return;
+        users = users.filter(u => u.id !== id);
+        loadUsers();
+      }
+    </script>
+</body>
+</html>

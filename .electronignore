@@ -1,0 +1,11 @@
+node_modules
+logs
+kiosk\mysql
+kiosk\mysql\*
+kiosk/mysql
+kiosk/mysql/*
+.git
+.gitignore
+docker-compose.yml
+dockerfile
+*.md

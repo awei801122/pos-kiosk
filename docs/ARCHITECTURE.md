@@ -1,0 +1,12 @@
+# Architecture
+- 前台 Kiosk（Electron, /kiosk）
+  - 點餐、購物車、結帳、掃碼支付
+- 後台 Admin（PHP, /admin）
+  - 菜單 CRUD、庫存與成本、報表、叫號管理
+- API（PHP, /api）
+  - /api/menu, /api/orders, /api/inventory, /api/reports, /api/users
+- 資料庫 MySQL（/db）
+  - tables: products, categories, orders, order_items, payments, inventory, users, roles, settings, audit_logs
+- 快取/中繼：可選 queue.json（只做臨時快取，不是最終存儲）
+- 資料流：Kiosk→API→DB；後台 Admin→API→DB；完成/取消→寫入報表
+- 打包：Electron（主程式＋內建 PHP Server 啟動腳本）

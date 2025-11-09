@@ -1,85 +1,33 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>設定主機 IP</title>
+  <meta charset="utf-8">
+  <title>API 設定</title>
   <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: #eceff1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .card {
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    input {
-      width: 280px;
-      padding: 10px 15px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    input:focus {
-      border-color: #1976d2;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #1976d2;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    button:hover {
-      background-color: #1565c0;
-    }
+    body { font-size: 1.5em; padding: 30px; background: #f8fafc; }
+    label { font-weight: bold; }
+    input { width: 400px; font-size: 1em; }
+    button { font-size: 1em; padding: 0.5em 1.5em; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>設定主機 IP 位址</h2>
-    <form id="configForm">
-      <input type="text" id="host" placeholder="輸入主機 IP，例如 127.0.0.1" required />
-      <br />
-      <button type="submit">儲存並返回點餐頁</button>
-    </form>
-  </div>
-
+  <h2>API 主機設定</h2>
+  <label>API 主機網址：</label>
+  <input type="text" id="apiHost" />
+  <button id="saveBtn">儲存</button>
+  <span id="msg" style="color:green; margin-left:2em;"></span>
   <script>
-    fetch('../config.json')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('host').value = data.host || '127.0.0.1';
-      });
-
-    document.getElementById('configForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const host = document.getElementById('host').value;
-      fetch('../api/save-config.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ host })
-      }).then(() => {
-        location.href = `http://${host}:8000/order.html`;
-      });
-    });
+    // 讀取目前設定
+    window.onload = function() {
+      const cfg = window.configAPI.load();
+      document.getElementById('apiHost').value = cfg.api_host;
+    };
+    // 存檔
+    document.getElementById('saveBtn').onclick = function() {
+      const api_host = document.getElementById('apiHost').value;
+      window.configAPI.save({ api_host });
+      document.getElementById('msg').innerText = "儲存成功！";
+    };
   </script>
 </body>
 </html>
