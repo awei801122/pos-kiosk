@@ -205,6 +205,11 @@
             </button>
           </li>
           <li class="nav-item">
+            <button class="nav-link" data-tab="tab-single" id="tab-btn-single" type="button">
+              <i class="bi bi-dot"></i>單點
+            </button>
+          </li>
+          <li class="nav-item">
             <button class="nav-link" data-tab="tab-combo" id="tab-btn-combo" type="button">
               <i class="bi bi-collection"></i>套餐設計
             </button>
@@ -222,6 +227,11 @@
           <li class="nav-item">
             <button class="nav-link" data-tab="tab-side" id="tab-btn-side" type="button">
               <i class="bi bi-egg-fried"></i>附餐選擇
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-tab="tab-event" id="tab-btn-event" type="button">
+              <i class="bi bi-gift"></i>活動餐點
             </button>
           </li>
         </ul>
@@ -244,7 +254,6 @@
                           <th>圖片</th>
                           <th>中文名稱</th>
                           <th>英文名稱</th>
-                          <th>類型</th>
                           <th>分類</th>
                           <th>價格</th>
                           <th>庫存</th>
@@ -256,6 +265,67 @@
                   </thead>
                   <tbody id="product_menuTable"></tbody>
               </table>
+          </div>
+        </div>
+      </div>
+      <!-- tab: 單點 -->
+      <div id="tab-single" class="tab-pane-custom" style="display:none;">
+        <div class="container mt-4">
+          <h2 class="mb-3">單點管理
+            <button class="btn btn-primary btn-sm add-btn" id="single_btn-add">
+              <i class="bi bi-plus-circle"></i> 新增單點
+            </button>
+          </h2>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>圖片</th>
+                  <th>中文名稱</th>
+                  <th>英文名稱</th>
+                  <th>分類</th>
+                  <th>價格</th>
+                  <th>庫存</th>
+                  <th>狀態</th>
+                  <th>建立時間</th>
+                  <th>更新時間</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="singleTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- tab: 活動餐點 -->
+      <div id="tab-event" class="tab-pane-custom" style="display:none;">
+        <div class="container mt-4">
+          <h2 class="mb-3">活動餐點管理
+            <button class="btn btn-primary btn-sm add-btn" id="event_btn-add">
+              <i class="bi bi-plus-circle"></i> 新增活動餐點
+            </button>
+          </h2>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>圖片</th>
+                  <th>中文名稱</th>
+                  <th>英文名稱</th>
+                  <th>分類</th>
+                  <th>價格</th>
+                  <th>庫存</th>
+                  <th>狀態</th>
+                  <th>建立時間</th>
+                  <th>更新時間</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="eventTable"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -291,7 +361,7 @@
       
       <!-- 套餐 Modal -->
       <div class="modal fade" id="comboModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
           <div class="modal-content">
             <form id="comboForm" enctype="multipart/form-data">
               <div class="modal-header">
@@ -302,13 +372,13 @@
                 <input type="hidden" id="combo_set_id">
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="mb-3">
+                    <div class="mb-2">
                       <label class="form-label">中文名稱</label>
                       <input type="text" id="combo_name_zh" class="form-control" required>
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <div class="mb-3">
+                    <div class="mb-2">
                       <label class="form-label">英文名稱</label>
                       <input type="text" id="combo_name_en" class="form-control">
                     </div>
@@ -316,29 +386,29 @@
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="mb-3">
+                    <div class="mb-2">
                       <label class="form-label">基本價格</label>
                       <input type="number" id="combo_base_price" class="form-control" required step="1" min="0">
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <div class="mb-3">
+                    <div class="mb-2">
                       <label class="form-label">庫存</label>
                       <input type="number" id="combo_stock" class="form-control" min="0">
                     </div>
                   </div>
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                   <label class="form-label">套餐說明</label>
                   <textarea id="combo_description" class="form-control" rows="2"></textarea>
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                   <label class="form-label">套餐圖片</label>
                   <input type="file" id="combo_image_file" class="form-control" accept="image/*" onchange="previewComboImage(event)">
                   <input type="hidden" id="combo_image" name="combo_image">
                   <img id="combo_image_preview" style="max-width:100%;max-height:120px;margin-top:6px;display:none;border-radius:8px;">
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                   <label class="form-label">上架狀態</label>
                   <select id="combo_is_active" class="form-select">
                     <option value="1">上架</option>
@@ -744,20 +814,7 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="product_menuId">
-                        <div class="mb-2">
-                            <label class="form-label">商品類型</label>
-                            <div>
-                              <input type="radio" name="product_type" id="product_type_single" value="single" checked>
-                              <label for="product_type_single" class="me-3">單點</label>
-                              <input type="radio" name="product_type" id="product_type_set" value="set">
-                              <label for="product_type_set">套餐</label>
-                            </div>
-                        </div>
-                        <div class="mb-2" id="product_comboItemsArea" style="display:none;">
-                            <label class="form-label">套餐內容設定</label>
-                            <div id="product_comboItemsList" class="border rounded p-2" style="max-height:220px;overflow:auto;"></div>
-                            <div class="form-text">僅能選擇「單點」商品，並輸入每項數量</div>
-                        </div>
+                        <!-- 商品類型區塊已移除 -->
                         <div class="mb-2">
                             <label class="form-label">中文名稱</label>
                             <input type="text" id="product_name_zh" class="form-control" required>
@@ -770,12 +827,12 @@
                             <label class="form-label">分類</label>
                             <select id="product_category" class="form-select" required>
                                 <option value="">請選擇分類</option>
-                                <option value="套餐">套餐</option>
                                 <option value="湯底">湯底</option>
                                 <option value="主餐">主餐</option>
                                 <option value="菜盤">菜盤</option>
                                 <option value="附餐">附餐</option>
                                 <option value="單點">單點</option>
+                                <option value="活動餐點">活動餐點</option>
                             </select>
                         </div>
                         <div class="mb-2">
@@ -822,9 +879,11 @@
     let editingItem = null;
     let soupData = [];
     let editingSoup = null;
-    // ====== 新增：菜盤/附餐全域變數 ======
+    // ====== 新增：菜盤/附餐/單點/活動餐點 全域變數 ======
     let veggieData = [];
     let sideData = [];
+    let singleData = [];
+    let eventData = [];
     let editingVeggie = null;
     let editingSide = null;
     // ====== 新增：套餐管理全域變數 ======
@@ -1022,10 +1081,18 @@
     }
 
     // ==================== 功能函式宣告 ====================
+    // 依指定分類開啟新增商品視窗（若 category 為 null 則不預設分類）
+    function openNewProductWithCategory(category) {
+      openProductEditModal();
+      if (category) {
+        const sel = document.getElementById('product_category');
+        if (sel) sel.value = category;
+      }
+    }
     // 商品管理
     function loadProductData(){
       const tbody = document.getElementById('product_menuTable');
-      tbody.innerHTML = `<tr><td colspan="12" class="text-center">載入中...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="11" class="text-center">載入中...</td></tr>`;
       fetch('/api/menu-crud.php?action=list')
         .then(r => r.json())
         .then(data => {
@@ -1033,7 +1100,7 @@
             renderProductMenuTable();
         })
         .catch(err=>{
-            tbody.innerHTML = `<tr><td colspan="12" class="text-danger text-center">載入失敗：${err}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="11" class="text-danger text-center">載入失敗：${err}</td></tr>`;
         });
     }
     function renderProductMenuTable(){
@@ -1044,7 +1111,6 @@
               <td><img src="${item.image}" class="img-thumb"></td>
               <td>${item.name_zh}</td>
               <td>${item.name_en}</td>
-              <td>${item.type === 'set' ? '套餐' : '單點'}</td>
               <td>${item.category}</td>
               <td>NT$${parseInt(item.price, 10)}</td>
               <td>${item.stock}</td>
@@ -1075,18 +1141,6 @@
       document.getElementById('product_add_on_price').value = editingItem && editingItem.add_on_price ? editingItem.add_on_price : 0;
       document.getElementById('product_stock').value = editingItem ? editingItem.stock : "";
       document.getElementById('product_is_active').value = editingItem ? editingItem.is_active : 1;
-      // 商品類型
-      let type = editingItem ? editingItem.type : 'single';
-      if(type !== 'set') type = 'single';
-      document.getElementById('product_type_single').checked = type === 'single';
-      document.getElementById('product_type_set').checked = type === 'set';
-      document.getElementById('product_comboItemsArea').style.display = type === 'set' ? 'block' : 'none';
-      // 套餐內容
-      if(type === 'set') {
-          renderProductComboItems(editingItem && editingItem.set_items ? editingItem.set_items : {});
-      } else {
-          document.getElementById('product_comboItemsList').innerHTML = "";
-      }
       // 預設圖片
       if (editingItem && editingItem.image) {
           preview.src = editingItem.image;
@@ -1128,27 +1182,158 @@
           }
       });
     }
-    // 動態生成套餐可選單點清單
-    function renderProductComboItems(selectedItems = {}) {
-      const comboArea = document.getElementById('product_comboItemsList');
-      // 只列出 type !== 'set' 的單點商品
-      const singles = menuData.filter(item => item.type !== 'set');
-      comboArea.innerHTML = singles.length
-          ? singles.map(item => `
-            <div class="form-check d-flex align-items-center mb-1">
-              <input type="checkbox" class="form-check-input" id="product_combo_${item.id}" value="${item.id}" ${selectedItems[item.id]?'checked':''}>
-              <label class="form-check-label flex-grow-1 ms-2" for="product_combo_${item.id}">${item.name_zh}</label>
-              <input type="number" min="1" style="width:70px;" class="form-control form-control-sm ms-2"
-                id="product_combo_qty_${item.id}" value="${selectedItems[item.id]||1}" ${selectedItems[item.id]?'':'disabled'}>
-            </div>
-          `).join('')
-          : '<div class="text-muted">尚無單點商品可選</div>';
-      singles.forEach(item=>{
-          document.getElementById(`product_combo_${item.id}`).addEventListener('change',function(){
-              document.getElementById(`product_combo_qty_${item.id}`).disabled = !this.checked;
-          });
+
+    // ==================== 單點 / 活動餐點管理 ====================
+    function loadSingleData() {
+      const tbody = document.getElementById('singleTable');
+      if (!tbody) return;
+      tbody.innerHTML = `<tr><td colspan="11" class="text-center">載入中...</td></tr>`;
+      fetch('/api/menu-crud.php?action=list&category=' + encodeURIComponent('單點'))
+        .then(r => r.json())
+        .then(data => {
+          singleData = data;
+          renderSingleTable();
+        })
+        .catch(err => {
+          tbody.innerHTML = `<tr><td colspan="11" class="text-danger text-center">載入失敗：${err}</td></tr>`;
+        });
+    }
+
+    function renderSingleTable() {
+      const tbody = document.getElementById('singleTable');
+      if (!tbody) return;
+      if (!singleData.length) {
+        tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted">無單點資料</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = singleData.map(item => `
+          <tr>
+              <td>${item.id}</td>
+              <td><img src="${item.image}" class="img-thumb"></td>
+              <td>${item.name_zh}</td>
+              <td>${item.name_en || ''}</td>
+              <td>${item.category}</td>
+              <td>NT$${parseInt(item.price, 10)}</td>
+              <td>${item.stock}</td>
+              <td>
+                  <span class="badge ${item.is_active==1?'badge-active':'badge-inactive'}">
+                      ${item.is_active==1?'上架':'下架'}
+                  </span>
+              </td>
+              <td>${item.created_at}</td>
+              <td>${item.updated_at}</td>
+              <td>
+                  <button class="action-btn" title="編輯" onclick="openProductEditModal(${item.id})"><i class="bi bi-pencil-square"></i></button>
+                  <button class="action-btn" title="刪除" onclick="deleteSingleItem(${item.id})"><i class="bi bi-trash"></i></button>
+              </td>
+          </tr>
+      `).join('');
+    }
+
+    function deleteSingleItem(id) {
+      Swal.fire({
+          title: "確定要刪除嗎？",
+          icon: "warning", showCancelButton: true,
+          confirmButtonText: "刪除", cancelButtonText: "取消"
+      }).then(res=>{
+          if(res.isConfirmed){
+              const formData = new FormData();
+              formData.append('action','delete');
+              formData.append('id',id);
+              fetch('/api/menu-crud.php', {
+                  method: 'POST',
+                  body: formData
+              })
+              .then(r=>r.json())
+              .then(data=>{
+                  if(data.success){
+                      Swal.fire({icon:'success',title:'已刪除'}).then(()=>{
+                        loadSingleData();
+                        loadProductData();
+                      });
+                  }else{
+                      Swal.fire({icon:'error',title:'刪除失敗',text:data.msg});
+                  }
+              });
+          }
       });
     }
+
+    function loadEventData() {
+      const tbody = document.getElementById('eventTable');
+      if (!tbody) return;
+      tbody.innerHTML = `<tr><td colspan="11" class="text-center">載入中...</td></tr>`;
+      fetch('/api/menu-crud.php?action=list&category=' + encodeURIComponent('活動餐點'))
+        .then(r => r.json())
+        .then(data => {
+          eventData = data;
+          renderEventTable();
+        })
+        .catch(err => {
+          tbody.innerHTML = `<tr><td colspan="11" class="text-danger text-center">載入失敗：${err}</td></tr>`;
+        });
+    }
+
+    function renderEventTable() {
+      const tbody = document.getElementById('eventTable');
+      if (!tbody) return;
+      if (!eventData.length) {
+        tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted">無活動餐點資料</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = eventData.map(item => `
+          <tr>
+              <td>${item.id}</td>
+              <td><img src="${item.image}" class="img-thumb"></td>
+              <td>${item.name_zh}</td>
+              <td>${item.name_en || ''}</td>
+              <td>${item.category}</td>
+              <td>NT$${parseInt(item.price, 10)}</td>
+              <td>${item.stock}</td>
+              <td>
+                  <span class="badge ${item.is_active==1?'badge-active':'badge-inactive'}">
+                      ${item.is_active==1?'上架':'下架'}
+                  </span>
+              </td>
+              <td>${item.created_at}</td>
+              <td>${item.updated_at}</td>
+              <td>
+                  <button class="action-btn" title="編輯" onclick="openProductEditModal(${item.id})"><i class="bi bi-pencil-square"></i></button>
+                  <button class="action-btn" title="刪除" onclick="deleteEventItem(${item.id})"><i class="bi bi-trash"></i></button>
+              </td>
+          </tr>
+      `).join('');
+    }
+
+    function deleteEventItem(id) {
+      Swal.fire({
+          title: "確定要刪除嗎？",
+          icon: "warning", showCancelButton: true,
+          confirmButtonText: "刪除", cancelButtonText: "取消"
+      }).then(res=>{
+          if(res.isConfirmed){
+              const formData = new FormData();
+              formData.append('action','delete');
+              formData.append('id',id);
+              fetch('/api/menu-crud.php', {
+                  method: 'POST',
+                  body: formData
+              })
+              .then(r=>r.json())
+              .then(data=>{
+                  if(data.success){
+                      Swal.fire({icon:'success',title:'已刪除'}).then(()=>{
+                        loadEventData();
+                        loadProductData();
+                      });
+                  }else{
+                      Swal.fire({icon:'error',title:'刪除失敗',text:data.msg});
+                  }
+              });
+          }
+      });
+    }
+    //（套餐內容設定功能已移除）
 
     // ==================== 湯底項目管理 ====================
     function loadSoupData() {
@@ -1312,9 +1497,17 @@
 
     // ==================== DOMContentLoaded 統一事件註冊 ====================
     document.addEventListener('DOMContentLoaded', function() {
+      // 設定頂部導覽列 active 狀態，維持後台頁面一致性
+      const navIds = ['nav-order','nav-admin','nav-menu','nav-inventory','nav-call','nav-user','nav-sales','nav-logout'];
+      navIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      const navMenuEl = document.getElementById('nav-menu');
+      if (navMenuEl) navMenuEl.classList.add('active');
       // Sidebar tab control
       const tabBtns = document.querySelectorAll('#sidebarTabs .nav-link');
-      const tabIds = ['tab-products','tab-combo','tab-soup','tab-veggie','tab-side'];
+      const tabIds = ['tab-products','tab-single','tab-combo','tab-soup','tab-veggie','tab-side','tab-event'];
       tabBtns.forEach(btn=>{
         btn.addEventListener('click',function(){
           tabBtns.forEach(b=>b.classList.remove('active'));
@@ -1323,10 +1516,13 @@
             document.getElementById(id).style.display = (this.dataset.tab === id) ? '' : 'none';
           });
           // 分頁切換時自動載入對應資料
-          if (this.dataset.tab === 'tab-products') loadProductData();
-          if (this.dataset.tab === 'tab-soup') loadSoupData();
-          if (this.dataset.tab === 'tab-veggie') loadVeggieData();
-          if (this.dataset.tab === 'tab-side') loadSideData();
+          if (this.dataset.tab === 'tab-products') loadProductData(); // 商品
+          if (this.dataset.tab === 'tab-single')   loadSingleData();  // 單點
+          if (this.dataset.tab === 'tab-combo')    loadComboData();   // 套餐
+          if (this.dataset.tab === 'tab-soup')     loadSoupData();    // 湯底
+          if (this.dataset.tab === 'tab-veggie')   loadVeggieData();  // 菜盤
+          if (this.dataset.tab === 'tab-side')     loadSideData();    // 附餐
+          if (this.dataset.tab === 'tab-event')    loadEventData();   // 活動餐點
         });
       });
 
@@ -1335,7 +1531,15 @@
 
       // 新增商品按鈕
       document.getElementById('product_btn-add').addEventListener('click', function() {
-        openProductEditModal();
+        openNewProductWithCategory(null);
+      });
+      // 新增單點按鈕
+      document.getElementById('single_btn-add').addEventListener('click', function() {
+        openNewProductWithCategory('單點');
+      });
+      // 新增活動餐點按鈕
+      document.getElementById('event_btn-add').addEventListener('click', function() {
+        openNewProductWithCategory('活動餐點');
       });
       // 新增湯底按鈕
       document.getElementById('btn-add-soup').addEventListener('click', function() {
@@ -1500,18 +1704,6 @@
         const old_image = document.getElementById('product_old_image').value;
         const fileInput = document.getElementById('product_image_file');
         const stock = document.getElementById('product_stock').value; // 取得庫存值
-        // 商品類型
-        let type = document.getElementById('product_type_set').checked ? 'set' : 'single';
-        // 套餐內容
-        let set_items = {};
-        if(type === 'set') {
-          document.querySelectorAll('#product_comboItemsList input[type=checkbox]').forEach(chk=>{
-            if(chk.checked) {
-              const qty = document.getElementById(`product_combo_qty_${chk.value}`).value;
-              set_items[chk.value] = parseInt(qty,10) || 1;
-            }
-          });
-        }
         const formData = new FormData();
         formData.append('name_zh', name_zh);
         formData.append('name_en', name_en);
@@ -1521,8 +1713,6 @@
         // 僅商品管理送出 stock 欄位
         formData.append('stock', stock);
         formData.append('is_active', is_active);
-        formData.append('type', type);
-        if(type === 'set') formData.append('set_items', JSON.stringify(set_items));
         // 圖片上傳
         if (fileInput.files && fileInput.files[0]) {
             formData.append('image', fileInput.files[0]);
@@ -1547,20 +1737,16 @@
                 Swal.fire({
                   icon: 'success',
                   title: '儲存成功'
-                }).then(()=>loadProductData());
+                }).then(()=>{
+                  loadProductData();
+                  loadSingleData();
+                  loadEventData();
+                });
             }else{
                 Swal.fire({icon:'error',title:'儲存失敗',text:data.msg});
             }
         });
       };
-      // 商品類型切換顯示套餐內容
-      document.getElementsByName('product_type').forEach(radio=>{
-        radio.addEventListener('change', function(){
-          document.getElementById('product_comboItemsArea').style.display =
-            this.value === 'set' ? 'block' : 'none';
-          if(this.value === 'set') renderProductComboItems();
-        });
-      });
 
       // 湯底表單送出
       document.getElementById('soupForm').onsubmit = function(e) {
@@ -1702,10 +1888,10 @@
     });
 
     // ==================== 套餐管理函數 ====================
-    function loadComboData() {
+function loadComboData() {
         const tbody = document.getElementById('comboTable');
         if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center">載入中...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="text-center">載入中...</td></tr>`;
         fetch('/api/menu-crud.php?action=list_combos')
             .then(r => r.json())
             .then(data => {
@@ -1713,7 +1899,7 @@
                 renderComboTable();
             })
             .catch(err=>{
-                tbody.innerHTML = `<tr><td colspan="7" class="text-danger text-center">載入失敗：${err}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="text-danger text-center">載入失敗：${err}</td></tr>`;
             });
     }
     
