@@ -12,6 +12,7 @@ try {
     $status = isset($rawStatus) ? strtoupper($rawStatus) : null;
 
 
+
     // Log 請求
     $logMessage = sprintf(
         "[%s] 收到更新請求：order_number=%s, 原始狀態=%s, 最終狀態=%s\n",
