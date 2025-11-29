@@ -10,3 +10,6 @@ temp/
 tmp/
 kiosk/mysql/
 .vscode/settings.json
+# macOS SMB 自動產生的垃圾檔案
+.DS_Store
+._*
