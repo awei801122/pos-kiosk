@@ -1,4 +1,41 @@
 {
-    "git.ignoreLimitWarning": true,
-    "git.enabled": false
+    // ===== Git 行為優化 =====
+    "git.ignoreLimitWarning": true,      // 不要一直跳 Git 檔案太多警告
+    "git.autofetch": false,              // 不自動 fetch，手動比較安全
+    "git.autorefresh": false,            // 不要一直掃描 Git 狀態（SMB 會爆 CPU）
+    "git.untrackedChanges": "hidden",    // 隱藏未追蹤檔，避免干擾
+    "git.postCommitCommand": "none",     // Commit 後不要自動做任何事（避免 refresh）
+
+    // ===== 檔案監控最佳化（避免 SMB 爆 CPU）=====
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/logs/**": true,
+        "**/log/**": true,
+        "**/tmp/**": true,
+        "**/.git/**": false       // ★ 不能排除 .git，否則 Git 完全失效
+    },
+
+    // ===== 搜尋優化（加速 Cmd+Shift+F）=====
+    "search.exclude": {
+        "**/node_modules/**": true,
+        "**/logs/**": true,
+        "**/log/**": true,
+        "**/tmp/**": true
+    },
+
+    // ===== 編輯器基本偏好 =====
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    "editor.renderWhitespace": "none",
+    "editor.minimap.enabled": false,
+    "editor.smoothScrolling": true,
+    "editor.wordWrap": "on",
+    
+    // ===== PHP 強化 =====
+    "php.suggest.basic": true,
+    "php.validate.enable": false,        // 你不用 VS Code 的 PHP Lint（避免誤判）
+
+    // ===== JSON 顯示 =====
+    "json.format.enable": true,
+    "json.maxItemsComputed": 500000
 }
