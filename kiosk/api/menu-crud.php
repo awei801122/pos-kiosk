@@ -1,8 +1,44 @@
 <?php
 header('Content-Type: application/json');
 require_once 'db.php';
+require_once __DIR__ . '/LicenseClient.php';
 
 try {
+    // ===== 授權檢查：商品管理 API 使用快取 =====
+    $settingFile = __DIR__ . '/system-setting.json';
+
+    if (!file_exists($settingFile)) {
+        throw new Exception('找不到 system-setting.json，無法讀取授權設定');
+    }
+
+    $setting    = json_decode(file_get_contents($settingFile), true);
+    $licenseKey = $setting['license_key'] ?? '';
+
+    if ($licenseKey === '') {
+        throw new Exception('尚未設定授權金鑰，請先在系統設定頁填寫 license_key');
+    }
+
+    // 授權伺服器網址
+    $licenseServer = 'https://license.yjova.com';
+
+    // 檢查頻率：目前測試階段 10 分鐘，未來可改為 7 天（7 * 24 * 60 * 60）
+    $intervalSeconds = 600; // 10 分鐘
+
+    // 建立授權用戶端並依快取檢查授權
+    $client = new LicenseClient($licenseServer, $licenseKey);
+    $status = $client->getLicenseStatusCached($intervalSeconds);
+
+    // 若授權不是有效狀態，直接回傳錯誤訊息並中止後續動作
+    if (($status['status'] ?? 'error') !== 'valid') {
+        $msg = $status['message'] ?? '系統授權已失效';
+        echo json_encode([
+            'success' => false,
+            'msg'     => $msg,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // 授權通過後才繼續處理 action
     $action = $_POST['action'] ?? $_GET['action'] ?? 'list';
     if ($action == 'add') {
         // 新增商品
