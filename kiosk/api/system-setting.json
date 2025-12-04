@@ -1,3 +1,8 @@
 {
-    "printer_strategy": "both"
+  "store_name": "測試",
+  "timezone": "Asia/Taipei",
+  "language": "zh-TW",
+  "currency": "TWD",
+  "license_key": "1a10eadf3dc095463982c20dbc641d51",
+  "printer_strategy": "both"
 }

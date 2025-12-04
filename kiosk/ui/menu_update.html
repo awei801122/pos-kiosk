@@ -834,6 +834,7 @@
                                 <option value="單點">單點</option>
                                 <option value="活動餐點">活動餐點</option>
                             </select>
+                            <div class="form-text text-muted" id="product_category_hint" style="display:none;"></div>
                         </div>
                         <div class="mb-2">
                             <label class="form-label">價格</label>
@@ -1495,8 +1496,79 @@
       }
     }
 
+    // ==================== 授權檢查：商品管理頁 ====================
+    async function checkLicenseForMenuPage() {
+      try {
+        const resp = await fetch('/api/license-check.php');
+        const data = await resp.json();
+
+        // 授權有效，直接放行
+        if (data.ok && data.status === 'valid') {
+          if (data.expires_at) {
+            console.log('License valid until', data.expires_at);
+          }
+          return true;
+        }
+
+        // 授權失效或未設定，顯示到期日與訊息並鎖住畫面
+        const expiresText = data.expires_at
+          ? `授權到期日為：<b>${data.expires_at}</b>`
+          : '';
+        const msg = data.message || '系統授權已到期或無效，請聯絡系統服務商。';
+
+        Swal.fire({
+          icon: 'error',
+          title: '系統授權已到期',
+          html: `${msg}<br>${expiresText}`,
+          confirmButtonText: '關閉',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          customClass: {
+            popup: 'swal2-custom-popup',
+            title: 'swal2-custom-title',
+            confirmButton: 'swal2-custom-btn'
+          }
+        });
+
+        const main = document.getElementById('main-content');
+        if (main) {
+          main.style.pointerEvents = 'none';
+          main.style.filter = 'grayscale(0.4)';
+        }
+
+        return false;
+      } catch (err) {
+        console.error('checkLicenseForMenuPage error', err);
+        // 無法連線授權伺服器時，目前採保守作法：視為失敗並鎖定操作
+        Swal.fire({
+          icon: 'error',
+          title: '授權檢查失敗',
+          html: '無法連線至授權伺服器，請稍後再試或聯絡系統服務商。',
+          confirmButtonText: '關閉',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          customClass: {
+            popup: 'swal2-custom-popup',
+            title: 'swal2-custom-title',
+            confirmButton: 'swal2-custom-btn'
+          }
+        });
+        const main = document.getElementById('main-content');
+        if (main) {
+          main.style.pointerEvents = 'none';
+          main.style.filter = 'grayscale(0.4)';
+        }
+        return false;
+      }
+    }
+
     // ==================== DOMContentLoaded 統一事件註冊 ====================
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
+      // 先檢查授權狀態，未通過則不載入任何管理功能
+      const licenseOk = await checkLicenseForMenuPage();
+      if (!licenseOk) {
+        return;
+      }
       // 設定頂部導覽列 active 狀態，維持後台頁面一致性
       const navIds = ['nav-order','nav-admin','nav-menu','nav-inventory','nav-call','nav-user','nav-sales','nav-logout'];
       navIds.forEach(id => {
